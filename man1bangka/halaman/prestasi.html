@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prestasi Siswa — MAN 1 Bangka</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar__brand">
+        <div class="navbar__logo">M1B</div>
+        <div class="navbar__title">
+          <span>MAN 1 Bangka</span>
+          <span>KEGIATAN SISWA</span>
+        </div>
+      </div>
+      <ul class="navbar__nav">
+        <li><a href="../index.html"><i class="fas fa-home"></i> Beranda</a></li>
+        <li><a href="pengumuman.html"><i class="far fa-bell"></i> Pengumuman</a></li>
+        <li><a href="agenda.html"><i class="far fa-calendar-alt"></i> Agenda</a></li>
+        <li><a href="ekstrakurikuler.html"><i class="fas fa-star"></i> Ekskul</a></li>
+        <li><a href="prestasi.html"><i class="fas fa-trophy"></i> Prestasi</a></li>
+        <li><a href="organisasi.html"><i class="fas fa-users"></i> OSIS</a></li>
+        <li><a href="dokumentasi.html"><i class="far fa-images"></i> Galeri</a></li>
+        <li><a href="karya-siswa.html"><i class="fas fa-palette"></i> Karya</a></li>
+        <li><a href="kontak.html"><i class="far fa-address-card"></i> Kontak</a></li>
+      </ul>
+    </nav>
+    <div class="mobile-nav">
+      <a href="../index.html"><i class="fas fa-home"></i> Beranda</a>
+      <a href="pengumuman.html"><i class="far fa-bell"></i> Pengumuman</a>
+      <a href="agenda.html"><i class="far fa-calendar-alt"></i> Agenda</a>
+      <a href="ekstrakurikuler.html"><i class="fas fa-star"></i> Ekstrakurikuler</a>
+      <a href="prestasi.html"><i class="fas fa-trophy"></i> Prestasi</a>
+      <a href="organisasi.html"><i class="fas fa-users"></i> Organisasi</a>
+      <a href="dokumentasi.html"><i class="far fa-images"></i> Dokumentasi</a>
+      <a href="arsip.html"><i class="fas fa-archive"></i> Arsip</a>
+      <a href="karya-siswa.html"><i class="fas fa-palette"></i> Karya Siswa</a>
+      <a href="testimoni.html"><i class="far fa-comment-dots"></i> Testimoni</a>
+      <a href="kontak.html"><i class="far fa-address-card"></i> Kontak</a>
+    </div>
+
+    <section class="page-hero">
+      <div class="breadcrumb">
+        <a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i>
+        <span style="color: var(--gold)">Prestasi Siswa</span>
+      </div>
+      <h1><i class="fas fa-trophy"></i> Prestasi Siswa</h1>
+      <p>
+        Catatan kebanggaan siswa MAN 1 Bangka — dari tingkat sekolah hingga
+        nasional.
+      </p>
+    </section>
+
+    <section style="padding: 3rem clamp(1rem, 5vw, 4rem)">
+      <div style="max-width: 1200px; margin: 0 auto">
+        <div class="section-header reveal" style="margin-bottom: 2rem">
+          <div class="section-tag">🏆 Hall of Fame</div>
+          <h2>Siswa-Siswa Berprestasi</h2>
+          <p>
+            Berbagai capaian membanggakan yang telah diraih oleh siswa MAN 1
+            Bangka di berbagai tingkatan.
+          </p>
+          <div class="section-divider"></div>
+        </div>
+
+        <div
+          style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem"
+          id="prestasi-filter"
+        >
+          <button class="filter-btn active" onclick="filterPrestasiPage('all', this)">Semua</button>
+          <button class="filter-btn" onclick="filterPrestasiPage('internasional', this)">🌍 Internasional</button>
+          <button class="filter-btn" onclick="filterPrestasiPage('nasional', this)">🇮🇩 Nasional</button>
+          <button class="filter-btn" onclick="filterPrestasiPage('provinsi', this)">🏛️ Provinsi</button>
+          <button class="filter-btn" onclick="filterPrestasiPage('kabupaten', this)">🏙️ Kabupaten</button>
+          <button class="filter-btn" onclick="filterPrestasiPage('sekolah', this)">🏫 Sekolah</button>
+        </div>
+
+        <div
+          id="prestasi-container"
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+          "
+        >
+          <div class="loading" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-wrap">
+            <div class="logo-icon">M1B</div>
+            <div class="logo-text">
+              <span>MAN 1 Bangka</span>
+              <span>WEBSITE KEGIATAN SISWA</span>
+            </div>
+          </div>
+          <p>
+            Portal resmi kegiatan siswa Madrasah Aliyah Negeri 1 Bangka.
+            Mewujudkan siswa yang beriman, berilmu, dan berprestasi.
+          </p>
+          <div class="footer-socials">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Menu Utama</h4>
+          <ul>
+            <li><a href="../index.html"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+            <li><a href="pengumuman.html"><i class="fas fa-chevron-right"></i> Pengumuman</a></li>
+            <li><a href="agenda.html"><i class="fas fa-chevron-right"></i> Agenda</a></li>
+            <li><a href="ekstrakurikuler.html"><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a></li>
+            <li><a href="prestasi.html"><i class="fas fa-chevron-right"></i> Prestasi</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Informasi</h4>
+          <ul>
+            <li><a href="organisasi.html"><i class="fas fa-chevron-right"></i> Organisasi Siswa</a></li>
+            <li><a href="dokumentasi.html"><i class="fas fa-chevron-right"></i> Dokumentasi</a></li>
+            <li><a href="arsip.html"><i class="fas fa-chevron-right"></i> Arsip Kegiatan</a></li>
+            <li><a href="karya-siswa.html"><i class="fas fa-chevron-right"></i> Karya Siswa</a></li>
+            <li><a href="testimoni.html"><i class="fas fa-chevron-right"></i> Testimoni</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak Sekolah</h4>
+          <ul>
+            <li><a href="#"><i class="fas fa-map-marker-alt"></i> Jl. Raya Bangka, Babel</a></li>
+            <li><a href="tel:07171234567"><i class="fas fa-phone"></i> (0717) 123-4567</a></li>
+            <li><a href="mailto:info@man1bangka.sch.id"><i class="fas fa-envelope"></i> info@man1bangka.sch.id</a></li>
+            <li><a href="kontak.html"><i class="fas fa-address-book"></i> Kontak Pembina</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 <span>Man1Bangka</span>. All rights reserved.</div>
+        <div>Dikembangkan oleh <span>Estefania</span></div>
+      </div>
+    </footer>
+    <button id="scrollTop" aria-label="Scroll ke atas">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <!-- Media Viewer Overlay -->
+    <div id="prestasi-viewer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;flex-direction:column;align-items:center;justify-content:center;">
+      <div style="position:absolute;top:1rem;left:1rem;">
+        <button onclick="closeMediaViewer()" style="display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.15);border:none;color:#fff;padding:.55rem 1.1rem;border-radius:30px;font-size:.9rem;cursor:pointer;font-weight:600;transition:.2s;" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">
+          <i class="fas fa-arrow-left"></i> Kembali
+        </button>
+      </div>
+      <div id="prestasi-viewer-media" style="max-width:90vw;max-height:80vh;display:flex;align-items:center;justify-content:center;"></div>
+      <div id="prestasi-viewer-caption" style="color:#fff;text-align:center;margin-top:.75rem;font-size:.9rem;max-width:600px;padding:0 1rem;"></div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+      // Media viewer functions
+      function openMediaViewer(url, title, type) {
+        const viewer = document.getElementById('prestasi-viewer');
+        const media  = document.getElementById('prestasi-viewer-media');
+        const cap    = document.getElementById('prestasi-viewer-caption');
+        media.innerHTML = '';
+        if (type === 'video') {
+          const vid = document.createElement('video');
+          vid.controls = true;
+          vid.style.cssText = 'max-width:90vw;max-height:76vh;border-radius:10px;background:#000;';
+          vid.src = '../' + url;
+          media.appendChild(vid);
+        } else {
+          const img = document.createElement('img');
+          img.style.cssText = 'max-width:90vw;max-height:76vh;border-radius:10px;object-fit:contain;';
+          img.alt = title;
+          img.src = '../' + url;
+          media.appendChild(img);
+        }
+        cap.textContent = title;
+        viewer.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+      function closeMediaViewer() {
+        const viewer = document.getElementById('prestasi-viewer');
+        const media  = document.getElementById('prestasi-viewer-media');
+        const vid = media.querySelector('video');
+        if (vid) { vid.pause(); vid.src = ''; }
+        media.innerHTML = '';
+        viewer.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && document.getElementById('prestasi-viewer').style.display !== 'none') closeMediaViewer();
+      });
+
+      // ── Prestasi page — override loadPrestasi with card+media renderer ──
+      const tingkatMedal = {
+        internasional: '🏆',
+        nasional: '🥇',
+        provinsi: '🥈',
+        kabupaten: '🥉',
+        sekolah: '⭐',
+      };
+      const tingkatBadgeColor = {
+        internasional: '#7c3aed',
+        nasional:      '#dc2626',
+        provinsi:      '#7c3aed',
+        kabupaten:     '#2563eb',
+        sekolah:       '#16a34a',
+      };
+      const jenisIcon = {
+        akademik:    '📚',
+        olahraga:    '⚽',
+        seni:        '🎨',
+        keagamaan:   '🕌',
+        teknologi:   '💡',
+        lainnya:     '⭐',
+      };
+      const jenisLabel = {
+        akademik:  'Akademik',
+        olahraga:  'Olahraga',
+        seni:      'Seni',
+        keagamaan: 'Keagamaan',
+        teknologi: 'Teknologi',
+        lainnya:   'Lainnya',
+      };
+
+      let allPrestasi = [];
+
+      // Override fungsi loadPrestasi dari main.js
+      async function loadPrestasi(containerId, tingkat) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '<div class="loading" style="grid-column:1/-1"><div class="spinner"></div></div>';
+        try {
+          const params = tingkat ? { tingkat } : {};
+          const res = await apiGet('prestasi', 'list', params);
+          allPrestasi = (res && res.status === 'success') ? res.data : [];
+        } catch (e) {
+          allPrestasi = [];
+        }
+        renderPrestasi(allPrestasi, container);
+      }
+
+      function renderPrestasi(data, container) {
+        if (!container) return;
+        if (!data || !data.length) {
+          container.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-trophy"></i><p>Belum ada prestasi yang dipublikasikan.</p></div>';
+          return;
+        }
+        container.innerHTML = data.map(p => {
+          const medal  = tingkatMedal[p.tingkat]  || '⭐';
+          const color  = tingkatBadgeColor[p.tingkat] || '#2563eb';
+          const icon   = jenisIcon[p.jenis]   || '⭐';
+          const label  = jenisLabel[p.jenis]  || p.jenis;
+          const deskripsi = (p.deskripsi || '').trim();
+          const hasFile = p.url_file && p.url_file.trim();
+          const isVideo = hasFile && /\.mp4$/i.test(p.url_file);
+          const isImage = hasFile && /\.(jpg|jpeg|png|webp)$/i.test(p.url_file);
+
+          let mediaHtml = '';
+          if (isVideo) {
+            mediaHtml = `
+              <div class="card__img" style="background:#111;position:relative;">
+                <video src="../${p.url_file}" style="width:100%;height:100%;object-fit:cover;" preload="none"
+                  onerror="this.parentElement.innerHTML='<div class=card__img-placeholder>${medal}</div>'"></video>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+                  <div style="width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-play" style="color:#fff;font-size:1.1rem;margin-left:3px;"></i>
+                  </div>
+                </div>
+              </div>`;
+          } else if (isImage) {
+            mediaHtml = `
+              <div class="card__img">
+                <img src="../${p.url_file}" alt="${p.judul}" style="width:100%;height:100%;object-fit:cover;"
+                  onerror="this.parentElement.innerHTML='<div class=card__img-placeholder>${medal}</div>'">
+              </div>`;
+          } else {
+            mediaHtml = `<div class="card__img"><div class="card__img-placeholder">${medal}</div></div>`;
+          }
+
+          const actionBtn = hasFile
+            ? `<button class="btn btn-green btn-sm" onclick="openMediaViewer('${p.url_file}','${p.judul.replace(/'/g,"\\'")}','${isVideo?'video':'image'}')"><i class="fas fa-eye"></i> ${isVideo ? 'Tonton' : 'Lihat'}</button>`
+            : `<span class="badge" style="background:#e0e0e0;color:#666;">Segera Hadir</span>`;
+
+          return `
+            <div class="card reveal" data-tingkat="${p.tingkat}">
+              ${mediaHtml}
+              <div class="card__body">
+                <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem;">
+                  <span class="card__tag tag-kegiatan">${icon} ${label}</span>
+                  <span style="font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;background:${color}18;color:${color};">${medal} ${p.tingkat ? p.tingkat.charAt(0).toUpperCase() + p.tingkat.slice(1) : ''}</span>
+                </div>
+                <h3 class="card__title">${p.judul}</h3>
+                ${deskripsi ? `<p class="card__text">${deskripsi.substring(0, 140)}${deskripsi.length > 140 ? '...' : ''}</p>` : ''}
+                <div class="card__meta" style="flex-direction:column;gap:.25rem;">
+                  <span><i class="fas fa-user"></i> ${p.siswa}${p.kelas ? ' — ' + p.kelas : ''}</span>
+                  ${p.tahun ? `<span><i class="fas fa-calendar"></i> ${p.tahun}</span>` : ''}
+                </div>
+              </div>
+              <div class="card__footer">
+                ${p.posisi ? `<span class="badge badge-gold"><i class="fas fa-award"></i> ${p.posisi}</span>` : '<span></span>'}
+                ${actionBtn}
+              </div>
+            </div>`;
+        }).join('');
+        if (typeof initReveal === 'function') initReveal();
+      }
+
+      function filterPrestasiPage(kat, btn) {
+        document.querySelectorAll('#prestasi-filter .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (kat === 'all') {
+          renderPrestasi(allPrestasi, document.getElementById('prestasi-container'));
+        } else {
+          renderPrestasi(allPrestasi.filter(p => p.tingkat === kat), document.getElementById('prestasi-container'));
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initNavbar === 'function') initNavbar();
+        if (typeof initReveal === 'function') initReveal();
+        loadPrestasi('prestasi-container');
+      });
+    </script>
+  </body>
+</html>

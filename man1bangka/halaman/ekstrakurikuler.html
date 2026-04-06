@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ekstrakurikuler — MAN 1 Bangka</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar__brand">
+        <div class="navbar__logo">M1B</div>
+        <div class="navbar__title">
+          <span>MAN 1 Bangka</span>
+          <span>KEGIATAN SISWA</span>
+        </div>
+      </div>
+      <ul class="navbar__nav">
+        <li>
+          <a href="../index.html"><i class="fas fa-home"></i> Beranda</a>
+        </li>
+        <li>
+          <a href="pengumuman.html"><i class="far fa-bell"></i> Pengumuman</a>
+        </li>
+        <li>
+          <a href="agenda.html"><i class="far fa-calendar-alt"></i> Agenda</a>
+        </li>
+        <li>
+          <a href="ekstrakurikuler.html"><i class="fas fa-star"></i> Ekskul</a>
+        </li>
+        <li>
+          <a href="prestasi.html"><i class="fas fa-trophy"></i> Prestasi</a>
+        </li>
+        <li>
+          <a href="organisasi.html"><i class="fas fa-users"></i> OSIS</a>
+        </li>
+        <li>
+          <a href="dokumentasi.html"><i class="far fa-images"></i> Galeri</a>
+        </li>
+        <li>
+          <a href="karya-siswa.html"><i class="fas fa-palette"></i> Karya</a>
+        </li>
+        <li>
+          <a href="kontak.html"><i class="far fa-address-card"></i> Kontak</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="mobile-nav">
+      <a href="../index.html"><i class="fas fa-home"></i> Beranda</a>
+      <a href="pengumuman.html"><i class="far fa-bell"></i> Pengumuman</a>
+      <a href="agenda.html"><i class="far fa-calendar-alt"></i> Agenda</a>
+      <a href="ekstrakurikuler.html"
+        ><i class="fas fa-star"></i> Ekstrakurikuler</a
+      >
+      <a href="prestasi.html"><i class="fas fa-trophy"></i> Prestasi</a>
+      <a href="organisasi.html"><i class="fas fa-users"></i> Organisasi</a>
+      <a href="dokumentasi.html"><i class="far fa-images"></i> Dokumentasi</a>
+      <a href="arsip.html"><i class="fas fa-archive"></i> Arsip</a>
+      <a href="karya-siswa.html"><i class="fas fa-palette"></i> Karya Siswa</a>
+      <a href="testimoni.html"><i class="far fa-comment-dots"></i> Testimoni</a>
+      <a href="kontak.html"><i class="far fa-address-card"></i> Kontak</a>
+    </div>
+    <section class="page-hero">
+      <div class="breadcrumb">
+        <a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i>
+        <span style="color: var(--gold)">Ekstrakurikuler</span>
+      </div>
+      <h1><i class="fas fa-star"></i> Ekstrakurikuler</h1>
+      <p>
+        Pilih ekstrakurikuler yang sesuai dengan minat dan bakatmu. Kembangkan
+        dirimu bersama MAN 1 Bangka!
+      </p>
+    </section>
+
+    <section style="padding: 3rem clamp(1rem, 5vw, 4rem)">
+      <div
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 2rem;
+        "
+      >
+        <div
+          class="tabs__nav"
+          style="
+            background: var(--gray-100);
+            padding: 6px;
+            border-radius: 24px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+          "
+        >
+          <button class="tab-btn active" onclick="filterEkskul('')">
+            Semua
+          </button>
+          <button class="tab-btn" onclick="filterEkskul('olahraga')">
+            ⚽ Olahraga
+          </button>
+          <button class="tab-btn" onclick="filterEkskul('seni')">
+            🎨 Seni
+          </button>
+          <button class="tab-btn" onclick="filterEkskul('akademik')">
+            📚 Akademik
+          </button>
+          <button class="tab-btn" onclick="filterEkskul('keagamaan')">
+            🕌 Keagamaan
+          </button>
+          <button class="tab-btn" onclick="filterEkskul('teknologi')">
+            💻 Teknologi
+          </button>
+        </div>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            id="search-ekskul"
+            placeholder="Cari ekstrakurikuler..."
+          />
+        </div>
+      </div>
+      <div class="cards-grid" id="ekskul-container">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </section>
+
+    <div class="modal-overlay" id="modal-daftar">
+      <div class="modal">
+        <div class="modal__header">
+          <h3>Daftar Ekstrakurikuler — <span id="modal-ekskul-nama"></span></h3>
+          <button
+            class="modal__close"
+            onclick="
+              document.getElementById('modal-daftar').classList.remove('open')
+            "
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal__body">
+          <form id="form-daftar-ekskul" autocomplete="off">
+            <input type="hidden" name="ekstrakurikuler_id" />
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nama Lengkap <span>*</span></label>
+                <input
+                  class="form-control"
+                  name="nama_siswa"
+                  required
+                  placeholder="Nama lengkap"
+                />
+              </div>
+              <div class="form-group">
+                <label>Kelas <span>*</span></label>
+                <select class="form-control" name="kelas" required>
+                  <option value="">-- Pilih Kelas --</option>
+                  <option>10A</option>
+                  <option>10B</option>
+                  <option>10C</option>
+                  <option>10D</option>
+                  <option>10E</option>
+                  <option>10F</option>
+                  <option>11A</option>
+                  <option>11B</option>
+                  <option>11C</option>
+                  <option>11D</option>
+                  <option>11E</option>
+                  <option>11F</option>
+                  <option>12A</option>
+                  <option>12B</option>
+                  <option>12C</option>
+                  <option>12D</option>
+                  <option>12E</option>
+                  <option>12F</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>NIS <span>*</span></label>
+                <input
+                  class="form-control"
+                  name="nis"
+                  required
+                  placeholder="Nomor Induk Siswa"
+                />
+              </div>
+              <div class="form-group">
+                <label>No. HP / WhatsApp</label>
+                <input
+                  class="form-control"
+                  name="no_hp"
+                  placeholder="08xxxxxxxxxx"
+                />
+              </div>
+              <div class="form-group full">
+                <label>Email</label>
+                <input
+                  class="form-control"
+                  type="email"
+                  name="email"
+                  placeholder="email@example.com"
+                />
+              </div>
+              <div class="form-group full">
+                <label>Alasan Bergabung</label>
+                <textarea
+                  class="form-control"
+                  name="alasan"
+                  placeholder="Ceritakan alasan dan motivasi kamu..."
+                  rows="3"
+                ></textarea>
+              </div>
+            </div>
+            <div style="margin-top: 1.25rem">
+              <button type="submit" class="btn btn-green" style="width: 100%">
+                <i class="fas fa-check"></i> Daftar Sekarang
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-wrap">
+            <div class="logo-icon">M1B</div>
+            <div class="logo-text">
+              <span>MAN 1 Bangka</span>
+              <span>WEBSITE KEGIATAN SISWA</span>
+            </div>
+          </div>
+          <p>
+            Portal resmi kegiatan siswa Madrasah Aliyah Negeri 1 Bangka.
+            Mewujudkan siswa yang beriman, berilmu, dan berprestasi.
+          </p>
+          <div class="footer-socials">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Menu Utama</h4>
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-chevron-right"></i> Beranda</a
+              >
+            </li>
+            <li>
+              <a href="pengumuman.html"
+                ><i class="fas fa-chevron-right"></i> Pengumuman</a
+              >
+            </li>
+            <li>
+              <a href="agenda.html"
+                ><i class="fas fa-chevron-right"></i> Agenda</a
+              >
+            </li>
+            <li>
+              <a href="ekstrakurikuler.html"
+                ><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a
+              >
+            </li>
+            <li>
+              <a href="prestasi.html"
+                ><i class="fas fa-chevron-right"></i> Prestasi</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Informasi</h4>
+          <ul>
+            <li>
+              <a href="organisasi.html"
+                ><i class="fas fa-chevron-right"></i> Organisasi Siswa</a
+              >
+            </li>
+            <li>
+              <a href="dokumentasi.html"
+                ><i class="fas fa-chevron-right"></i> Dokumentasi</a
+              >
+            </li>
+            <li>
+              <a href="arsip.html"
+                ><i class="fas fa-chevron-right"></i> Arsip Kegiatan</a
+              >
+            </li>
+            <li>
+              <a href="karya-siswa.html"
+                ><i class="fas fa-chevron-right"></i> Karya Siswa</a
+              >
+            </li>
+            <li>
+              <a href="testimoni.html"
+                ><i class="fas fa-chevron-right"></i> Testimoni</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak Sekolah</h4>
+          <ul>
+            <li>
+              <a href="#"
+                ><i class="fas fa-map-marker-alt"></i> Jl. Raya Bangka, Babel</a
+              >
+            </li>
+            <li>
+              <a href="tel:07171234567"
+                ><i class="fas fa-phone"></i> (0717) 123-4567</a
+              >
+            </li>
+            <li>
+              <a href="mailto:info@man1bangka.sch.id"
+                ><i class="fas fa-envelope"></i> info@man1bangka.sch.id</a
+              >
+            </li>
+            <li>
+              <a href="kontak.html"
+                ><i class="fas fa-address-book"></i> Kontak Pembina</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 <span>Man1Bangka</span>. All rights reserved.</div>
+        <div>Dikembangkan oleh <span>Estefania</span></div>
+      </div>
+    </footer>
+    <button id="scrollTop" aria-label="Scroll ke atas">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <script src="../assets/js/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadEkskul("ekskul-container");
+        initSearch("#search-ekskul", ".ekskul-card");
+        document.querySelectorAll(".tab-btn").forEach((b) =>
+          b.addEventListener("click", () => {
+            document
+              .querySelectorAll(".tab-btn")
+              .forEach((x) => x.classList.remove("active"));
+            b.classList.add("active");
+          }),
+        );
+        document
+          .querySelector(".modal-overlay")
+          ?.addEventListener("click", function (e) {
+            if (e.target === this) this.classList.remove("open");
+          });
+      });
+      function filterEkskul(kat) {
+        loadEkskul("ekskul-container", kat);
+      }
+    </script>
+  </body>
+</html>

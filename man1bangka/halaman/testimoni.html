@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testimoni Siswa — MAN 1 Bangka</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar__brand">
+    <div class="navbar__logo">M1B</div>
+    <div class="navbar__title">
+      <span>MAN 1 Bangka</span>
+      <span>KEGIATAN SISWA</span>
+    </div>
+  </div>
+  <ul class="navbar__nav">
+    <li><a href="../index.html"><i class="fas fa-home"></i> Beranda</a></li>
+    <li><a href="pengumuman.html"><i class="far fa-bell"></i> Pengumuman</a></li>
+    <li><a href="agenda.html"><i class="far fa-calendar-alt"></i> Agenda</a></li>
+    <li><a href="ekstrakurikuler.html"><i class="fas fa-star"></i> Ekskul</a></li>
+    <li><a href="prestasi.html"><i class="fas fa-trophy"></i> Prestasi</a></li>
+    <li><a href="organisasi.html"><i class="fas fa-users"></i> OSIS</a></li>
+    <li><a href="dokumentasi.html"><i class="far fa-images"></i> Galeri</a></li>
+    <li><a href="karya-siswa.html"><i class="fas fa-palette"></i> Karya</a></li>
+    <li><a href="kontak.html"><i class="far fa-address-card"></i> Kontak</a></li>
+  </ul>
+  
+</nav>
+<div class="mobile-nav">
+  <a href="../index.html"><i class="fas fa-home"></i> Beranda</a>
+  <a href="pengumuman.html"><i class="far fa-bell"></i> Pengumuman</a>
+  <a href="agenda.html"><i class="far fa-calendar-alt"></i> Agenda</a>
+  <a href="ekstrakurikuler.html"><i class="fas fa-star"></i> Ekstrakurikuler</a>
+  <a href="prestasi.html"><i class="fas fa-trophy"></i> Prestasi</a>
+  <a href="organisasi.html"><i class="fas fa-users"></i> Organisasi</a>
+  <a href="dokumentasi.html"><i class="far fa-images"></i> Dokumentasi</a>
+  <a href="arsip.html"><i class="fas fa-archive"></i> Arsip</a>
+  <a href="karya-siswa.html"><i class="fas fa-palette"></i> Karya Siswa</a>
+  <a href="testimoni.html"><i class="far fa-comment-dots"></i> Testimoni</a>
+  <a href="kontak.html"><i class="far fa-address-card"></i> Kontak</a>
+ 
+</div>
+<section class="page-hero">
+  <div class="breadcrumb"><a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i> <span style="color:var(--gold);">Testimoni Siswa</span></div>
+  <h1><i class="far fa-comment-dots"></i> Testimoni Siswa</h1>
+  <p>Pengalaman dan cerita nyata dari siswa MAN 1 Bangka tentang kegiatan yang telah mereka ikuti.</p>
+</section>
+
+<section class="testimoni-section" style="padding:4rem clamp(1rem,5vw,4rem);">
+  <div class="section-header reveal">
+    <div class="section-tag">💬 Testimoni</div>
+    <h2>Suara Siswa MAN 1 Bangka</h2>
+    <p>Pengalaman dan cerita nyata dari siswa yang telah merasakan kegiatan seru di MAN 1 Bangka.</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="testimoni-slider" style="overflow:hidden;max-width:1200px;margin:0 auto;">
+    <div class="testimoni-track" id="testimoni-track">
+      <div class="testimoni-card"><div class="quote">"</div><p class="text">Memuat testimoni...</p></div>
+    </div>
+  </div>
+  <div class="slider-controls">
+    <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+    <div class="slider-dots"><span class="slider-dot active"></span></div>
+    <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+  </div>
+</section>
+
+<section style="padding:3rem clamp(1rem,5vw,4rem);background:var(--cream);">
+  <div style="max-width:700px;margin:0 auto;">
+    <div class="section-header reveal" style="margin-bottom:2rem;">
+      <div class="section-tag">✍️ Bagikan</div>
+      <h2>Bagikan Pengalamanmu</h2>
+      <p>Ceritakan pengalaman seru dan inspirasimu di MAN 1 Bangka!</p>
+      <div class="section-divider"></div>
+    </div>
+    <div class="form-card reveal">
+      <form id="form-testimoni" autocomplete="off">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nama Siswa <span>*</span></label>
+            <input class="form-control" name="nama_siswa" required placeholder="Nama lengkapmu" />
+          </div>
+          <div class="form-group">
+            <label>Kelas</label>
+            <select class="form-control" name="kelas">
+            <option value="">-- Pilih Kelas --</option>
+                <option>10A</option><option>10B</option><option>10C</option>
+                <option>10D</option><option>10E</option><option>10F</option>
+                <option>11A</option><option>11B</option><option>11C</option>
+                <option>11D</option><option>11E</option><option>11F</option>
+                <option>12A</option><option>12B</option><option>12C</option>
+                <option>12D</option><option>12E</option><option>12F</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Jenis Kegiatan</label>
+            <select class="form-control" name="jenis_kegiatan">
+              <option value="ekskul">Ekstrakurikuler</option>
+              <option value="lomba">Lomba / Kompetisi</option>
+              <option value="seminar">Seminar / Pelatihan</option>
+              <option value="organisasi">Organisasi (OSIS)</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nama Kegiatan</label>
+            <input class="form-control" name="nama_kegiatan" placeholder="Nama kegiatan yang diikuti" />
+          </div>
+          <div class="form-group full">
+            <label>Ceritakan Pengalamanmu <span>*</span></label>
+            <textarea class="form-control" name="isi" rows="5" required placeholder="Ceritakan pengalaman seru, kesan, atau inspirasi yang kamu dapat..."></textarea>
+          </div>
+          <div class="form-group full">
+            <label>Rating</label>
+            <div style="display:flex;gap:6px;">
+              <input type="hidden" name="rating" value="5" />
+              <span style="font-size:1.5rem;cursor:pointer;" onclick="setRating(1)">⭐</span>
+              <span style="font-size:1.5rem;cursor:pointer;" onclick="setRating(2)">⭐</span>
+              <span style="font-size:1.5rem;cursor:pointer;" onclick="setRating(3)">⭐</span>
+              <span style="font-size:1.5rem;cursor:pointer;" onclick="setRating(4)">⭐</span>
+              <span style="font-size:1.5rem;cursor:pointer;" onclick="setRating(5)">⭐</span>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;width:100%;">
+          <i class="fas fa-paper-plane"></i> Kirim Testimoni
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-wrap">
+        <div class="logo-icon">M1B</div>
+        <div class="logo-text">
+          <span>MAN 1 Bangka</span>
+          <span>WEBSITE KEGIATAN SISWA</span>
+        </div>
+      </div>
+      <p>Portal resmi kegiatan siswa Madrasah Aliyah Negeri 1 Bangka. Mewujudkan siswa yang beriman, berilmu, dan berprestasi.</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-x-twitter"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Menu Utama</h4>
+      <ul>
+        <li><a href="../index.html"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+        <li><a href="pengumuman.html"><i class="fas fa-chevron-right"></i> Pengumuman</a></li>
+        <li><a href="agenda.html"><i class="fas fa-chevron-right"></i> Agenda</a></li>
+        <li><a href="ekstrakurikuler.html"><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a></li>
+        <li><a href="prestasi.html"><i class="fas fa-chevron-right"></i> Prestasi</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Informasi</h4>
+      <ul>
+        <li><a href="organisasi.html"><i class="fas fa-chevron-right"></i> Organisasi Siswa</a></li>
+        <li><a href="dokumentasi.html"><i class="fas fa-chevron-right"></i> Dokumentasi</a></li>
+        <li><a href="arsip.html"><i class="fas fa-chevron-right"></i> Arsip Kegiatan</a></li>
+        <li><a href="karya-siswa.html"><i class="fas fa-chevron-right"></i> Karya Siswa</a></li>
+        <li><a href="testimoni.html"><i class="fas fa-chevron-right"></i> Testimoni</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Kontak Sekolah</h4>
+      <ul>
+        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Jl. Raya Bangka, Babel</a></li>
+        <li><a href="tel:07171234567"><i class="fas fa-phone"></i> (0717) 123-4567</a></li>
+        <li><a href="mailto:info@man1bangka.sch.id"><i class="fas fa-envelope"></i> info@man1bangka.sch.id</a></li>
+        <li><a href="kontak.html"><i class="fas fa-address-book"></i> Kontak Pembina</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 <span>Man1Bangka</span>. All rights reserved.</div>
+    <div>Dikembangkan oleh <span>Estefania</span></div>
+  </div>
+</footer>
+<button id="scrollTop" aria-label="Scroll ke atas"><i class="fas fa-arrow-up"></i></button>
+<script src="../assets/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  loadTestimoni();
+  initReveal();
+  initForms();
+});
+function setRating(val) {
+  document.querySelector('input[name="rating"]').value = val;
+}
+</script>
+</body>
+</html>

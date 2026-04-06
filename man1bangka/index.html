@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAN 1 Bangka — Website Kegiatan Siswa</title>
+    <meta
+      name="description"
+      content="Website resmi kegiatan siswa MAN 1 Bangka — informasi ekstrakurikuler, prestasi, agenda, dan pengumuman sekolah."
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Index-specific extras */
+      .home-section {
+        background: var(--white);
+      }
+      .home-section:nth-child(even) {
+        background: var(--gray-100);
+      }
+      .section-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--green-mid);
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: var(--transition);
+        margin-top: 1.5rem;
+      }
+      .section-link:hover {
+        color: var(--gold-dark);
+        gap: 10px;
+      }
+      .section-link i {
+        font-size: 0.75rem;
+      }
+      .pengumuman-sect {
+        background: var(--cream);
+      }
+      .prestasi-sect {
+        background: var(--gray-100);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+    <nav class="navbar">
+      <div class="navbar__brand">
+        <img
+          src="assets/img/logo.png"
+          alt="MAN 1 Bangka"
+          style="
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            border-radius: 50%;
+          "
+        />
+        <div class="navbar__title">
+          <span>MAN 1 Bangka</span>
+          <span>KEGIATAN SISWA</span>
+        </div>
+      </div>
+      <ul class="navbar__nav">
+        <li>
+          <a href="index.html" class="active"
+            ><i class="fas fa-home"></i> Beranda</a
+          >
+        </li>
+        <li>
+          <a href="halaman/pengumuman.html"
+            ><i class="far fa-bell"></i> Pengumuman</a
+          >
+        </li>
+        <li>
+          <a href="halaman/agenda.html"
+            ><i class="far fa-calendar-alt"></i> Agenda</a
+          >
+        </li>
+        <li>
+          <a href="halaman/ekstrakurikuler.html"
+            ><i class="fas fa-star"></i> Ekskul</a
+          >
+        </li>
+        <li>
+          <a href="halaman/prestasi.html"
+            ><i class="fas fa-trophy"></i> Prestasi</a
+          >
+        </li>
+        <li>
+          <a href="halaman/organisasi.html"
+            ><i class="fas fa-users"></i> OSIS</a
+          >
+        </li>
+        <li>
+          <a href="halaman/dokumentasi.html"
+            ><i class="far fa-images"></i> Galeri</a
+          >
+        </li>
+        <li>
+          <a href="halaman/karya-siswa.html"
+            ><i class="fas fa-palette"></i> Karya</a
+          >
+        </li>
+        <li>
+          <a href="halaman/kontak.html"
+            ><i class="far fa-address-card"></i> Kontak</a
+          >
+        </li>
+      </ul>
+      
+    </nav>
+
+    <!-- Mobile Nav -->
+    <div class="mobile-nav">
+      <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+      <a href="halaman/pengumuman.html"
+        ><i class="far fa-bell"></i> Pengumuman</a
+      >
+      <a href="halaman/agenda.html"
+        ><i class="far fa-calendar-alt"></i> Agenda</a
+      >
+      <a href="halaman/ekstrakurikuler.html"
+        ><i class="fas fa-star"></i> Ekstrakurikuler</a
+      >
+      <a href="halaman/prestasi.html"
+        ><i class="fas fa-trophy"></i> Prestasi Siswa</a
+      >
+      <a href="halaman/organisasi.html"
+        ><i class="fas fa-users"></i> Organisasi Siswa</a
+      >
+      <a href="halaman/dokumentasi.html"
+        ><i class="far fa-images"></i> Dokumentasi</a
+      >
+      <a href="halaman/arsip.html"
+        ><i class="fas fa-archive"></i> Arsip Kegiatan</a
+      >
+      <a href="halaman/karya-siswa.html"
+        ><i class="fas fa-palette"></i> Karya Siswa</a
+      >
+      <a href="halaman/testimoni.html"
+        ><i class="far fa-comment-dots"></i> Testimoni</a
+      >
+      <a href="halaman/kontak.html"
+        ><i class="far fa-address-card"></i> Kontak Pembina</a
+      >
+      
+    </div>
+
+    <!-- ============================================================
+     HERO
+     ============================================================ -->
+    <section class="hero">
+      <div class="hero__pattern"></div>
+      <div class="hero__geo"></div>
+      <div class="hero__content">
+        <div class="hero__badge">Madrasah Aliyah Negeri 1 Bangka</div>
+        <div class="hero__arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
+        <h1 class="hero__title">
+          Wujudkan <span>Prestasi</span>,<br />Bangun Karakter
+        </h1>
+        <p class="hero__subtitle">Kegiatan Siswa · MAN 1 Bangka</p>
+        <p class="hero__desc">
+          Selamat datang di portal kegiatan siswa MAN 1 Bangka. Temukan
+          informasi ekstrakurikuler, agenda, prestasi, dan berbagai kegiatan
+          menarik untuk mengembangkan potensi dirimu.
+        </p>
+        <div class="hero__actions">
+          <a href="halaman/ekstrakurikuler.html" class="btn btn-primary"
+            ><i class="fas fa-star"></i> Jelajahi Ekskul</a
+          >
+          <a href="halaman/pendaftaran.html" class="btn btn-outline"
+            ><i class="fas fa-pen"></i> Daftar Sekarang</a
+          >
+        </div>
+      </div>
+      <div class="hero__stats">
+        <div class="stat">
+          <div class="stat__num" data-counter data-target="600" data-suffix="+">
+            600+
+          </div>
+          <div class="stat__label">Siswa Aktif</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num" id="hero-stat-ekskul">—</div>
+          <div class="stat__label">Ekstrakurikuler</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num" id="hero-stat-prestasi">—</div>
+          <div class="stat__label">Prestasi</div>
+        </div>
+        <div class="stat">
+          <div class="stat__num" id="hero-stat-guru">—</div>
+          <div class="stat__label">Guru & Pembina</div>
+        </div>
+      </div>
+      <div
+        class="hero__scroll"
+        onclick="
+          document
+            .getElementById('pengumuman-sect')
+            .scrollIntoView({ behavior: 'smooth' })
+        "
+      >
+        <i class="fas fa-chevron-down"></i>
+        <span>Scroll</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     PENGUMUMAN HIGHLIGHT
+     ============================================================ -->
+    <section
+      class="home-section pengumuman-sect"
+      id="pengumuman-sect"
+      style="background: var(--cream)"
+    >
+      <div class="section-header reveal">
+        <div class="section-tag"><i class="far fa-bell"></i> Pengumuman</div>
+        <h2>Informasi Terkini</h2>
+        <p>
+          Update terbaru seputar kegiatan, lomba, dan pengumuman penting untuk
+          siswa MAN 1 Bangka.
+        </p>
+        <div class="section-divider"></div>
+      </div>
+      <div class="highlight-grid" id="highlight-container">
+        <!-- Loaded via JS -->
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+      <div style="text-align: center">
+        <a href="halaman/pengumuman.html" class="section-link"
+          >Lihat Semua Pengumuman <i class="fas fa-arrow-right"></i
+        ></a>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     AGENDA UPCOMING
+     ============================================================ -->
+    <section class="home-section" style="background: var(--gray-100)">
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 3rem;
+          align-items: start;
+          max-width: 1200px;
+          margin: 0 auto;
+        "
+      >
+        <div>
+          <div class="section-header" style="text-align: left" class="reveal">
+            <div class="section-tag">
+              <i class="far fa-calendar-alt"></i> Agenda
+            </div>
+            <h2>Kegiatan Mendatang</h2>
+            <p>
+              Jangan sampai ketinggalan kegiatan seru yang akan segera
+              berlangsung di MAN 1 Bangka.
+            </p>
+            <div class="section-divider" style="margin-left: 0"></div>
+          </div>
+          <div id="agenda-upcoming" style="margin-top: 1.5rem">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+          <a href="halaman/agenda.html" class="section-link"
+            >Lihat Semua Agenda <i class="fas fa-arrow-right"></i
+          ></a>
+        </div>
+        <div class="reveal">
+          <div class="form-card">
+            <div
+              class="section-header"
+              style="text-align: left; margin-bottom: 1.5rem"
+            >
+              <div class="section-tag">
+                <i class="far fa-comment-dots"></i> Testimoni
+              </div>
+              <h2 style="font-size: 1.4rem">Bagikan Pengalamanmu</h2>
+            </div>
+            <form id="form-testimoni-quick" onsubmit="return false;">
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <div class="form-group">
+                  <label>Nama Siswa <span>*</span></label>
+                  <input
+                    class="form-control"
+                    name="nama_siswa"
+                    placeholder="Nama lengkap kamu"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Kelas</label>
+                  <input
+                    class="form-control"
+                    name="kelas"
+                    placeholder="Contoh: XI IPA 2"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Kegiatan yang Diikuti</label>
+                  <input
+                    class="form-control"
+                    name="nama_kegiatan"
+                    placeholder="Pramuka, OSIS, Lomba, dll."
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Ceritakan Pengalamanmu <span>*</span></label>
+                  <textarea
+                    class="form-control"
+                    name="isi"
+                    placeholder="Bagikan pengalaman seru kamu..."
+                    rows="4"
+                    required
+                  ></textarea>
+                </div>
+                <input type="hidden" name="jenis_kegiatan" value="lainnya" />
+                <input type="hidden" name="rating" value="5" />
+                <button
+                  type="button"
+                  class="btn btn-green"
+                  onclick="submitQuickTestimoni()"
+                >
+                  <i class="fas fa-paper-plane"></i> Kirim Testimoni
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     EKSTRAKURIKULER FEATURED
+     ============================================================ -->
+    <section class="home-section" style="background: var(--white)">
+      <div class="section-header reveal">
+        <div class="section-tag">
+          <i class="fas fa-star"></i> Ekstrakurikuler
+        </div>
+        <h2>Kembangkan Potensimu</h2>
+        <p>
+          Pilih dari berbagai kegiatan ekstrakurikuler yang dirancang untuk
+          mengasah bakat dan karakter siswa MAN 1 Bangka.
+        </p>
+        <div class="section-divider"></div>
+      </div>
+      <div
+        class="cards-grid"
+        id="ekskul-home"
+        style="max-width: 1200px; margin: 0 auto"
+      >
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+      <div style="text-align: center; margin-top: 2rem">
+        <a href="halaman/ekstrakurikuler.html" class="btn btn-green"
+          ><i class="fas fa-arrow-right"></i> Lihat Semua Ekskul</a
+        >
+      </div>
+    </section>
+
+    <!-- ============================================================
+     STATS
+     ============================================================ -->
+    <section class="stats-section">
+      <div class="stats-grid" style="max-width: 1000px; margin: 0 auto">
+        <div class="stat-item reveal">
+          <span
+            class="num"
+            id="stat-siswa"
+            data-counter
+            data-target="600"
+            data-suffix="+"
+            >0</span
+          >
+          <span class="label">Siswa Aktif</span>
+        </div>
+        <div class="stat-item reveal">
+          <span class="num" id="stat-ekskul">0</span>
+          <span class="label">Ekstrakurikuler</span>
+        </div>
+        <div class="stat-item reveal">
+          <span class="num" id="stat-prestasi">0</span>
+          <span class="label">Prestasi Diraih</span>
+        </div>
+        <div class="stat-item reveal">
+          <span class="num" id="stat-pembina">0</span>
+          <span class="label">Guru & Pembina</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     PRESTASI HIGHLIGHT
+     ============================================================ -->
+    <section class="home-section prestasi-sect">
+      <div class="section-header reveal">
+        <div class="section-tag"><i class="fas fa-trophy"></i> Prestasi</div>
+        <h2>Kebanggaan Kita Bersama</h2>
+        <p>
+          Siswa MAN 1 Bangka telah menorehkan berbagai prestasi membanggakan di
+          tingkat lokal, regional, hingga nasional.
+        </p>
+        <div class="section-divider"></div>
+      </div>
+      <div
+        class="prestasi-grid"
+        id="prestasi-highlight"
+        style="max-width: 1200px; margin: 0 auto 2rem"
+      >
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+      <div style="text-align: center">
+        <a href="halaman/prestasi.html" class="btn btn-green"
+          ><i class="fas fa-trophy"></i> Semua Prestasi</a
+        >
+      </div>
+    </section>
+
+    <!-- ============================================================
+     TESTIMONI
+     ============================================================ -->
+    <section
+      class="testimoni-section"
+      style="padding: 5rem clamp(1rem, 5vw, 4rem)"
+    >
+      <div class="section-header reveal">
+        <div class="section-tag">
+          <i class="far fa-comment-dots"></i> Testimoni
+        </div>
+        <h2>Suara Siswa MAN 1 Bangka</h2>
+        <p>
+          Apa kata mereka yang telah merasakan pengalaman seru di MAN 1 Bangka?
+        </p>
+        <div class="section-divider"></div>
+      </div>
+      <div
+        class="testimoni-slider"
+        style="overflow: hidden; max-width: 1200px; margin: 0 auto"
+      >
+        <div class="testimoni-track" id="testimoni-track">
+          <!-- loaded via JS -->
+          <div class="testimoni-card">
+            <div class="quote">"</div>
+            <p class="text">Memuat testimoni...</p>
+            <div class="author">
+              <div class="avatar">?</div>
+              <div class="author-info"><span>—</span><span>—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slider-controls">
+        <button class="slider-btn prev">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="slider-dots">
+          <span class="slider-dot active"></span>
+        </div>
+        <button class="slider-btn next">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 2.5rem">
+        <a href="halaman/testimoni.html" class="btn btn-outline"
+          ><i class="far fa-comment-dots"></i> Lihat Semua & Beri Testimoni</a
+        >
+      </div>
+    </section>
+
+    <!-- ============================================================
+     QUICK LINKS
+     ============================================================ -->
+    <section
+      style="background: var(--cream); padding: 4rem clamp(1rem, 5vw, 4rem)"
+    >
+      <div class="section-header reveal">
+        <div class="section-tag">Menu</div>
+        <h2>Jelajahi Lebih Lanjut</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 1rem;
+          max-width: 1200px;
+          margin: 0 auto;
+        "
+      >
+        <a
+          href="halaman/pengumuman.html"
+          class="card reveal"
+          style="text-align: center; padding: 2rem 1rem; text-decoration: none"
+        >
+          <div style="font-size: 2rem; margin-bottom: 0.75rem">📢</div>
+          <h3 style="font-size: 0.95rem">Pengumuman</h3>
+          <p style="font-size: 0.8rem">Info terbaru</p>
+        </a>
+        <a
+          href="halaman/agenda.html"
+          class="card reveal"
+          style="text-align: center; padding: 2rem 1rem; text-decoration: none"
+        >
+          <div style="font-size: 2rem; margin-bottom: 0.75rem">📅</div>
+          <h3 style="font-size: 0.95rem">Agenda</h3>
+          <p style="font-size: 0.8rem">Jadwal kegiatan</p>
+        </a>
+        <a
+          href="halaman/dokumentasi.html"
+          class="card reveal"
+          style="text-align: center; padding: 2rem 1rem; text-decoration: none"
+        >
+          <div style="font-size: 2rem; margin-bottom: 0.75rem">📸</div>
+          <h3 style="font-size: 0.95rem">Dokumentasi</h3>
+          <p style="font-size: 0.8rem">Foto &amp; video</p>
+        </a>
+        <a
+          href="halaman/organisasi.html"
+          class="card reveal"
+          style="text-align: center; padding: 2rem 1rem; text-decoration: none"
+        >
+          <div style="font-size: 2rem; margin-bottom: 0.75rem">🏫</div>
+          <h3 style="font-size: 0.95rem">Organisasi</h3>
+          <p style="font-size: 0.8rem">OSIS &amp; strukturnya</p>
+        </a>
+        <a
+          href="halaman/arsip.html"
+          class="card reveal"
+          style="text-align: center; padding: 2rem 1rem; text-decoration: none"
+        >
+          <div style="font-size: 2rem; margin-bottom: 0.75rem">🗂️</div>
+          <h3 style="font-size: 0.95rem">Arsip</h3>
+          <p style="font-size: 0.8rem">Laporan kegiatan</p>
+        </a>
+        <a
+          href="halaman/karya-siswa.html"
+          class="card reveal"
+          style="text-align: center; padding: 2rem 1rem; text-decoration: none"
+        >
+          <div style="font-size: 2rem; margin-bottom: 0.75rem">🎨</div>
+          <h3 style="font-size: 0.95rem">Karya Siswa</h3>
+          <p style="font-size: 0.8rem">Kreasi terbaik</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     FOOTER
+     ============================================================ -->
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-wrap">
+            <img
+              src="assets/img/logo.png"
+              alt="MAN 1 Bangka"
+              style="
+                width: 44px;
+                height: 44px;
+                object-fit: contain;
+                border-radius: 50%;
+              "
+            />
+            <div class="logo-text">
+              <span>MAN 1 Bangka</span>
+              <span>WEBSITE KEGIATAN SISWA</span>
+            </div>
+          </div>
+          <p>
+            Portal resmi kegiatan siswa Madrasah Aliyah Negeri 1 Bangka.
+            Mewujudkan siswa yang beriman, berilmu, dan berprestasi.
+          </p>
+          <div class="footer-socials">
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Menu Utama</h4>
+          <ul>
+            <li>
+              <a href="index.html"
+                ><i class="fas fa-chevron-right"></i> Beranda</a
+              >
+            </li>
+            <li>
+              <a href="halaman/pengumuman.html"
+                ><i class="fas fa-chevron-right"></i> Pengumuman</a
+              >
+            </li>
+            <li>
+              <a href="halaman/agenda.html"
+                ><i class="fas fa-chevron-right"></i> Agenda</a
+              >
+            </li>
+            <li>
+              <a href="halaman/ekstrakurikuler.html"
+                ><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a
+              >
+            </li>
+            <li>
+              <a href="halaman/prestasi.html"
+                ><i class="fas fa-chevron-right"></i> Prestasi</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Informasi</h4>
+          <ul>
+            <li>
+              <a href="halaman/organisasi.html"
+                ><i class="fas fa-chevron-right"></i> Organisasi Siswa</a
+              >
+            </li>
+            <li>
+              <a href="halaman/dokumentasi.html"
+                ><i class="fas fa-chevron-right"></i> Dokumentasi</a
+              >
+            </li>
+            <li>
+              <a href="halaman/arsip.html"
+                ><i class="fas fa-chevron-right"></i> Arsip Kegiatan</a
+              >
+            </li>
+            <li>
+              <a href="halaman/karya-siswa.html"
+                ><i class="fas fa-chevron-right"></i> Karya Siswa</a
+              >
+            </li>
+            <li>
+              <a href="halaman/testimoni.html"
+                ><i class="fas fa-chevron-right"></i> Testimoni</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak Sekolah</h4>
+          <ul>
+            <li>
+              <a href="#"
+                ><i class="fas fa-map-marker-alt"></i> Jl. Raya Bangka, Prov.
+                Kepulauan Bangka Belitung</a
+              >
+            </li>
+            <li>
+              <a href="tel:07171234567"
+                ><i class="fas fa-phone"></i> (0717) 123-4567</a
+              >
+            </li>
+            <li>
+              <a href="mailto:info@man1bangka.sch.id"
+                ><i class="fas fa-envelope"></i> info@man1bangka.sch.id</a
+              >
+            </li>
+            <li>
+              <a href="halaman/kontak.html"
+                ><i class="fas fa-address-book"></i> Kontak Pembina</a
+              >
+            </li>
+            <li>
+              
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 <span>Man1Bangka</span>. All rights reserved.</div>
+        <div>Dikembangkan oleh <span>Estefania</span></div>
+      </div>
+    </footer>
+
+    <!-- scrollTop removed -->
+
+    <!-- Modal Detail -->
+    <div class="modal-overlay" id="modal-detail">
+      <div class="modal">
+        <div class="modal__header">
+          <h3 id="modal-detail-title">Detail</h3>
+          <button
+            class="modal__close"
+            onclick="
+              document.getElementById('modal-detail').classList.remove('open')
+            "
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal__body">
+          <p id="modal-detail-body" style="line-height: 1.9"></p>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+      // Quick testimoni for homepage
+      async function submitQuickTestimoni() {
+        const form = document.getElementById("form-testimoni-quick");
+        const fd = new FormData(form);
+        const nama = fd.get("nama_siswa");
+        const isi = fd.get("isi");
+        if (!nama || !isi) {
+          showAlert("Nama dan cerita wajib diisi", "error");
+          return;
+        }
+        const res = await apiPost("testimoni", "tambah", fd);
+        if (res?.status === "success") {
+          showAlert("Testimoni berhasil dikirim! Terima kasih 🙏");
+          form.reset();
+        } else showAlert(res?.message || "Gagal mengirim", "error");
+      }
+
+      // Load ekskul for homepage (3 items only)
+      (async () => {
+        const container = document.getElementById("ekskul-home");
+        const res = await apiGet("ekskul", "list");
+        const icons = {
+          olahraga: "⚽",
+          seni: "🎨",
+          akademik: "📚",
+          keagamaan: "🕌",
+          teknologi: "💻",
+          lainnya: "🌟",
+        };
+        if (res?.status === "success" && res.data.length) {
+          // Update stat ekskul dynamically
+          animateStatNum("stat-ekskul", res.data.length, "");
+          // Hero
+          const heroE = document.getElementById("hero-stat-ekskul");
+          if (heroE) heroE.textContent = res.data.length;
+
+          container.innerHTML = res.data
+            .slice(0, 3)
+            .map(
+              (e) => `
+      <div class="ekskul-card reveal" style="max-width:100%;">
+        <div class="ekskul-card__header">
+          <div class="ekskul-card__icon">${icons[e.kategori] || "🌟"}</div>
+          <h3 class="ekskul-card__title">${e.nama}</h3>
+          <span class="badge badge-gold">${e.kategori}</span>
+        </div>
+        <div class="ekskul-card__body">
+          <p style="font-size:.87rem;margin-bottom:1rem;">${(e.deskripsi || "").substring(0, 120)}...</p>
+          <div class="ekskul-card__row"><i class="fas fa-user-tie"></i><span>${e.nama_pembina || "-"}</span></div>
+          <div class="ekskul-card__row"><i class="far fa-clock"></i><span>${e.jadwal || "-"}</span></div>
+        </div>
+        <div class="ekskul-card__footer">
+          <button class="btn btn-green btn-sm" onclick="window.location='halaman/ekstrakurikuler.html'">
+            <i class="fas fa-arrow-right"></i> Detail
+          </button>
+        </div>
+      </div>
+    `,
+            )
+            .join("");
+          initReveal();
+        }
+      })();
+
+      // Load dynamic stats for prestasi & pembina
+      (async () => {
+        // Prestasi count — mid-page + hero
+        const resPrestasi = await apiGet("prestasi", "list");
+        if (resPrestasi?.status === "success") {
+          const n = resPrestasi.data.length;
+          animateStatNum("stat-prestasi", n, "+");
+          // Hero hero-stat-prestasi
+          const heroP = document.getElementById("hero-stat-prestasi");
+          if (heroP) {
+            heroP.textContent = n + "+";
+          }
+        }
+        // Pembina count — mid-page + hero
+        const resPembina = await apiGet("pembina", "list");
+        if (resPembina?.status === "success") {
+          const n = resPembina.data.length;
+          animateStatNum("stat-pembina", n, "");
+          const heroG = document.getElementById("hero-stat-guru");
+          if (heroG) {
+            heroG.textContent = n + "+";
+          }
+        }
+      })();
+
+      // Animate a specific stat element with counter
+      function animateStatNum(id, target, suffix) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = "0";
+        const obs = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                let cur = 0;
+                const step = Math.max(1, Math.floor(target / 60));
+                const timer = setInterval(() => {
+                  cur = Math.min(cur + step, target);
+                  el.textContent = cur.toLocaleString("id-ID") + suffix;
+                  if (cur >= target) clearInterval(timer);
+                }, 30);
+                obs.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.5 },
+        );
+        obs.observe(el);
+      }
+    </script>
+  </body>
+</html>
