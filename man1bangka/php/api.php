@@ -324,7 +324,7 @@ switch ($module) {
 
             $stmt = $conn->prepare(
                 "INSERT INTO testimoni (nama_siswa, kelas, jenis_kegiatan, nama_kegiatan, isi, rating, status, organisasi_id, ekskul_id)
-                 VALUES (?, ?, ?, ?, ?, ?, 'aktif', ?, ?)"
+                 VALUES (?, ?, ?, ?, ?, ?, 'nonaktif', ?, ?)"
             );
             $stmt->bind_param('sssssiii', $nama, $kelas, $jenis, $namKeg, $isi, $rating, $org_id, $ekskul_id);
 
@@ -387,9 +387,65 @@ switch ($module) {
         }
         break;
 
+    // ----------------------------------------------------------
+    // MODULE: pesan_kontak
+    // Menerima pesan dari form kontak halaman publik.
+    // Data disimpan ke tabel pesan_kontak untuk dibaca admin.
+    // ----------------------------------------------------------
+    case 'pesan_kontak':
+        if ($action === 'kirim' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nama   = sanitize($_POST['nama']   ?? '');
+            $kelas  = sanitize($_POST['kelas']  ?? '');
+            $subjek = sanitize($_POST['subjek'] ?? '');
+            $pesan  = sanitize($_POST['pesan']  ?? '');
+
+            if (!$nama || !$subjek || !$pesan) {
+                jsonResponse('error', [], 'Nama, subjek, dan pesan wajib diisi');
+            }
+
+            $stmt = $conn->prepare(
+                "INSERT INTO pesan_kontak (nama, kelas, subjek, pesan) VALUES (?, ?, ?, ?)"
+            );
+            $stmt->bind_param('ssss', $nama, $kelas, $subjek, $pesan);
+            if ($stmt->execute()) {
+                jsonResponse('success', [], 'Pesan berhasil dikirim! Koordinator akan segera menghubungi Anda.');
+            } else {
+                jsonResponse('error', [], 'Gagal mengirim pesan');
+            }
+        }
+        break;
+
+    // ----------------------------------------------------------
+    // MODULE: pendaftaran_lomba
+    // Menerima pendaftaran lomba dari halaman publik.
+    // ----------------------------------------------------------
+    case 'pendaftaran_lomba':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nama      = sanitize($_POST['nama']       ?? '');
+            $kelas     = sanitize($_POST['kelas']      ?? '');
+            $nis       = sanitize($_POST['nis']        ?? '');
+            $namaLomba = sanitize($_POST['nama_lomba'] ?? '');
+            $tingkat   = sanitize($_POST['tingkat']    ?? '');
+            $noHp      = sanitize($_POST['no_hp']      ?? '');
+
+            if (!$nama || !$kelas || !$nis || !$namaLomba) {
+                jsonResponse('error', [], 'Nama, kelas, NIS, dan nama lomba wajib diisi');
+            }
+
+            $stmt = $conn->prepare(
+                "INSERT INTO pendaftaran_lomba (nama, kelas, nis, nama_lomba, tingkat, no_hp) VALUES (?, ?, ?, ?, ?, ?)"
+            );
+            $stmt->bind_param('ssssss', $nama, $kelas, $nis, $namaLomba, $tingkat, $noHp);
+            if ($stmt->execute()) {
+                jsonResponse('success', [], 'Pendaftaran lomba berhasil dikirim! Menunggu konfirmasi dari pembina.');
+            } else {
+                jsonResponse('error', [], 'Gagal mendaftar');
+            }
+        }
+        break;
+
     default:
         jsonResponse('error', [], 'Modul tidak ditemukan');
 }
-
-$conn->close();
+// Koneksi MySQLi ditutup otomatis oleh PHP saat request selesai.
 ?>

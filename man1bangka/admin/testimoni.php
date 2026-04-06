@@ -20,20 +20,21 @@
 require 'auth.php';
 require '../php/config.php'; ?>
 <?php
-$msg = ''; // Pesan hasil aksi
+$msg = ''; // Pesan hasil aksi (dari redirect parameter)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  verifyCsrf(); // Tolak jika CSRF token tidak valid
   $action = $_POST['action'] ?? '';
   // --- AKSI: Hapus testimoni ---
   if ($action === 'hapus') {
     $pdo->prepare("DELETE FROM testimoni WHERE id=?")->execute([(int)$_POST['id']]);
-    $msg = 'Testimoni dihapus.';
+    header('Location: testimoni.php?msg=hapus'); exit;
   // --- AKSI: Setujui testimoni (ubah status nonaktif -> aktif) ---
   } elseif ($action === 'approve') {
     $pdo->prepare("UPDATE testimoni SET status='aktif', is_approved=1 WHERE id=?")->execute([(int)$_POST['id']]);
-    $msg = 'Testimoni disetujui dan ditampilkan di website!';
+    header('Location: testimoni.php?msg=approve'); exit;
   } elseif ($action === 'reject') {
     $pdo->prepare("UPDATE testimoni SET status='nonaktif', is_approved=0 WHERE id=?")->execute([(int)$_POST['id']]);
-    $msg = 'Testimoni ditolak.';
+    header('Location: testimoni.php?msg=reject'); exit;
   } elseif ($action === 'tambah') {
     $nama = trim($_POST['nama'] ?? '');
     $kelas = trim($_POST['kelas'] ?? '');
@@ -43,14 +44,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $org_id    = ($_POST['organisasi_id'] ?? '') !== '' ? (int)$_POST['organisasi_id'] : null;
     $ekskul_id = ($_POST['ekskul_id'] ?? '') !== '' ? (int)$_POST['ekskul_id'] : null;
     if (!$nama || !$isi) {
-      $msg = 'Nama dan isi wajib diisi.';
-    } else {
-      $pdo->prepare("INSERT INTO testimoni (nama_siswa,kelas,jenis_kegiatan,nama_kegiatan,isi,rating,status,is_approved,organisasi_id,ekskul_id) VALUES (?,?,'lainnya',?,?,?,'aktif',1,?,?)")
-        ->execute([$nama, $kelas, $kegiatan, $isi, $rating, $org_id, $ekskul_id]);
-      $msg = 'Testimoni berhasil ditambahkan!';
+      header('Location: testimoni.php?err=data_kurang'); exit;
     }
+    $pdo->prepare("INSERT INTO testimoni (nama_siswa,kelas,jenis_kegiatan,nama_kegiatan,isi,rating,status,is_approved,organisasi_id,ekskul_id) VALUES (?,?,'lainnya',?,?,?,'aktif',1,?,?)")
+      ->execute([$nama, $kelas, $kegiatan, $isi, $rating, $org_id, $ekskul_id]);
+    header('Location: testimoni.php?msg=tambah'); exit;
   }
 }
+
+// Konversi parameter redirect ke pesan tampilan
+$msgMap = [
+  'hapus'   => 'Testimoni dihapus.',
+  'approve' => 'Testimoni disetujui dan ditampilkan di website!',
+  'reject'  => 'Testimoni ditolak.',
+  'tambah'  => 'Testimoni berhasil ditambahkan!',
+];
+$errMap = ['data_kurang' => 'Nama dan isi wajib diisi.'];
+if (isset($_GET['msg'])) $msg = $msgMap[$_GET['msg']] ?? '';
+$err = isset($_GET['err']) ? ($errMap[$_GET['err']] ?? '') : '';
 
 $rows = $pdo->query("SELECT * FROM testimoni ORDER BY is_approved ASC, created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 $pending = array_values(array_filter($rows, fn($r) => $r['status'] !== 'aktif'));
@@ -128,6 +139,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
           </div>
           <div class="form-section-body">
             <form method="POST" id="form-testimoni" autocomplete="off">
+              <?= csrfField() ?>
               <input type="hidden" name="action" value="tambah" />
 
               <div class="form-group">
@@ -282,6 +294,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                   <!-- Actions -->
                   <div style="display:flex;gap:.4rem;">
                     <form method="POST" style="display:inline;" autocomplete="off">
+              <?= csrfField() ?>
                       <input type="hidden" name="action" value="approve" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-primary btn-sm">
@@ -289,6 +302,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                       </button>
                     </form>
                     <form method="POST" style="display:inline;" autocomplete="off">
+              <?= csrfField() ?>
                       <input type="hidden" name="action" value="reject" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-outline btn-sm" style="color:var(--orange);border-color:var(--orange);">
@@ -296,6 +310,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                       </button>
                     </form>
                     <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus testimoni ini?')" autocomplete="off">
+              <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-ghost btn-sm" style="color:var(--red);">
@@ -330,6 +345,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                           <?php if ($r['kelas']): ?><span style="font-size:.75rem;color:var(--gray-400);"> — <?= htmlspecialchars($r['kelas']) ?></span><?php endif; ?>
                         </div>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus?')" autocomplete="off">
+              <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus" />
                           <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                           <button type="submit" class="btn btn-ghost btn-icon btn-xs" style="color:var(--red);" title="Hapus">

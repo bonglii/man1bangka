@@ -20,7 +20,8 @@ require '../php/config.php'; ?>
 $msg = $err = ''; // Variabel pesan sukses dan error untuk flash message
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $action = $_POST['action'] ?? ''; // Tentukan aksi: tambah, edit, atau hapus
+  verifyCsrf(); // Tolak request jika CSRF token tidak valid
+  $action = $_POST['action'] ?? '';
   if ($action === 'tambah' || $action === 'edit') {
     $judul = trim($_POST['judul'] ?? '');
     $desk = trim($_POST['deskripsi'] ?? '');
@@ -122,6 +123,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
           </div>
           <div class="form-section-body">
             <form method="POST" id="form-agenda" autocomplete="off">
+              <?= csrfField() ?>
               <input type="hidden" name="action" value="<?= $isEdit ? 'edit' : 'tambah' ?>" />
               <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= $edit['id'] ?>" /><?php endif; ?>
               <div class="form-group">
@@ -222,6 +224,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                   <div class="data-item-actions">
                     <a href="?edit=<?= $r['id'] ?>&bulan=<?= $bulan ?>&tahun=<?= $tahun ?>" class="btn btn-outline btn-icon btn-xs"><i class="fas fa-pen"></i></a>
                     <form method="POST" style="display:inline" onsubmit="return confirm('Hapus agenda?')" autocomplete="off">
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" /><input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button class="btn btn-ghost btn-icon btn-xs" style="color:var(--red)"><i class="fas fa-trash"></i></button>
                     </form>

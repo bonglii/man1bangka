@@ -423,8 +423,9 @@ function fmtNum(n) { return Number(n).toLocaleString('id-ID'); }
    Diperkuat dengan loading bar dan toast on error.
    ============================================================ */
 (function () {
-  // Halaman dengan file upload kompleks — full reload
-  const FULL_RELOAD_PAGES = ['media.php'];
+  // Halaman dengan file upload kompleks + inline scripts bergantung pada scope global
+  // wajib full reload (bukan SPA swap) agar upload preview & validasi file berfungsi.
+  const FULL_RELOAD_PAGES = ['media.php', 'karya.php', 'prestasi.php'];
 
   function isSameOrigin(href) {
     try { return new URL(href, location.href).origin === location.origin; }
@@ -552,9 +553,17 @@ function fmtNum(n) { return Number(n).toLocaleString('id-ID'); }
     });
     // Re-init confirm intercept untuk form-form di halaman baru
     if (window._interceptConfirmForms) window._interceptConfirmForms();
-    // Re-run inline scripts dari halaman yang dimuat
+    // Re-run inline scripts dari halaman yang dimuat.
+    // Menggunakan new Function() agar berjalan di scope global (window),
+    // bukan scope closure seperti eval() — sehingga variabel & fungsi
+    // yang didefinisikan di dalam script bisa diakses oleh event handler.
     document.querySelectorAll('.page-content script').forEach(s => {
-      try { eval(s.textContent); } catch (e) { /* abaikan */ }
+      try {
+        // eslint-disable-next-line no-new-func
+        new Function(s.textContent)();
+      } catch (e) {
+        console.warn('[SPA] Script reinit warning:', e.message);
+      }
     });
   }
 })();

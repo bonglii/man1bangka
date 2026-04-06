@@ -270,3 +270,40 @@ Browser (HTML/JS)
 ---
 
 > Dikembangkan oleh **Estefania — 2322500043, ISB Atma Luhur** — 2026
+
+---
+
+## 🔧 Riwayat Perbaikan (Patch v2 — April 2026)
+
+Perbaikan menyeluruh dari hasil audit kode. Total **16 bug diperbaiki** di **20 file**.
+
+### 🔴 Bug Kritis
+| # | File | Perbaikan |
+|---|---|---|
+| 1 | `halaman/index.php` | Ditulis ulang sebagai halaman publik SSR — sebelumnya duplikat admin dashboard |
+| 2 | `php/api.php` | Testimoni publik kini masuk `status='nonaktif'` (wajib disetujui admin) |
+| 12 | `assets/js/main.js` | Ditambah `esc()` — semua data API di-escape sebelum masuk `innerHTML` |
+| 13 | `php/config.php` + semua `admin/*.php` | CSRF token protection: `getCsrfToken()`, `verifyCsrf()`, `csrfField()` |
+
+### 🟡 Bug Sedang & Minor
+| # | File | Perbaikan |
+|---|---|---|
+| 3 | `database/man1bangka.sql` | Hapus data uji coba (`www`, `wdawd`) dari seed |
+| 4 | `admin/login.php` | Hapus kotak kredensial default dari halaman login |
+| 5 | `php/config.php` | Perbaiki path `UPLOAD_DIR` |
+| 6 | `php/api.php` | Hapus `$conn->close()` dead code |
+| 7 | `halaman/kontak.html`, `pendaftaran.html` | Form kontak & lomba kini terhubung ke backend (`pesan_kontak`, `pendaftaran_lomba`) |
+| 8 | `admin/karya.php`, `admin/prestasi.php` | File lama di-`unlink()` saat edit dengan upload baru |
+| 10 | `admin/pendaftaran.php`, `admin/testimoni.php` | PRG pattern (redirect setelah POST) diterapkan |
+| 14 | `admin/index.php` | Ditambah Google Fonts Inter di `<head>` |
+| 15 | `admin/assets/admin.js` | `eval()` diganti `new Function()` + `karya.php`/`prestasi.php` dikecualikan dari SPA |
+| 16 | `admin/auth.php` | `!isset()` → `empty()` untuk pengecekan session yang lebih aman |
+
+### Tabel Baru di Database
+| Tabel | Fungsi |
+|---|---|
+| `pesan_kontak` | Menyimpan pesan dari form kontak publik |
+| `pendaftaran_lomba` | Menyimpan pendaftaran lomba dari form publik |
+
+> Patch oleh review kode menyeluruh — April 2026
+

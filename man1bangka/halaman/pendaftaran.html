@@ -437,8 +437,29 @@
       }
       function submitLomba(e) {
         e.preventDefault();
-        showAlert("Pendaftaran lomba berhasil dikirim! Menunggu konfirmasi.");
-        e.target.reset();
+        const form = e.target;
+        const btn  = form.querySelector('[type=submit]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendaftar...';
+
+        const fd = new FormData(form);
+        fetch('../php/api.php?module=pendaftaran_lomba', {
+          method: 'POST', body: fd
+        })
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === 'success') {
+            showAlert(res.message || 'Pendaftaran berhasil dikirim!');
+            form.reset();
+          } else {
+            showAlert(res.message || 'Gagal mendaftar.', 'error');
+          }
+        })
+        .catch(() => showAlert('Gagal terhubung ke server.', 'error'))
+        .finally(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-check"></i> Kirim Pendaftaran';
+        });
       }
     </script>
   </body>

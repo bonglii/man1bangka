@@ -26,6 +26,7 @@ $UPLOAD_DIR = '../php/uploads/prestasi/'; // Folder upload foto/video prestasi (
 if (!is_dir($UPLOAD_DIR)) @mkdir($UPLOAD_DIR, 0755, true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  verifyCsrf(); // Tolak jika CSRF token tidak valid
   $action = $_POST['action'] ?? '';
   if ($action === 'tambah' || $action === 'edit') {
     $f = ['judul', 'siswa', 'kelas', 'jenis', 'posisi', 'tingkat', 'penyelenggara', 'tahun'];
@@ -58,6 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
           $id = (int)$_POST['id'];
           if ($url_file) {
+            // Hapus file lama dari disk sebelum menyimpan file baru
+            $oldFile = $pdo->prepare("SELECT url_file FROM prestasi WHERE id=?");
+            $oldFile->execute([$id]);
+            $old = $oldFile->fetchColumn();
+            if ($old && file_exists('../' . $old)) @unlink('../' . $old);
+
             $sql = "UPDATE prestasi SET judul=?,siswa=?,kelas=?,jenis=?,posisi=?,tingkat=?,penyelenggara=?,tahun=?,deskripsi=?,url_file=?,ekskul_id=? WHERE id=?";
             $pdo->prepare($sql)->execute(array_merge($v, [$desk, $url_file, $ekskul_id, $id]));
           } else {
@@ -139,6 +146,7 @@ $medals = ['sekolah' => '⭐', 'kabupaten' => '🥉', 'provinsi' => '🥈', 'nas
           </div>
           <div class="form-section-body">
             <form method="POST" enctype="multipart/form-data" id="form-prestasi" autocomplete="off">
+              <?= csrfField() ?>
               <input type="hidden" name="action" value="<?= $isEdit ? 'edit' : 'tambah' ?>" />
               <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= $edit['id'] ?>" /><?php endif; ?>
 
@@ -293,6 +301,7 @@ $medals = ['sekolah' => '⭐', 'kabupaten' => '🥉', 'provinsi' => '🥈', 'nas
                   <div class="data-item-actions">
                     <a href="?edit=<?= $r['id'] ?>" class="btn btn-outline btn-icon btn-xs"><i class="fas fa-pen"></i></a>
                     <form method="POST" style="display:inline" onsubmit="return confirm('Hapus prestasi ini?')" autocomplete="off">
+              <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" /><input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button class="btn btn-ghost btn-icon btn-xs" style="color:var(--red)"><i class="fas fa-trash"></i></button>
                     </form>

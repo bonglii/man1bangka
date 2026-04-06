@@ -16,42 +16,46 @@
 require 'auth.php';
 require '../php/config.php'; ?>
 <?php
-$msg = $err = '';
-
 // Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  verifyCsrf(); // Tolak jika CSRF token tidak valid
   $action = $_POST['action'] ?? '';
 
   if ($action === 'update_status') {
     $id     = (int)$_POST['id'];
     $status = $_POST['status'] ?? 'menunggu';
-    if (!in_array($status, ['menunggu', 'diterima', 'ditolak'])) $err = 'Status tidak valid.';
-    else {
-      $pdo->prepare("UPDATE pendaftaran_ekskul SET status=? WHERE id=?")->execute([$status, $id]);
-      $msg = 'Status pendaftaran diperbarui!';
+    if (!in_array($status, ['menunggu', 'diterima', 'ditolak'])) {
+      header('Location: pendaftaran.php?err=status_invalid'); exit;
     }
+    $pdo->prepare("UPDATE pendaftaran_ekskul SET status=? WHERE id=?")->execute([$status, $id]);
+    header('Location: pendaftaran.php?msg=status_updated'); exit;
+
   } elseif ($action === 'hapus') {
     $id = (int)$_POST['id'];
     $pdo->prepare("DELETE FROM pendaftaran_ekskul WHERE id=?")->execute([$id]);
-    $msg = 'Data pendaftaran dihapus.';
+    header('Location: pendaftaran.php?msg=hapus'); exit;
+
   } elseif ($action === 'update_status_bulk') {
     $ids    = $_POST['id'] ?? [];
     $status = $_POST['status_bulk'] ?? 'menunggu';
     if (!in_array($status, ['menunggu', 'diterima', 'ditolak'])) {
-      $err = 'Status tidak valid.';
-    } elseif ($ids) {
+      header('Location: pendaftaran.php?err=status_invalid'); exit;
+    }
+    if ($ids) {
       $ph = implode(',', array_fill(0, count($ids), '?'));
       $vals = array_merge([$status], array_map('intval', $ids));
       $pdo->prepare("UPDATE pendaftaran_ekskul SET status=? WHERE id IN ($ph)")->execute($vals);
-      $msg = count($ids) . ' pendaftaran diperbarui menjadi "' . $status . '"!';
     }
+    header('Location: pendaftaran.php?msg=bulk_updated&n=' . count($ids)); exit;
+
   } elseif ($action === 'hapus_bulk') {
     $ids = $_POST['ids'] ?? [];
     if ($ids) {
       $ph = implode(',', array_fill(0, count($ids), '?'));
       $pdo->prepare("DELETE FROM pendaftaran_ekskul WHERE id IN ($ph)")->execute(array_map('intval', $ids));
-      $msg = count($ids) . ' data berhasil dihapus.';
     }
+    header('Location: pendaftaran.php?msg=bulk_hapus&n=' . count($ids)); exit;
+
   } elseif ($action === 'tambah') {
     $ekskul_id = (int)($_POST['ekstrakurikuler_id'] ?? 0);
     $nama      = trim($_POST['nama_siswa'] ?? '');
@@ -63,20 +67,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status    = $_POST['status'] ?? 'menunggu';
 
     if (!$ekskul_id || !$nama || !$kelas || !$nis) {
-      $err = 'Ekskul, nama siswa, kelas, dan NIS wajib diisi.';
-    } else {
-      $cek = $pdo->prepare("SELECT id FROM pendaftaran_ekskul WHERE nis=? AND ekstrakurikuler_id=?");
-      $cek->execute([$nis, $ekskul_id]);
-      if ($cek->fetch()) {
-        $err = 'Siswa dengan NIS tersebut sudah terdaftar di ekskul ini.';
-      } else {
-        $pdo->prepare("INSERT INTO pendaftaran_ekskul (ekstrakurikuler_id,nama_siswa,kelas,nis,no_hp,email,alasan,status) VALUES (?,?,?,?,?,?,?,?)")
-          ->execute([$ekskul_id, $nama, $kelas, $nis, $no_hp, $email, $alasan, $status]);
-        $msg = 'Pendaftaran berhasil ditambahkan!';
-      }
+      header('Location: pendaftaran.php?err=data_kurang'); exit;
     }
+    $cek = $pdo->prepare("SELECT id FROM pendaftaran_ekskul WHERE nis=? AND ekstrakurikuler_id=?");
+    $cek->execute([$nis, $ekskul_id]);
+    if ($cek->fetch()) {
+      header('Location: pendaftaran.php?err=sudah_daftar'); exit;
+    }
+    $pdo->prepare("INSERT INTO pendaftaran_ekskul (ekstrakurikuler_id,nama_siswa,kelas,nis,no_hp,email,alasan,status) VALUES (?,?,?,?,?,?,?,?)")
+      ->execute([$ekskul_id, $nama, $kelas, $nis, $no_hp, $email, $alasan, $status]);
+    header('Location: pendaftaran.php?msg=tambah'); exit;
   }
 }
+
+// Konversi parameter ?msg= & ?err= dari redirect ke pesan tampilan
+$msg = $err = '';
+$msgMap = [
+  'status_updated' => 'Status pendaftaran diperbarui!',
+  'hapus'          => 'Data pendaftaran dihapus.',
+  'bulk_updated'   => ($_GET['n'] ?? 0) . ' pendaftaran diperbarui.',
+  'bulk_hapus'     => ($_GET['n'] ?? 0) . ' data berhasil dihapus.',
+  'tambah'         => 'Pendaftaran berhasil ditambahkan!',
+];
+$errMap = [
+  'status_invalid' => 'Status tidak valid.',
+  'data_kurang'    => 'Ekskul, nama siswa, kelas, dan NIS wajib diisi.',
+  'sudah_daftar'   => 'Siswa dengan NIS tersebut sudah terdaftar di ekskul ini.',
+];
+if (isset($_GET['msg'])) $msg = $msgMap[$_GET['msg']] ?? '';
+if (isset($_GET['err'])) $err = $errMap[$_GET['err']] ?? '';
 
 // Filters
 $fEkskul  = (int)($_GET['ekskul'] ?? 0);
@@ -236,6 +255,7 @@ if (isset($_GET['detail'])) {
         <!-- TABLE -->
         <!-- Hidden bulk form (outside table to avoid nested form issues) -->
         <form method="POST" id="bulk-form" autocomplete="off" style="display:none;">
+              <?= csrfField() ?>
           <input type="hidden" name="action" value="hapus_bulk" />
           <div id="bulk-ids-container"></div>
         </form>
@@ -273,6 +293,7 @@ if (isset($_GET['detail'])) {
                     </td>
                     <td>
                       <form method="POST" style="display:inline;" autocomplete="off">
+              <?= csrfField() ?>
                         <input type="hidden" name="action" value="update_status" />
                         <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                         <select name="status" onchange="this.form.submit()" style="width:auto;font-size:.76rem;padding:.3rem .6rem;border-radius:6px;font-weight:600;border-color:transparent;" class="status-select status-<?= htmlspecialchars($r['status']) ?>">
@@ -287,6 +308,7 @@ if (isset($_GET['detail'])) {
                       <div class="td-actions">
                         <a href="?detail=<?= $r['id'] ?><?= $fSearch ? '&q=' . urlencode($fSearch) : '' ?><?= $fStatus ? '&status=' . urlencode($fStatus) : '' ?><?= $fEkskul ? '&ekskul=' . (int)$fEkskul : '' ?>" class="btn btn-ghost btn-icon btn-sm" title="Detail"><i class="fas fa-eye"></i></a>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus pendaftaran ini?')" autocomplete="off">
+              <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus" />
                           <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                           <button type="submit" class="btn btn-ghost btn-icon btn-sm" style="color:var(--red);" title="Hapus"><i class="fas fa-trash"></i></button>
@@ -425,6 +447,7 @@ if (isset($_GET['detail'])) {
         <button class="modal-close" onclick="closeModal('modal-tambah')"><i class="fas fa-times"></i></button>
       </div>
       <form method="POST" autocomplete="off">
+              <?= csrfField() ?>
         <div class="modal-body">
           <input type="hidden" name="action" value="tambah" />
           <div class="form-group">
@@ -567,6 +590,7 @@ if (isset($_GET['detail'])) {
         <div class="modal-footer">
           <!-- Quick status update -->
           <form method="POST" style="display:flex;gap:.5rem;align-items:center;flex:1;" autocomplete="off">
+              <?= csrfField() ?>
             <input type="hidden" name="action" value="update_status" />
             <input type="hidden" name="id" value="<?= $detail['id'] ?>" />
             <select name="status" style="width:auto;font-size:.82rem;">
@@ -577,6 +601,7 @@ if (isset($_GET['detail'])) {
             <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Update Status</button>
           </form>
           <form method="POST" onsubmit="return confirm('Hapus data ini?')" autocomplete="off">
+              <?= csrfField() ?>
             <input type="hidden" name="action" value="hapus" />
             <input type="hidden" name="id" value="<?= $detail['id'] ?>" />
             <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>

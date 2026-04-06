@@ -299,10 +299,29 @@
       });
       function submitKontak(e) {
         e.preventDefault();
-        showAlert(
-          "Pesan berhasil dikirim! Pembina akan menghubungi kamu segera.",
-        );
-        e.target.reset();
+        const form = e.target;
+        const btn  = form.querySelector('[type=submit]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+
+        const fd = new FormData(form);
+        fetch('../php/api.php?module=pesan_kontak&action=kirim', {
+          method: 'POST', body: fd
+        })
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === 'success') {
+            showAlert(res.message || 'Pesan berhasil dikirim!');
+            form.reset();
+          } else {
+            showAlert(res.message || 'Gagal mengirim pesan.', 'error');
+          }
+        })
+        .catch(() => showAlert('Gagal terhubung ke server.', 'error'))
+        .finally(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Pesan';
+        });
       }
     </script>
   </body>

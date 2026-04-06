@@ -20,6 +20,7 @@ $msg = $err = ''; // Flash messages sukses/error
 $UPLOAD_DIR = '../php/uploads/karya/'; // Folder penyimpanan file karya siswa
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  verifyCsrf(); // Tolak jika CSRF token tidak valid
   $action = $_POST['action'] ?? '';
   if ($action === 'tambah' || $action === 'edit') {
     $judul = trim($_POST['judul'] ?? '');
@@ -56,6 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
           $id = (int)$_POST['id'];
           if ($url_file) {
+            // Hapus file lama dari disk sebelum menyimpan file baru
+            $oldFile = $pdo->prepare("SELECT url_file FROM karya_siswa WHERE id=?");
+            $oldFile->execute([$id]);
+            $old = $oldFile->fetchColumn();
+            if ($old && file_exists('../' . $old)) @unlink('../' . $old);
+
             $sql = "UPDATE karya_siswa SET judul=?,penulis=?,siswa=?,kelas=?,jenis=?,deskripsi=?,penghargaan=?,ekskul_id=?,url_file=? WHERE id=?";
             $pdo->prepare($sql)->execute([$judul, $siswa, $siswa, $kelas, $jenis, $desk, $penghargaan, $ekskul_id, $url_file, $id]);
           } else {
@@ -152,6 +159,7 @@ $jenisInfo = [
           </div>
           <div class="form-section-body">
             <form method="POST" enctype="multipart/form-data" id="form-karya" autocomplete="off">
+              <?= csrfField() ?>
               <input type="hidden" name="action" value="<?= $isEdit ? 'edit' : 'tambah' ?>" />
               <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= $edit['id'] ?>" /><?php endif; ?>
 
@@ -334,6 +342,7 @@ $jenisInfo = [
                       <i class="fas fa-pen"></i>
                     </a>
                     <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus karya &quot;<?= addslashes(htmlspecialchars($r['judul'])) ?>&quot;?')" autocomplete="off">
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-ghost btn-icon btn-xs" style="color:var(--red);" title="Hapus">

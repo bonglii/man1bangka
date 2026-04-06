@@ -26,7 +26,9 @@ define('DB_CHARSET', 'utf8mb4');   // utf8mb4 mendukung emoji dan karakter khusu
 // ------------------------------------------------------------
 define('SITE_URL',    'http://localhost/man1bangka');
 define('SITE_NAME',   'MAN 1 Bangka');
-define('UPLOAD_DIR',  __DIR__ . '/../php/uploads/');
+// UPLOAD_DIR & UPLOAD_URL: path absolut & URL ke folder uploads.
+// Digunakan oleh modul upload di panel admin.
+define('UPLOAD_DIR',  __DIR__ . '/uploads/');          // man1bangka/php/uploads/
 define('UPLOAD_URL',  SITE_URL . '/php/uploads/');
 
 // ============================================================
@@ -122,6 +124,49 @@ function sanitize($input) {
 // Contoh: "2026-04-03" → "3 April 2026"
 // Mengembalikan '-' jika nilai kosong/null.
 // ============================================================
+// ============================================================
+// CSRF PROTECTION
+// Semua form POST di panel admin dilindungi CSRF token.
+// Token dibuat sekali per sesi dan diverifikasi setiap POST.
+// ============================================================
+
+/**
+ * Ambil (atau buat) CSRF token untuk sesi ini.
+ * Wajib session_start() sudah dipanggil sebelumnya.
+ */
+function getCsrfToken(): string {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * Verifikasi CSRF token dari form POST.
+ * Gunakan hash_equals() agar tahan timing attack.
+ * Panggil di awal blok POST setiap halaman admin.
+ */
+function verifyCsrf(): void {
+    $token = $_POST['_csrf'] ?? '';
+    if (empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+        http_response_code(403);
+        die('<div style="font-family:sans-serif;padding:2rem;background:#fee2e2;color:#991b1b;border-radius:8px;margin:2rem;">'
+          . '<strong>403 — Permintaan ditolak.</strong><br>'
+          . 'Token keamanan tidak valid. Kembali dan coba lagi.'
+          . '</div>');
+    }
+}
+
+/**
+ * Render hidden input CSRF token untuk disematkan di setiap form POST admin.
+ * Contoh penggunaan: <?= csrfField() ?>
+ */
+function csrfField(): string {
+    return '<input type="hidden" name="_csrf" value="' . htmlspecialchars(getCsrfToken()) . '" />';
+}
+
+// ============================================================
+// FUNGSI: formatTanggal($date)
 function formatTanggal($date) {
     // Mapping nomor bulan ke nama bulan Bahasa Indonesia
     $bulan = [

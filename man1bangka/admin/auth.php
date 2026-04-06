@@ -19,8 +19,8 @@
 
 session_start(); // Mulai/lanjutkan sesi PHP
 
-// Jika belum login, redirect ke halaman login dan hentikan eksekusi
-if (!isset($_SESSION['admin_logged_in'])) {
+// Jika belum login (atau nilai session falsy), redirect ke halaman login
+if (empty($_SESSION['admin_logged_in'])) {
     header('Location: login.php');
     exit; // Wajib setelah header redirect agar kode di bawah tidak dijalankan
 }

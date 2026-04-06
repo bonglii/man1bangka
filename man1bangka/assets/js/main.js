@@ -7,6 +7,21 @@ const _depth = (window.location.pathname.match(/\//g) || []).length - 1;
 const API_BASE = (_depth <= 1 ? '' : '../') + 'php/api.php';
 
 // ============================================================
+// SECURITY: HTML ESCAPE
+// Semua data dari API wajib melewati esc() sebelum dimasukkan
+// ke innerHTML untuk mencegah XSS (Cross-Site Scripting).
+// ============================================================
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// ============================================================
 // UTILITY FUNCTIONS
 // ============================================================
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
@@ -180,8 +195,8 @@ async function loadPengumumanHighlight() {
     container.innerHTML = res.data.map(p => `
       <div class="highlight-card reveal">
         <span class="card__tag tag-${p.kategori}">${p.kategori}</span>
-        <h3>${p.judul}</h3>
-        <p>${p.isi.substring(0, 120)}...</p>
+        <h3>${esc(p.judul)}</h3>
+        <p>${esc(p.isi.substring(0, 120))}...</p>
         <div class="date"><i class="far fa-calendar-alt"></i> ${p.tanggal_publish_format}</div>
       </div>
     `).join('');
@@ -208,10 +223,10 @@ async function loadAgendaUpcoming() {
         <div class="agenda-item reveal">
           <div class="agenda-date"><div class="day">${day}</div><div class="month">${mon}</div></div>
           <div class="agenda-info">
-            <h4>${a.judul}</h4>
-            <p>${a.deskripsi || ''}</p>
+            <h4>${esc(a.judul)}</h4>
+            <p>${esc(a.deskripsi || '')}</p>
             <div class="agenda-meta">
-              ${a.lokasi ? `<span><i class="fas fa-map-marker-alt"></i>${a.lokasi}</span>` : ''}
+              ${a.lokasi ? `<span><i class="fas fa-map-marker-alt"></i>${esc(a.lokasi)}</span>` : ''}
               <span class="badge badge-green">${a.kategori}</span>
             </div>
           </div>
@@ -235,11 +250,11 @@ async function loadPrestasiHighlight() {
     container.innerHTML = res.data.slice(0, 4).map(p => `
       <div class="prestasi-card ${p.tingkat} reveal" data-cat="${p.tingkat}">
         <div class="prestasi-medali">${medals[p.tingkat] || '⭐'}</div>
-        <h4>${p.judul}</h4>
-        <div class="prestasi-siswa">${p.siswa} — ${p.kelas}</div>
+        <h4>${esc(p.judul)}</h4>
+        <div class="prestasi-siswa">${esc(p.siswa)} — ${esc(p.kelas)}</div>
         <div class="prestasi-tags">
-          <span class="badge badge-${p.tingkat === 'nasional' ? 'red' : p.tingkat === 'provinsi' ? 'gold' : 'blue'}">${p.tingkat}</span>
-          <span class="badge badge-green">${p.posisi}</span>
+          <span class="badge badge-${p.tingkat === 'nasional' ? 'red' : p.tingkat === 'provinsi' ? 'gold' : 'blue'}">${esc(p.tingkat)}</span>
+          <span class="badge badge-green">${esc(p.posisi)}</span>
         </div>
         <div class="prestasi-year">${p.tahun}</div>
       </div>
@@ -263,17 +278,17 @@ async function loadEkskul(containerId = 'ekskul-container', filter = '') {
       <div class="ekskul-card reveal" data-cat="${e.kategori}">
         <div class="ekskul-card__header">
           <div class="ekskul-card__icon">${icons[e.kategori] || '🌟'}</div>
-          <h3 class="ekskul-card__title">${e.nama}</h3>
+          <h3 class="ekskul-card__title">${esc(e.nama)}</h3>
           <span class="badge badge-gold">${e.kategori}</span>
         </div>
         <div class="ekskul-card__body">
-          <p style="font-size:.87rem;margin-bottom:1rem;">${e.deskripsi || ''}</p>
-          <div class="ekskul-card__row"><i class="fas fa-user-tie"></i><span>${e.nama_pembina || '-'}</span></div>
-          <div class="ekskul-card__row"><i class="far fa-clock"></i><span>${e.jadwal || '-'}</span></div>
-          <div class="ekskul-card__row"><i class="fas fa-map-marker-alt"></i><span>${e.tempat || '-'}</span></div>
+          <p style="font-size:.87rem;margin-bottom:1rem;">${esc(e.deskripsi || '')}</p>
+          <div class="ekskul-card__row"><i class="fas fa-user-tie"></i><span>${esc(e.nama_pembina || '-')}</span></div>
+          <div class="ekskul-card__row"><i class="far fa-clock"></i><span>${esc(e.jadwal || '-')}</span></div>
+          <div class="ekskul-card__row"><i class="fas fa-map-marker-alt"></i><span>${esc(e.tempat || '-')}</span></div>
         </div>
         <div class="ekskul-card__footer">
-          <button class="btn btn-green btn-sm" onclick="openDaftarModal(${e.id}, '${e.nama.replace(/'/g, "\\'")}')">
+          <button class="btn btn-green btn-sm" onclick="openDaftarModal(${e.id}, '${esc(e.nama).replace(/'/g, "\\'")}')">
             <i class="fas fa-pen"></i> Daftar Sekarang
           </button>
         </div>
@@ -300,12 +315,12 @@ async function loadPrestasi(containerId = 'prestasi-container', filter = '') {
     container.innerHTML = res.data.map(p => `
       <div class="prestasi-card ${p.tingkat} reveal" data-cat="${p.tingkat}">
         <div class="prestasi-medali">${medals[p.tingkat] || '⭐'}</div>
-        <h4>${p.judul}</h4>
-        <div class="prestasi-siswa"><i class="fas fa-user"></i> ${p.siswa}</div>
-        <div style="font-size:.8rem;color:var(--gray-400);margin-bottom:.5rem;">${p.penyelenggara || ''}</div>
+        <h4>${esc(p.judul)}</h4>
+        <div class="prestasi-siswa"><i class="fas fa-user"></i> ${esc(p.siswa)}</div>
+        <div style="font-size:.8rem;color:var(--gray-400);margin-bottom:.5rem;">${esc(p.penyelenggara || '')}</div>
         <div class="prestasi-tags">
-          <span class="badge badge-${p.tingkat === 'nasional' ? 'red' : 'blue'}">${p.tingkat}</span>
-          <span class="badge badge-green">${p.posisi}</span>
+          <span class="badge badge-${p.tingkat === 'nasional' ? 'red' : 'blue'}">${esc(p.tingkat)}</span>
+          <span class="badge badge-green">${esc(p.posisi)}</span>
           <span class="badge badge-gold">${p.jenis}</span>
         </div>
         <div class="prestasi-year">${p.tahun}</div>
@@ -332,8 +347,8 @@ async function loadPengumuman(containerId = 'pengumuman-container', filter = '')
       <div class="card reveal" data-cat="${p.kategori}">
         <div class="card__body">
           <span class="card__tag tag-${p.kategori}">${p.kategori}</span>
-          <h3 class="card__title">${p.judul}</h3>
-          <p class="card__text">${p.isi.substring(0, 180)}${p.isi.length > 180 ? '...' : ''}</p>
+          <h3 class="card__title">${esc(p.judul)}</h3>
+          <p class="card__text">${esc(p.isi.substring(0, 180))}${p.isi.length > 180 ? '...' : ''}</p>
           <div class="card__meta">
             <span><i class="far fa-calendar-alt"></i>${p.tanggal_publish_format}</span>
             ${p.tanggal_berakhir ? `<span><i class="fas fa-hourglass-end"></i>Berakhir: ${formatDate(p.tanggal_berakhir)}</span>` : ''}
@@ -341,7 +356,7 @@ async function loadPengumuman(containerId = 'pengumuman-container', filter = '')
         </div>
         <div class="card__footer">
           ${p.is_highlight ? '<span class="badge badge-gold"><i class="fas fa-star"></i> Highlight</span>' : '<span></span>'}
-          <button class="btn btn-green btn-sm" onclick="showDetail('${p.judul.replace(/'/g, "\\'")}','${p.isi.replace(/'/g, "\\'")}')">Selengkapnya</button>
+          <button class="btn btn-green btn-sm" onclick="showDetail('${esc(p.judul).replace(/'/g, "\\'")}','${esc(p.isi).replace(/'/g, "\\'")}')">Selengkapnya</button>
         </div>
       </div>
     `).join('');
@@ -363,12 +378,12 @@ async function loadTestimoni() {
     track.innerHTML = res.data.map(t => `
       <div class="testimoni-card">
         <div class="quote">"</div>
-        <p class="text">${t.isi}</p>
+        <p class="text">${esc(t.isi)}</p>
         <div class="author">
-          <div class="avatar">${t.nama_siswa[0]}</div>
+          <div class="avatar">${esc(t.nama_siswa[0])}</div>
           <div class="author-info">
-            <span>${t.nama_siswa}</span>
-            <span>${t.kelas} — ${t.nama_kegiatan || t.jenis_kegiatan}</span>
+            <span>${esc(t.nama_siswa)}</span>
+            <span>${esc(t.kelas)} — ${esc(t.nama_kegiatan || t.jenis_kegiatan)}</span>
             <div class="stars">${stars(t.rating)}</div>
           </div>
         </div>
@@ -395,15 +410,15 @@ async function loadKontak() {
       <div class="kontak-card reveal">
         <div class="kontak-avatar">
           ${k.foto
-        ? `<img src="../php/uploads/${k.foto}" alt="${k.nama}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><i class="fas fa-user-tie" style="display:none;"></i>`
+        ? `<img src="../php/uploads/${k.foto}" alt="${esc(k.nama)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><i class="fas fa-user-tie" style="display:none;"></i>`
         : `<i class="fas fa-user-tie"></i>`}
         </div>
         <div class="kontak-info">
-          <h4>${k.nama}</h4>
-          <div class="jabatan">${k.jabatan || ''}</div>
-          ${k.bidang ? `<div class="contact-row"><i class="fas fa-briefcase"></i>${k.bidang}</div>` : ''}
-          ${k.email ? `<div class="contact-row"><i class="fas fa-envelope"></i>${k.email}</div>` : ''}
-          ${k.no_hp ? `<div class="contact-row"><i class="fas fa-phone"></i>${k.no_hp}</div>` : ''}
+          <h4>${esc(k.nama)}</h4>
+          <div class="jabatan">${esc(k.jabatan || '')}</div>
+          ${k.bidang ? `<div class="contact-row"><i class="fas fa-briefcase"></i>${esc(k.bidang)}</div>` : ''}
+          ${k.email ? `<div class="contact-row"><i class="fas fa-envelope"></i>${esc(k.email)}</div>` : ''}
+          ${k.no_hp ? `<div class="contact-row"><i class="fas fa-phone"></i>${esc(k.no_hp)}</div>` : ''}
         </div>
       </div>
     `).join('');

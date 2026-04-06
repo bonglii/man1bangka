@@ -216,8 +216,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </button>
       </form>
 
-      <!-- Informasi kredensial default untuk kemudahan pengujian -->
-      <div class="login-info">Default: <code>admin</code> / <code>man1bangka2026</code></div>
+      <!-- Informasi kredensial dihapus dari UI untuk keamanan produksi.
+           Ganti password di admin/login.php sebelum deploy. -->
 
     </div>
     <div class="back-link">

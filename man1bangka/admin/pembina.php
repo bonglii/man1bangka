@@ -18,6 +18,7 @@ require '../php/config.php'; ?>
 <?php
 $msg = $err = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  verifyCsrf(); // Tolak jika CSRF token tidak valid
   $action = $_POST['action'] ?? '';
   if ($action === 'tambah' || $action === 'edit') {
     $nama = trim($_POST['nama'] ?? '');
@@ -147,6 +148,7 @@ $bidangColors = ['Kepramukaan' => 'green', 'Keagamaan' => 'teal', 'Olahraga' => 
           </div>
           <div class="form-section-body">
             <form method="POST" id="form-pembina" autocomplete="off" enctype="multipart/form-data">
+              <?= csrfField() ?>
               <input type="hidden" name="action" value="<?= $isEdit ? 'edit' : 'tambah' ?>" />
               <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= $edit['id'] ?>" /><?php endif; ?>
 
@@ -267,6 +269,7 @@ $bidangColors = ['Kepramukaan' => 'green', 'Keagamaan' => 'teal', 'Olahraga' => 
                   <div class="data-item-actions">
                     <a href="?edit=<?= $r['id'] ?>" class="btn btn-outline btn-icon btn-xs" title="Edit"><i class="fas fa-pen"></i></a>
                     <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus pembina <?= htmlspecialchars(addslashes($r['nama']), ENT_QUOTES) ?>?')">
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-ghost btn-icon btn-xs" style="color:var(--red);" title="Hapus"><i class="fas fa-trash"></i></button>

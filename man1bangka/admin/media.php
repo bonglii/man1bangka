@@ -17,10 +17,13 @@
 require 'auth.php';
 require '../php/config.php'; ?>
 <?php
-$msg = $err = ''; // Flash messages: sukses dan error
+$msg = $err = ''; // Dari redirect parameter
+$msgMap = ['upload'=>'Media berhasil diupload!','hapus'=>'Media dihapus.','edit'=>'Keterangan diperbarui.'];
+if (isset($_GET['msg'])) $msg = $msgMap[$_GET['msg']] ?? '';
 $UPLOAD_DIR = '../php/uploads/'; // Direktori upload relatif dari folder admin/
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  verifyCsrf(); // Tolak jika CSRF token tidak valid
   $action = $_POST['action'] ?? '';
   // --- AKSI: Upload file baru ---
   if ($action === 'upload') {
@@ -45,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $url = 'php/uploads/' . $folder . $fname;
           $pdo->prepare("INSERT INTO dokumentasi (judul,deskripsi,jenis,url_media,thumbnail,kategori,tanggal,organisasi_id,ekskul_id) VALUES (?,?,?,?,?,?,NOW(),?,?)")
             ->execute([$judul, $desk, $jenis, $url, ($jenis !== 'video' ? $url : ''), $kat, $org_id, $ekskul_id]);
-          $msg = 'Media berhasil diupload!';
+          // PRG: redirect setelah upload sukses
+          header('Location: media.php?msg=upload'); exit;
         } else $err = 'Gagal menyimpan file. Cek permission folder uploads.';
       }
     } else $err = 'Pilih file terlebih dahulu.';
@@ -60,13 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $fp = '../' . $r['url_media'];
       if (file_exists($fp)) @unlink($fp); // @ untuk suppress warning jika file sudah tidak ada
       $pdo->prepare("DELETE FROM dokumentasi WHERE id=?")->execute([$id]);
-      $msg = 'Media dihapus.';
+      header('Location: media.php?msg=hapus'); exit;
     }
     // --- AKSI: Edit judul/deskripsi media (tanpa re-upload file) ---
   } elseif ($action === 'edit_judul') {
     $id = (int)$_POST['id'];
     $pdo->prepare("UPDATE dokumentasi SET judul=?,deskripsi=? WHERE id=?")->execute([trim($_POST['judul']), trim($_POST['deskripsi']), $id]);
-    $msg = 'Keterangan diperbarui.';
+    header('Location: media.php?msg=edit'); exit;
   }
 }
 
@@ -363,6 +367,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
           </div>
           <div class="form-section-body">
             <form method="POST" enctype="multipart/form-data" id="upload-form" autocomplete="off">
+              <?= csrfField() ?>
               <input type="hidden" name="action" value="upload" />
               <input type="hidden" name="jenis" id="jenis-val" value="foto" />
 
@@ -517,6 +522,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                       <div class="mc-actions">
                         <button class="mc-btn" style="background:var(--blue);color:#fff;" onclick="openEditMedia(<?= $m['id'] ?>,'<?= addslashes(htmlspecialchars($m['judul'])) ?>','<?= addslashes(htmlspecialchars($m['deskripsi'] ?? '')) ?>')" title="Edit"><i class="fas fa-pen"></i></button>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus media ini?')" autocomplete="off">
+              <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus" />
                           <input type="hidden" name="id" value="<?= $m['id'] ?>" />
                           <button type="submit" class="mc-btn" style="background:var(--red);color:#fff;" title="Hapus"><i class="fas fa-trash"></i></button>
@@ -546,6 +552,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
           <button class="modal-close" onclick="closeModal('modal-edit')"><i class="fas fa-times"></i></button>
         </div>
         <form method="POST" autocomplete="off">
+              <?= csrfField() ?>
           <div class="modal-body">
             <input type="hidden" name="action" value="edit_judul" />
             <input type="hidden" name="id" id="edit-media-id" />
