@@ -545,7 +545,6 @@ $jenisInfo = [
           };
         })();
       </script>
-    </div>
     </div><!-- end page-content -->
   </main>
   <script src="assets/admin.js"></script>

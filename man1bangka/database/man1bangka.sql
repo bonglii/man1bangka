@@ -2,8 +2,8 @@
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Apr 06, 2026 at 12:24 PM
+-- Host: localhost
+-- Generation Time: Apr 10, 2026 at 04:08 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -29,13 +29,13 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `agenda` (
   `id` int NOT NULL,
-  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `judul` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `tanggal_mulai` datetime NOT NULL,
   `tanggal_selesai` datetime DEFAULT NULL,
-  `lokasi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kategori` enum('lomba','seminar','kelas','organisasi','ekskul','keagamaan','umum','lainnya') COLLATE utf8mb4_unicode_ci DEFAULT 'umum',
-  `warna` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT '#1a6b3c',
+  `lokasi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kategori` enum('lomba','seminar','kelas','organisasi','ekskul','keagamaan','umum','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'umum',
+  `warna` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '#1a6b3c',
   `is_selesai` tinyint(1) DEFAULT '0',
   `organisasi_id` int DEFAULT NULL,
   `ekskul_id` int DEFAULT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE `agenda` (
 --
 
 INSERT INTO `agenda` (`id`, `judul`, `deskripsi`, `tanggal_mulai`, `tanggal_selesai`, `lokasi`, `kategori`, `warna`, `is_selesai`, `organisasi_id`, `ekskul_id`, `created_at`) VALUES
-(11, 'TOEFL', 'TEST TEFL BAHASA INGGRIS', '2026-04-09 00:00:00', '2026-04-14 00:00:00', 'AULA MAN 1 BANGKA', 'organisasi', '#000000', 0, 1, NULL, '2026-04-02 09:54:16');
+(11, 'TOEFL', 'TEST TOEFL BAHASA INGGRIS', '2026-04-09 00:00:00', '2026-04-14 00:00:00', 'AULA MAN 1 BANGKA', 'organisasi', '#000000', 0, 1, NULL, '2026-04-02 09:54:16');
 
 -- --------------------------------------------------------
 
@@ -58,10 +58,10 @@ INSERT INTO `agenda` (`id`, `judul`, `deskripsi`, `tanggal_mulai`, `tanggal_sele
 CREATE TABLE `anggota_organisasi` (
   `id` int NOT NULL,
   `organisasi_id` int NOT NULL,
-  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jabatan` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kelas` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jabatan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelas` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -84,12 +84,12 @@ INSERT INTO `anggota_organisasi` (`id`, `organisasi_id`, `nama`, `jabatan`, `kel
 
 CREATE TABLE `arsip` (
   `id` int NOT NULL,
-  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `semester` enum('ganjil','genap') COLLATE utf8mb4_unicode_ci DEFAULT 'ganjil',
-  `tahun_ajaran` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kategori` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url_file` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `judul` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `semester` enum('ganjil','genap') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'ganjil',
+  `tahun_ajaran` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kategori` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url_file` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `organisasi_id` int DEFAULT NULL,
   `ekskul_id` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -113,12 +113,12 @@ INSERT INTO `arsip` (`id`, `judul`, `deskripsi`, `semester`, `tahun_ajaran`, `ka
 
 CREATE TABLE `dokumentasi` (
   `id` int NOT NULL,
-  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `jenis` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT 'foto',
-  `url_media` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `thumbnail` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kategori` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT 'kegiatan',
+  `judul` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `jenis` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'foto',
+  `url_media` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kategori` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'kegiatan',
   `tanggal` datetime DEFAULT CURRENT_TIMESTAMP,
   `organisasi_id` int DEFAULT NULL,
   `ekskul_id` int DEFAULT NULL,
@@ -133,11 +133,11 @@ CREATE TABLE `dokumentasi` (
 
 CREATE TABLE `ekstrakurikuler` (
   `id` int NOT NULL,
-  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `kategori` enum('olahraga','seni','akademik','keagamaan','teknologi','lainnya') COLLATE utf8mb4_unicode_ci DEFAULT 'lainnya',
-  `jadwal` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tempat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `kategori` enum('olahraga','seni','akademik','keagamaan','teknologi','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'lainnya',
+  `jadwal` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tempat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `pembina_id` int DEFAULT NULL,
   `kuota` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -148,15 +148,15 @@ CREATE TABLE `ekstrakurikuler` (
 --
 
 INSERT INTO `ekstrakurikuler` (`id`, `nama`, `deskripsi`, `kategori`, `jadwal`, `tempat`, `pembina_id`, `kuota`, `created_at`) VALUES
-(1, 'Pramuka', 'Kegiatan kepanduan yang melatih karakter, kemandirian, dan kerjasama antar siswa. Wajib untuk kelas X.', 'lainnya', 'Jumat, 14:00–16:00', 'Lapangan Utama', 7, NULL, '2026-04-01 19:11:49'),
-(2, 'Majelis Taklim', 'Kegiatan keagamaan Islam berupa pengajian, tahfidz Al-Quran, dan pembinaan karakter Islami.', 'keagamaan', 'Senin & Rabu, 15:00–16:30', 'Musholla Sekolah', 8, NULL, '2026-04-01 19:11:49'),
-(3, 'Bola Basket', 'Olahraga bola basket yang melatih kemampuan fisik, strategi, dan kerjasama tim.', 'olahraga', 'Sabtu, 07:00–09:00', 'Lapangan Basket', 4, NULL, '2026-04-01 19:11:49'),
-(4, 'Karya Ilmiah Remaja (KIR)', 'Kegiatan penelitian ilmiah untuk mengembangkan kemampuan berpikir kritis dan inovatif siswa.', 'akademik', 'Kamis, 14:00–16:00', 'Lab IPA', 9, NULL, '2026-04-01 19:11:49'),
-(6, 'Robotika', 'Mempelajari teknologi, pemrograman Arduino, dan merakit robot untuk menghadapi era digital.', 'teknologi', 'Sabtu, 09:00–11:00', 'Lab Komputer', 6, NULL, '2026-04-01 19:11:49'),
-(7, 'Futsal', 'Olahraga futsal kompetitif yang membangun semangat sportivitas dan kekompakan tim.', 'olahraga', 'Minggu, 08:00–10:00', 'Lapangan Futsal', 4, NULL, '2026-04-01 19:11:49'),
+(1, 'Pramuka', 'Kegiatan kepanduan yang melatih karakter, kemandirian, dan kerjasama antar siswa. Wajib untuk kelas X.', 'lainnya', 'Jumat, 14:00–16:00', 'Lapangan Utama', NULL, NULL, '2026-04-01 19:11:49'),
+(2, 'Majelis Taklim', 'Kegiatan keagamaan Islam berupa pengajian, tahfidz Al-Quran, dan pembinaan karakter Islami.', 'keagamaan', 'Senin & Rabu, 15:00–16:30', 'Musholla Sekolah', NULL, NULL, '2026-04-01 19:11:49'),
+(3, 'Bola Basket', 'Olahraga bola basket yang melatih kemampuan fisik, strategi, dan kerjasama tim.', 'olahraga', 'Sabtu, 07:00–09:00', 'Lapangan Basket', NULL, NULL, '2026-04-01 19:11:49'),
+(4, 'Karya Ilmiah Remaja (KIR)', 'Kegiatan penelitian ilmiah untuk mengembangkan kemampuan berpikir kritis dan inovatif siswa.', 'akademik', 'Kamis, 14:00–16:00', 'Lab IPA', NULL, NULL, '2026-04-01 19:11:49'),
+(6, 'Robotika', 'Mempelajari teknologi, pemrograman Arduino, dan merakit robot untuk menghadapi era digital.', 'teknologi', 'Sabtu, 09:00–11:00', 'Lab Komputer', NULL, NULL, '2026-04-01 19:11:49'),
+(7, 'Bola Kaki/Futsal', 'Olahraga bola kaki/futsal kompetitif yang membangun semangat sportivitas dan kekompakan tim.', 'olahraga', 'Selasa, 16.00-Selesai', 'Lapangan Sepak Bola Gang Sambu, Lapangan Futsal Man 1 Bangka', 21, NULL, '2026-04-01 19:11:49'),
 (8, 'Paduan Suara', 'Kegiatan seni vokal yang melatih kemampuan bernyanyi harmonis dan tampil di berbagai acara.', 'seni', 'Selasa, 14:00–16:00', 'Ruang Musik', NULL, NULL, '2026-04-01 19:11:49'),
 (9, 'Silat', 'Pencak Silat', 'olahraga', 'Selasa 14.00', 'Sekolah', NULL, 5, '2026-04-01 19:48:30'),
-(10, 'www', 'awdawdawdawdawd', 'akademik', 'awdawdawd', 'awdawdawdawd', 4, 5, '2026-04-02 14:49:00');
+(10, 'www', 'awdawdawdawdawd', 'akademik', 'awdawdawd', 'awdawdawdawd', NULL, 5, '2026-04-02 14:49:00');
 
 -- --------------------------------------------------------
 
@@ -166,14 +166,14 @@ INSERT INTO `ekstrakurikuler` (`id`, `nama`, `deskripsi`, `kategori`, `jadwal`, 
 
 CREATE TABLE `karya_siswa` (
   `id` int NOT NULL,
-  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `siswa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `penulis` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kelas` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis` enum('artikel','karya_ilmiah','poster','video','puisi','lainnya') COLLATE utf8mb4_unicode_ci DEFAULT 'artikel',
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `penghargaan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url_file` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `judul` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `siswa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `penulis` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kelas` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis` enum('artikel','karya_ilmiah','poster','video','puisi','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'artikel',
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `penghargaan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url_file` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ekskul_id` int DEFAULT NULL,
   `tanggal` datetime DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -199,12 +199,12 @@ INSERT INTO `karya_siswa` (`id`, `judul`, `siswa`, `penulis`, `kelas`, `jenis`, 
 
 CREATE TABLE `kontak_pembina` (
   `id` int NOT NULL,
-  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jabatan` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `bidang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jabatan` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_hp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bidang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -213,12 +213,34 @@ CREATE TABLE `kontak_pembina` (
 --
 
 INSERT INTO `kontak_pembina` (`id`, `nama`, `jabatan`, `email`, `no_hp`, `bidang`, `foto`, `created_at`) VALUES
-(1, 'Bpk. Drs. H. Syamsul Bahri', 'Waka Kesiswaan', 'syamsul@man1bangka.sch.id', '08567890123', 'Koordinator Kesiswaan', NULL, '2026-04-01 19:11:49'),
-(4, 'Bpk. Rizky Pratama, S.Pd', 'Pembina Olahraga', 'rizkypratama@man1bangka.sch.id', '08345678901', 'Olahraga', NULL, '2026-04-01 19:11:49'),
-(6, 'Bpk. Hendra Saputra, S.T', 'Pembina Robotika', 'hendra@man1bangka.sch.id', '08567890124', 'Teknologi', NULL, '2026-04-01 19:11:49'),
-(7, 'Bpk. Ahmad Fauzi, S.Pd', 'Pembina Pramuka', NULL, NULL, 'Kepanduan', NULL, '2026-04-01 19:11:49'),
-(8, 'Ibu Siti Aisyah, M.Pd.I', 'Pembina Majelis Taklim', NULL, NULL, 'Keagamaan', NULL, '2026-04-01 19:11:49'),
-(9, 'Delvin Fernando', 'Penonton (Wajib)', '2222500077@mahasiswa.atmaluhur.ac.id', '087893896712', 'Teknologi', NULL, '2026-04-01 19:11:49');
+(10, 'Chardina Sari, S.Si', 'Pembina  OSIS', '', '', 'Lainnya', '', '2026-04-08 00:54:37'),
+(11, 'Helda Zaitinia, S.Pd', 'Pembina OSIS', '', '', 'Lainnya', '', '2026-04-08 00:55:50'),
+(12, 'Edi Kurniawan, S.Pd.I', 'Pembina Rohis', '', '', 'Keagamaan', '', '2026-04-08 00:56:42'),
+(13, 'Riskayati, S.Pd.I', 'Pembina Rohis', '', '', 'Keagamaan', '', '2026-04-08 00:57:32'),
+(14, 'Sintia Dewi, S.Pd', 'Pembina PMR', '', '', 'Lainnya', '', '2026-04-08 00:58:06'),
+(15, 'Bimo Guntoro', 'Pembina PKS', '', '', 'Lainnya', '', '2026-04-08 00:59:22'),
+(16, 'Sulistya, M.Pd', 'Pembina Pramuka, 9K', '', '', 'Lainnya', '', '2026-04-08 01:00:10'),
+(17, 'Siti Kurniati, S.Pd', 'Pembina Pramuka, Seni Budaya, Geografi', '', '', 'Lainnya', '', '2026-04-08 01:00:53'),
+(18, 'Ryan Bagus Sadewo, S.Pd', 'Pembina Pramuka', '', '', 'Kepramukaan', '', '2026-04-08 01:01:23'),
+(19, 'Febri', 'Pembina Pramuka', '', '', 'Kepramukaan', '', '2026-04-08 01:01:40'),
+(20, 'Samsu, S.Ag', 'Pembina Muhadhoroh', '', '', 'Keagamaan', '', '2026-04-08 01:02:14'),
+(21, 'Nuryadi, S.Pd', 'Pembina Marching Band, Bola Kaki/Futsal, Bola Voli, Laboratorium Komputer/Multimedia', 'nuryadipjkr@gmail.com', '087774950001', 'Olahraga', 'foto_pembina/pembina_1775620245_855.jpeg', '2026-04-08 01:04:18'),
+(22, 'Nenie Prastyaningrum, S.Pd', 'Pembina Marching Band', '', '', 'Seni', '', '2026-04-08 01:05:08'),
+(23, 'Ghalib Mekakau, S.HI', 'Pembina Band, Paskib', '', '', 'Lainnya', '', '2026-04-08 01:31:10'),
+(24, 'Ika Purwandani, S.Pd', 'Pembina UKS, KSM Matematika', '', '', 'Akademik', '', '2026-04-08 01:35:38'),
+(25, 'Fariasih, S.Ag', 'Pembina UKS', '', '', 'Lainnya', '', '2026-04-08 01:36:42'),
+(26, 'Lili Vembriana Hakim, S.Pd', 'Pembina 9K', '', '', 'Lainnya', '', '2026-04-08 01:53:49'),
+(27, 'Mika Enjeli, S.Pd', 'Pembina PIK-R', '', '', 'Lainnya', '', '2026-04-08 03:28:17'),
+(28, 'Norhayati, S.Ag', 'Pembina BBQ, Arabic Club,', '', '', 'Keagamaan', '', '2026-04-08 03:29:29'),
+(29, 'Rahmat Charles, S.I.Pust', 'Pembina Perpustakaan', '', '', 'Lainnya', '', '2026-04-08 03:36:55'),
+(30, 'Fitri Indaswari Oktavia, S.Si', 'Pembina Laboratorium Fisika, KSM Fisika/Astronomi', '', '', 'Akademik', '', '2026-04-08 03:38:58'),
+(31, 'Amsuri, S.Pd, MSc', 'Pembina Laboratorium Kimia, KSN Kimia,', '', '', 'Akademik', '', '2026-04-08 03:40:25'),
+(32, 'Fadhliah, S.Si, M.Pd', 'Pembina Laboratorium Biologi, KSM Biologi', '', '', 'Akademik', '', '2026-04-08 03:42:01'),
+(33, 'Maynenda Handayani, S.E', 'Pembina Laboratorium Komputer/Multimedia, KSM Ekonomi', '', '', 'Akademik', '', '2026-04-08 03:43:38'),
+(34, 'Dra. Sugiah', 'Pembina Sekolah/Madrasah Sehat', '', '', 'Lainnya', '', '2026-04-08 03:53:08'),
+(35, 'Utama Dewi Maya Sari,S.Pd', 'Pembina Sekolah/Madrasah Sehat, English Club', '', '', 'Lainnya', '', '2026-04-08 04:17:48'),
+(36, 'Feni Wulandari, S.Pd', 'Pembina Sekolah/Madrasah Sehat, KSM Matematika', '', '', 'Lainnya', '', '2026-04-08 04:19:26'),
+(37, 'Tina, S.Pd', 'Pembina Ruang Sastra, Literasi', '', '', 'Akademik', '', '2026-04-08 04:21:37');
 
 -- --------------------------------------------------------
 
@@ -228,11 +250,11 @@ INSERT INTO `kontak_pembina` (`id`, `nama`, `jabatan`, `email`, `no_hp`, `bidang
 
 CREATE TABLE `organisasi` (
   `id` int NOT NULL,
-  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `visi` text COLLATE utf8mb4_unicode_ci,
-  `misi` text COLLATE utf8mb4_unicode_ci,
-  `gambar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `visi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `misi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `gambar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -252,13 +274,13 @@ INSERT INTO `organisasi` (`id`, `nama`, `deskripsi`, `visi`, `misi`, `gambar`, `
 CREATE TABLE `pendaftaran_ekskul` (
   `id` int NOT NULL,
   `ekstrakurikuler_id` int NOT NULL,
-  `nama_siswa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kelas` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nis` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `alasan` text COLLATE utf8mb4_unicode_ci,
-  `status` enum('menunggu','diterima','ditolak') COLLATE utf8mb4_unicode_ci DEFAULT 'menunggu',
+  `nama_siswa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelas` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nis` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_hp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alasan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `status` enum('menunggu','diterima','ditolak') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'menunggu',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -270,9 +292,9 @@ CREATE TABLE `pendaftaran_ekskul` (
 
 CREATE TABLE `pengumuman` (
   `id` int NOT NULL,
-  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kategori` enum('umum','lomba','ekskul','keagamaan','akademik','libur','pendaftaran','kegiatan') COLLATE utf8mb4_unicode_ci DEFAULT 'umum',
+  `judul` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kategori` enum('umum','lomba','ekskul','keagamaan','akademik','libur','pendaftaran','kegiatan') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'umum',
   `tanggal_publish` date NOT NULL DEFAULT (curdate()),
   `tanggal_berakhir` date DEFAULT NULL,
   `is_highlight` tinyint(1) DEFAULT '0',
@@ -298,16 +320,16 @@ INSERT INTO `pengumuman` (`id`, `judul`, `isi`, `kategori`, `tanggal_publish`, `
 
 CREATE TABLE `prestasi` (
   `id` int NOT NULL,
-  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `siswa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kelas` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis` enum('akademik','olahraga','seni','keagamaan','teknologi','lainnya') COLLATE utf8mb4_unicode_ci DEFAULT 'akademik',
-  `tingkat` enum('sekolah','kabupaten','provinsi','nasional','internasional') COLLATE utf8mb4_unicode_ci DEFAULT 'kabupaten',
-  `posisi` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `penyelenggara` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `judul` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `siswa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelas` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis` enum('akademik','olahraga','seni','keagamaan','teknologi','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'akademik',
+  `tingkat` enum('sekolah','kabupaten','provinsi','nasional','internasional') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'kabupaten',
+  `posisi` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `penyelenggara` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tahun` year DEFAULT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `url_file` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `url_file` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ekskul_id` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -335,10 +357,10 @@ INSERT INTO `prestasi` (`id`, `judul`, `siswa`, `kelas`, `jenis`, `tingkat`, `po
 CREATE TABLE `program_kerja` (
   `id` int NOT NULL,
   `organisasi_id` int NOT NULL,
-  `nama_program` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `semester` enum('ganjil','genap') COLLATE utf8mb4_unicode_ci DEFAULT 'ganjil',
-  `status` enum('rencana','berjalan','selesai') COLLATE utf8mb4_unicode_ci DEFAULT 'rencana',
+  `nama_program` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `semester` enum('ganjil','genap') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'ganjil',
+  `status` enum('rencana','berjalan','selesai') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'rencana',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -360,14 +382,14 @@ INSERT INTO `program_kerja` (`id`, `organisasi_id`, `nama_program`, `deskripsi`,
 
 CREATE TABLE `testimoni` (
   `id` int NOT NULL,
-  `nama_siswa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kelas` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis_kegiatan` enum('ekskul','lomba','seminar','organisasi','lainnya') COLLATE utf8mb4_unicode_ci DEFAULT 'lainnya',
-  `nama_kegiatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_siswa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelas` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_kegiatan` enum('ekskul','lomba','seminar','organisasi','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'lainnya',
+  `nama_kegiatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `isi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `rating` int DEFAULT '5',
-  `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci DEFAULT 'aktif',
+  `status` enum('aktif','nonaktif') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'aktif',
   `is_approved` tinyint(1) DEFAULT '1',
   `organisasi_id` int DEFAULT NULL,
   `ekskul_id` int DEFAULT NULL,
@@ -525,7 +547,7 @@ ALTER TABLE `karya_siswa`
 -- AUTO_INCREMENT for table `kontak_pembina`
 --
 ALTER TABLE `kontak_pembina`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `organisasi`

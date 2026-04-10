@@ -86,20 +86,20 @@ man1bangka/
 │           └── logo.png          # Logo MAN 1 Bangka
 │
 ├── halaman/                      # Halaman Publik
-│   ├── index.html                # Beranda (versi HTML + fetch API)
-│   ├── index.php                 # Beranda (versi PHP SSR / fallback)
-│   ├── agenda.html               # Agenda kegiatan
-│   ├── ekstrakurikuler.html      # Daftar ekstrakurikuler
-│   ├── dokumentasi.html          # Galeri foto & video
-│   ├── pengumuman.html           # Daftar pengumuman
-│   ├── prestasi.html             # Prestasi siswa
-│   ├── karya-siswa.html          # Karya siswa
-│   ├── organisasi.html           # Struktur organisasi
-│   ├── pendaftaran.html          # Form pendaftaran ekskul
-│   ├── arsip.html                # Arsip dokumen
-│   ├── kontak.html               # Kontak & lokasi sekolah
-│   ├── testimoni.html            # Testimoni siswa
-│   └── sidebar.php               # Komponen sidebar halaman publik
+│   ├── index.php                 # Beranda (versi PHP, navbar dinamis)
+│   ├── navbar.php                # Komponen navbar dinamis (di-include semua halaman)
+│   ├── agenda.php                # Agenda kegiatan
+│   ├── ekstrakurikuler.php       # Daftar ekstrakurikuler
+│   ├── dokumentasi.php           # Galeri foto & video
+│   ├── pengumuman.php            # Daftar pengumuman
+│   ├── prestasi.php              # Prestasi siswa
+│   ├── karya-siswa.php           # Karya siswa
+│   ├── organisasi.php            # Struktur organisasi
+│   ├── pendaftaran.php           # Form pendaftaran ekskul
+│   ├── arsip.php                 # Arsip dokumen
+│   ├── kontak.php                # Kontak & lokasi sekolah
+│   ├── testimoni.php             # Testimoni siswa
+│   └── sidebar.php               # Komponen sidebar halaman publik (legacy)
 │
 ├── php/
 │   ├── api.php                   # REST API endpoint utama (semua modul)
@@ -278,32 +278,52 @@ Browser (HTML/JS)
 Perbaikan menyeluruh dari hasil audit kode. Total **16 bug diperbaiki** di **20 file**.
 
 ### 🔴 Bug Kritis
-| # | File | Perbaikan |
-|---|---|---|
-| 1 | `halaman/index.php` | Ditulis ulang sebagai halaman publik SSR — sebelumnya duplikat admin dashboard |
-| 2 | `php/api.php` | Testimoni publik kini masuk `status='nonaktif'` (wajib disetujui admin) |
-| 12 | `assets/js/main.js` | Ditambah `esc()` — semua data API di-escape sebelum masuk `innerHTML` |
-| 13 | `php/config.php` + semua `admin/*.php` | CSRF token protection: `getCsrfToken()`, `verifyCsrf()`, `csrfField()` |
+
+| #   | File                                   | Perbaikan                                                                      |
+| --- | -------------------------------------- | ------------------------------------------------------------------------------ |
+| 1   | `halaman/index.php`                    | Ditulis ulang sebagai halaman publik SSR — sebelumnya duplikat admin dashboard |
+| 2   | `php/api.php`                          | Testimoni publik kini masuk `status='nonaktif'` (wajib disetujui admin)        |
+| 12  | `assets/js/main.js`                    | Ditambah `esc()` — semua data API di-escape sebelum masuk `innerHTML`          |
+| 13  | `php/config.php` + semua `admin/*.php` | CSRF token protection: `getCsrfToken()`, `verifyCsrf()`, `csrfField()`         |
 
 ### 🟡 Bug Sedang & Minor
-| # | File | Perbaikan |
-|---|---|---|
-| 3 | `database/man1bangka.sql` | Hapus data uji coba (`www`, `wdawd`) dari seed |
-| 4 | `admin/login.php` | Hapus kotak kredensial default dari halaman login |
-| 5 | `php/config.php` | Perbaiki path `UPLOAD_DIR` |
-| 6 | `php/api.php` | Hapus `$conn->close()` dead code |
-| 7 | `halaman/kontak.html`, `pendaftaran.html` | Form kontak & lomba kini terhubung ke backend (`pesan_kontak`, `pendaftaran_lomba`) |
-| 8 | `admin/karya.php`, `admin/prestasi.php` | File lama di-`unlink()` saat edit dengan upload baru |
-| 10 | `admin/pendaftaran.php`, `admin/testimoni.php` | PRG pattern (redirect setelah POST) diterapkan |
-| 14 | `admin/index.php` | Ditambah Google Fonts Inter di `<head>` |
-| 15 | `admin/assets/admin.js` | `eval()` diganti `new Function()` + `karya.php`/`prestasi.php` dikecualikan dari SPA |
-| 16 | `admin/auth.php` | `!isset()` → `empty()` untuk pengecekan session yang lebih aman |
+
+| #   | File                                           | Perbaikan                                                                            |
+| --- | ---------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 3   | `database/man1bangka.sql`                      | Hapus data uji coba (`www`, `wdawd`) dari seed                                       |
+| 4   | `admin/login.php`                              | Hapus kotak kredensial default dari halaman login                                    |
+| 5   | `php/config.php`                               | Perbaiki path `UPLOAD_DIR`                                                           |
+| 6   | `php/api.php`                                  | Hapus `$conn->close()` dead code                                                     |
+| 7   | `halaman/kontak.html`, `pendaftaran.html`      | Form kontak & lomba kini terhubung ke backend (`pesan_kontak`, `pendaftaran_lomba`)  |
+| 8   | `admin/karya.php`, `admin/prestasi.php`        | File lama di-`unlink()` saat edit dengan upload baru                                 |
+| 10  | `admin/pendaftaran.php`, `admin/testimoni.php` | PRG pattern (redirect setelah POST) diterapkan                                       |
+| 14  | `admin/index.php`                              | Ditambah Google Fonts Inter di `<head>`                                              |
+| 15  | `admin/assets/admin.js`                        | `eval()` diganti `new Function()` + `karya.php`/`prestasi.php` dikecualikan dari SPA |
+| 16  | `admin/auth.php`                               | `!isset()` → `empty()` untuk pengecekan session yang lebih aman                      |
 
 ### Tabel Baru di Database
-| Tabel | Fungsi |
-|---|---|
-| `pesan_kontak` | Menyimpan pesan dari form kontak publik |
+
+| Tabel               | Fungsi                                       |
+| ------------------- | -------------------------------------------- |
+| `pesan_kontak`      | Menyimpan pesan dari form kontak publik      |
 | `pendaftaran_lomba` | Menyimpan pendaftaran lomba dari form publik |
+
+### Perubahan Struktur Halaman (Navbar Dinamis)
+
+| File                 | Perubahan                                                                     |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `halaman/navbar.php` | File baru — navbar terpusat yang di-include semua halaman                     |
+| `halaman/*.html`     | Dikonversi ke `.php` — navbar statis diganti `<?php include 'navbar.php'; ?>` |
+| `assets/js/main.js`  | Page routing diperbarui: `.html` → `.php`                                     |
 
 > Patch oleh review kode menyeluruh — April 2026
 
+### Perubahan Tambahan (Audit Lanjutan)
+
+| Item                                    | Perubahan                                                                         |
+| --------------------------------------- | --------------------------------------------------------------------------------- |
+| `halaman/index.php`                     | Diubah menjadi redirect 301 ke root `index.html` (file duplikat tidak diperlukan) |
+| `php/uploads/*/`                        | `.htaccess` proteksi dikopi ke semua subfolder upload                             |
+| `assets/js/main.js`                     | Page routing `.html` → `.php` diperbaiki (loadPengumuman, loadEkskul, dll)        |
+| `database/man1bangka.sql`               | Ditambah tabel `pesan_kontak` dan `pendaftaran_lomba` yang sebelumnya hilang      |
+| `php/uploads/{foto,video,karya,arsip}/` | Folder dengan nama literal (brace expansion salah) dihapus                        |

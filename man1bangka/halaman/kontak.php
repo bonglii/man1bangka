@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kontak Pembina — MAN 1 Bangka</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    
+    <?php include 'navbar.php'; ?>
+
+    <section class="page-hero">
+      <div class="breadcrumb">
+        <a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i>
+        <span style="color: var(--gold)">Kontak Pembina</span>
+      </div>
+      <h1><i class="far fa-address-card"></i> Kontak Pembina Kegiatan</h1>
+      <p>Informasi dan kontak seluruh pembina kegiatan siswa MAN 1 Bangka.</p>
+    </section>
+
+    <section style="padding: 3rem clamp(1rem, 5vw, 4rem)">
+      <div class="section-header reveal">
+        <div class="section-tag">📋 Kontak</div>
+        <h2>Kontak Pembina Kegiatan</h2>
+        <p>
+          Hubungi pembina kegiatan untuk informasi lebih lanjut tentang program
+          dan pendaftaran.
+        </p>
+        <div class="section-divider"></div>
+      </div>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          gap: 1.25rem;
+          max-width: 1200px;
+          margin: 0 auto;
+        "
+        id="kontak-container"
+      >
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+      <div
+        style="
+          margin-top: 3rem;
+          max-width: 700px;
+          margin-left: auto;
+          margin-right: auto;
+        "
+      >
+        <div class="form-card reveal">
+          <h3 style="margin-bottom: 1.5rem">
+            <i class="far fa-envelope" style="color: var(--gold-dark)"></i>
+            Kirim Pesan ke Koordinator
+          </h3>
+          <form onsubmit="submitKontak(event)" autocomplete="off">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nama <span>*</span></label
+                ><input
+                  class="form-control"
+                  name="nama"
+                  required
+                  placeholder="Nama lengkap"
+                />
+              </div>
+              <div class="form-group">
+                <label>Kelas</label
+                ><select class="form-control" name="kelas">
+                  <option value="">-- Pilih Kelas --</option>
+                  <option>10A</option>
+                  <option>10B</option>
+                  <option>10C</option>
+                  <option>10D</option>
+                  <option>10E</option>
+                  <option>10F</option>
+                  <option>11A</option>
+                  <option>11B</option>
+                  <option>11C</option>
+                  <option>11D</option>
+                  <option>11E</option>
+                  <option>11F</option>
+                  <option>12A</option>
+                  <option>12B</option>
+                  <option>12C</option>
+                  <option>12D</option>
+                  <option>12E</option>
+                  <option>12F</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label>Subjek <span>*</span></label
+                ><input
+                  class="form-control"
+                  name="subjek"
+                  required
+                  placeholder="Topik pesan Anda"
+                />
+              </div>
+              <div class="form-group full">
+                <label>Pesan <span>*</span></label
+                ><textarea
+                  class="form-control"
+                  name="pesan"
+                  rows="5"
+                  required
+                  placeholder="Tulis pesan Anda di sini..."
+                ></textarea>
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-green"
+              style="margin-top: 1rem"
+            >
+              <i class="fas fa-paper-plane"></i> Kirim Pesan
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-wrap">
+            <div class="logo-icon">M1B</div>
+            <div class="logo-text">
+              <span>MAN 1 Bangka</span>
+              <span>WEBSITE KEGIATAN SISWA</span>
+            </div>
+          </div>
+          <p>
+            Portal resmi kegiatan siswa Madrasah Aliyah Negeri 1 Bangka.
+            Mewujudkan siswa yang beriman, berilmu, dan berprestasi.
+          </p>
+          <div class="footer-socials">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Menu Utama</h4>
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-chevron-right"></i> Beranda</a
+              >
+            </li>
+            <li>
+              <a href="pengumuman.php"
+                ><i class="fas fa-chevron-right"></i> Pengumuman</a
+              >
+            </li>
+            <li>
+              <a href="agenda.php"
+                ><i class="fas fa-chevron-right"></i> Agenda</a
+              >
+            </li>
+            <li>
+              <a href="ekstrakurikuler.php"
+                ><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a
+              >
+            </li>
+            <li>
+              <a href="prestasi.php"
+                ><i class="fas fa-chevron-right"></i> Prestasi</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Informasi</h4>
+          <ul>
+            <li>
+              <a href="organisasi.php"
+                ><i class="fas fa-chevron-right"></i> Organisasi Siswa</a
+              >
+            </li>
+            <li>
+              <a href="dokumentasi.php"
+                ><i class="fas fa-chevron-right"></i> Dokumentasi</a
+              >
+            </li>
+            <li>
+              <a href="arsip.php"
+                ><i class="fas fa-chevron-right"></i> Arsip Kegiatan</a
+              >
+            </li>
+            <li>
+              <a href="karya-siswa.php"
+                ><i class="fas fa-chevron-right"></i> Karya Siswa</a
+              >
+            </li>
+            <li>
+              <a href="testimoni.php"
+                ><i class="fas fa-chevron-right"></i> Testimoni</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak Sekolah</h4>
+          <ul>
+            <li>
+              <a href="#"
+                ><i class="fas fa-map-marker-alt"></i> Jl. Raya Bangka, Babel</a
+              >
+            </li>
+            <li>
+              <a href="tel:07171234567"
+                ><i class="fas fa-phone"></i> (0717) 123-4567</a
+              >
+            </li>
+            <li>
+              <a href="mailto:info@man1bangka.sch.id"
+                ><i class="fas fa-envelope"></i> info@man1bangka.sch.id</a
+              >
+            </li>
+            <li>
+              <a href="kontak.php"
+                ><i class="fas fa-address-book"></i> Kontak Pembina</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 <span>Man1Bangka</span>. All rights reserved.</div>
+        <div>Dikembangkan oleh <span>Estefania</span></div>
+      </div>
+    </footer>
+    <button id="scrollTop" aria-label="Scroll ke atas">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <script src="../assets/js/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadKontak();
+        initReveal();
+      });
+      function submitKontak(e) {
+        e.preventDefault();
+        const form = e.target;
+        const btn  = form.querySelector('[type=submit]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+
+        const fd = new FormData(form);
+        fetch('../php/api.php?module=pesan_kontak&action=kirim', {
+          method: 'POST', body: fd
+        })
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === 'success') {
+            showAlert(res.message || 'Pesan berhasil dikirim!');
+            form.reset();
+          } else {
+            showAlert(res.message || 'Gagal mengirim pesan.', 'error');
+          }
+        })
+        .catch(() => showAlert('Gagal terhubung ke server.', 'error'))
+        .finally(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Pesan';
+        });
+      }
+    </script>
+  </body>
+</html>

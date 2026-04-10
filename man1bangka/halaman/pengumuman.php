@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pengumuman — MAN 1 Bangka</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+
+  <?php include 'navbar.php'; ?>
+
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i>
+      <span style="color: var(--gold)">Pengumuman</span>
+    </div>
+    <h1><i class="far fa-bell"></i> Pengumuman Kegiatan</h1>
+    <p>
+      Informasi terbaru seputar lomba, kegiatan sekolah, dan pendaftaran untuk
+      siswa MAN 1 Bangka.
+    </p>
+  </section>
+
+  <section style="padding: 3rem clamp(1rem, 5vw, 4rem)">
+    <div
+      style="
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 2rem;
+        ">
+      <div
+        class="tabs__nav"
+        style="
+            background: var(--gray-100);
+            padding: 6px;
+            border-radius: 24px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+          ">
+        <button
+          class="tab-btn active"
+          data-filter="all"
+          onclick="filterPengumuman('all')">
+          Semua
+        </button>
+        <button
+          class="tab-btn"
+          data-filter="lomba"
+          onclick="filterPengumuman('lomba')">
+          🏆 Lomba
+        </button>
+        <button
+          class="tab-btn"
+          data-filter="kegiatan"
+          onclick="filterPengumuman('kegiatan')">
+          📅 Kegiatan
+        </button>
+        <button
+          class="tab-btn"
+          data-filter="pendaftaran"
+          onclick="filterPengumuman('pendaftaran')">
+          📝 Pendaftaran
+        </button>
+      </div>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input
+          type="text"
+          id="search-pengumuman"
+          placeholder="Cari pengumuman..." />
+      </div>
+    </div>
+    <div class="cards-grid" id="pengumuman-container">
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </section>
+  <div class="modal-overlay" id="modal-detail">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 id="modal-detail-title">Detail</h3>
+        <button
+          class="modal__close"
+          onclick="
+              document.getElementById('modal-detail').classList.remove('open')
+            ">
+          ×
+        </button>
+      </div>
+      <div class="modal__body">
+        <p id="modal-detail-body" style="line-height: 1.9"></p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-wrap">
+          <div class="logo-icon">M1B</div>
+          <div class="logo-text">
+            <span>MAN 1 Bangka</span>
+            <span>WEBSITE KEGIATAN SISWA</span>
+          </div>
+        </div>
+        <p>
+          Portal resmi kegiatan siswa Madrasah Aliyah Negeri 1 Bangka.
+          Mewujudkan siswa yang beriman, berilmu, dan berprestasi.
+        </p>
+        <div class="footer-socials">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-x-twitter"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Menu Utama</h4>
+        <ul>
+          <li>
+            <a href="../index.html"><i class="fas fa-chevron-right"></i> Beranda</a>
+          </li>
+          <li>
+            <a href="pengumuman.php"><i class="fas fa-chevron-right"></i> Pengumuman</a>
+          </li>
+          <li>
+            <a href="agenda.php"><i class="fas fa-chevron-right"></i> Agenda</a>
+          </li>
+          <li>
+            <a href="ekstrakurikuler.php"><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a>
+          </li>
+          <li>
+            <a href="prestasi.php"><i class="fas fa-chevron-right"></i> Prestasi</a>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informasi</h4>
+        <ul>
+          <li>
+            <a href="organisasi.php"><i class="fas fa-chevron-right"></i> Organisasi Siswa</a>
+          </li>
+          <li>
+            <a href="dokumentasi.php"><i class="fas fa-chevron-right"></i> Dokumentasi</a>
+          </li>
+          <li>
+            <a href="arsip.php"><i class="fas fa-chevron-right"></i> Arsip Kegiatan</a>
+          </li>
+          <li>
+            <a href="karya-siswa.php"><i class="fas fa-chevron-right"></i> Karya Siswa</a>
+          </li>
+          <li>
+            <a href="testimoni.php"><i class="fas fa-chevron-right"></i> Testimoni</a>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kontak Sekolah</h4>
+        <ul>
+          <li>
+            <a href="#"><i class="fas fa-map-marker-alt"></i> Jl. Raya Bangka, Babel</a>
+          </li>
+          <li>
+            <a href="tel:07171234567"><i class="fas fa-phone"></i> (0717) 123-4567</a>
+          </li>
+          <li>
+            <a href="mailto:info@man1bangka.sch.id"><i class="fas fa-envelope"></i> info@man1bangka.sch.id</a>
+          </li>
+          <li>
+            <a href="kontak.php"><i class="fas fa-address-book"></i> Kontak Pembina</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 <span>Man1Bangka</span>. All rights reserved.</div>
+      <div>Dikembangkan oleh <span>Estefania</span></div>
+    </div>
+  </footer>
+  <button id="scrollTop" aria-label="Scroll ke atas">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPengumuman("pengumuman-container");
+      initSearch("#search-pengumuman", ".card");
+      document.querySelectorAll(".tab-btn").forEach((b) =>
+        b.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((x) => x.classList.remove("active"));
+          b.classList.add("active");
+        }),
+      );
+    });
+
+    function filterPengumuman(kat) {
+      loadPengumuman("pengumuman-container", kat === "all" ? "" : kat);
+    }
+  </script>
+</body>
+
+</html>

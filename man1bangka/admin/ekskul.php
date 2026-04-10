@@ -47,14 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   } elseif ($action === 'update_pendaftar') {
     $pid = (int)$_POST['pendaftar_id'];
+    $viewId = (int)($_POST['view'] ?? 0);
     $status = $_POST['status'] ?? 'menunggu';
     if (!in_array($status, ['menunggu', 'diterima', 'ditolak'])) $status = 'menunggu';
     $pdo->prepare("UPDATE pendaftaran_ekskul SET status=? WHERE id=?")->execute([$status, $pid]);
-    header('Location: ekskul.php?msg=pendaftar');
+    header('Location: ekskul.php?view=' . $viewId . '&msg=pendaftar');
     exit;
   } elseif ($action === 'hapus_pendaftar') {
+    $viewId2 = (int)($_POST['view'] ?? 0);
     $pdo->prepare("DELETE FROM pendaftaran_ekskul WHERE id=?")->execute([(int)$_POST['pendaftar_id']]);
-    header('Location: ekskul.php?msg=hapus_pendaftar');
+    header('Location: ekskul.php?view=' . $viewId2 . '&msg=hapus_pendaftar');
     exit;
   }
 }
@@ -213,7 +215,7 @@ $catIcon = ['olahraga' => '⚽', 'seni' => '🎨', 'akademik' => '📚', 'keagam
               <?= csrfField() ?>
                           <input type="hidden" name="action" value="update_pendaftar" />
                           <input type="hidden" name="pendaftar_id" value="<?= $p['id'] ?>" />
-                          <input type="hidden" name="<?= 'view' ?>" value="<?= (int)$_GET['view'] ?>" />
+                          <input type="hidden" name="view" value="<?= (int)$_GET['view'] ?>" />
                           <select name="status" onchange="this.form.submit()" style="width:auto;font-size:.75rem;padding:.3rem .5rem;font-weight:600;border-radius:6px;cursor:pointer;" class="status-<?= htmlspecialchars($p['status']) ?>">
                             <option value="menunggu" <?= $p['status'] === 'menunggu' ? 'selected' : '' ?>>⏳ Menunggu</option>
                             <option value="diterima" <?= $p['status'] === 'diterima' ? 'selected' : '' ?>>✅ Diterima</option>

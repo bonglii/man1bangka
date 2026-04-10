@@ -9,10 +9,11 @@
 // ============================================================
 
 $current = basename($_SERVER['PHP_SELF']);
-function pubNavLink($href, $icon, $label) {
-    global $current;
-    $active = ($current === basename($href)) ? ' class="active"' : '';
-    echo "<a href=\"$href\"$active><i class=\"fas $icon\"></i> $label</a>";
+function pubNavLink($href, $icon, $label)
+{
+  global $current;
+  $active = ($current === basename($href)) ? ' class="active"' : '';
+  echo "<a href=\"$href\"$active><i class=\"fas $icon\"></i> $label</a>";
 }
 ?>
 <nav class="navbar" id="navbar">

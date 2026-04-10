@@ -78,7 +78,7 @@ function initNavbar() {
   });
 
   // Active link
-  const current = location.pathname.split('/').pop() || 'index.html';
+  const current = location.pathname.split('/').pop() || 'index.php';
   $$('.navbar__nav a, .mobile-nav a').forEach(a => {
     const href = a.getAttribute('href')?.split('/').pop();
     if (href === current) a.classList.add('active');
@@ -536,19 +536,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initParallax();
 
   // Page-specific loaders
-  const page = location.pathname.split('/').pop() || 'index.html';
+  const page = location.pathname.split('/').pop() || 'index.php';
 
-  if (page === 'index.html' || page === '') {
+  if (page === 'index.php' || page === 'index.html' || page === '') {
     loadPengumumanHighlight();
     loadAgendaUpcoming();
     loadPrestasiHighlight();
     loadTestimoni();
   }
-  if (page === 'pengumuman.html') loadPengumuman();
-  if (page === 'ekstrakurikuler.html') loadEkskul();
-  if (page === 'prestasi.html') loadPrestasi();
-  if (page === 'testimoni.html') { loadTestimoni(); }
-  if (page === 'kontak.html') loadKontak();
+  if (page === 'pengumuman.php') loadPengumuman();
+  if (page === 'ekstrakurikuler.php') loadEkskul();
+  if (page === 'prestasi.php') loadPrestasi();
+  if (page === 'testimoni.php') { loadTestimoni(); }
+  if (page === 'kontak.php') loadKontak();
 });
 
 // Expose globals
