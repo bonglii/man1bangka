@@ -12,27 +12,27 @@ session_start(); // Mulai sesi untuk menyimpan status login
 
 // Jika sudah login, langsung ke dashboard — tidak perlu login lagi
 if (isset($_SESSION['admin_logged_in'])) {
-    header('Location: index.php');
-    exit;
+  header('Location: index.php');
+  exit;
 }
 
 $error = ''; // Variabel untuk menyimpan pesan error login
 
 // Proses form login saat method POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = $_POST['username'] ?? '';
-    $pass = $_POST['password'] ?? '';
+  $user = $_POST['username'] ?? '';
+  $pass = $_POST['password'] ?? '';
 
-    // Validasi kredensial hardcoded (cocok untuk proyek akademik sederhana)
-    // Untuk produksi: gunakan database + password_hash() / password_verify()
-    if ($user === 'admin' && $pass === 'man1bangka2026') {
-        $_SESSION['admin_logged_in'] = true;  // Tandai sebagai sudah login
-        $_SESSION['admin_user']      = $user; // Simpan nama user untuk ditampilkan
-        header('Location: index.php');
-        exit;
-    } else {
-        $error = 'Username atau password salah!'; // Pesan error ditampilkan di form
-    }
+  // Validasi kredensial hardcoded (cocok untuk proyek akademik sederhana)
+  // Untuk produksi: gunakan database + password_hash() / password_verify()
+  if ($user === 'admin' && $pass === 'man1bangka2026') {
+    $_SESSION['admin_logged_in'] = true;  // Tandai sebagai sudah login
+    $_SESSION['admin_user']      = $user; // Simpan nama user untuk ditampilkan
+    header('Location: index.php');
+    exit;
+  } else {
+    $error = 'Username atau password salah!'; // Pesan error ditampilkan di form
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -53,7 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       --cream: #FAF7F0;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       min-height: 100vh;
@@ -68,7 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         linear-gradient(135deg, #0B3D2E 0%, #1a6b3c 60%, #0f5132 100%);
     }
 
-    .login-wrap { width: 100%; max-width: 400px; padding: 1rem; }
+    .login-wrap {
+      width: 100%;
+      max-width: 400px;
+      padding: 1rem;
+    }
 
     .login-box {
       background: #fff;
@@ -77,39 +85,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       box-shadow: 0 25px 50px rgba(0, 0, 0, .25);
     }
 
-    .login-header { text-align: center; margin-bottom: 2rem; }
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
     .login-logo {
-      width: 72px; height: 72px;
+      width: 72px;
+      height: 72px;
       background: linear-gradient(135deg, var(--green), var(--green-mid));
       border-radius: 18px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto 1.25rem;
-      font-size: 1.4rem; font-weight: 800;
+      font-size: 1.4rem;
+      font-weight: 800;
       color: var(--gold);
       box-shadow: 0 8px 24px rgba(11, 61, 46, .3);
       letter-spacing: -1px;
     }
 
-    .login-header h1 { font-size: 1.35rem; font-weight: 800; color: var(--green); letter-spacing: -.3px; }
-    .login-header p  { font-size: .8rem; color: #9ca3af; margin-top: .3rem; }
+    .login-header h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -.3px;
+    }
 
-    .form-group { margin-bottom: 1.1rem; }
+    .login-header p {
+      font-size: .8rem;
+      color: #9ca3af;
+      margin-top: .3rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
 
     label {
       display: block;
-      font-size: .76rem; font-weight: 700;
+      font-size: .76rem;
+      font-weight: 700;
       color: #374151;
       margin-bottom: .4rem;
       letter-spacing: .2px;
     }
 
-    .input-wrap { position: relative; }
+    .input-wrap {
+      position: relative;
+    }
 
     .input-wrap i {
-      position: absolute; left: 12px; top: 50%;
+      position: absolute;
+      left: 12px;
+      top: 50%;
       transform: translateY(-50%);
-      color: #9ca3af; font-size: .85rem;
+      color: #9ca3af;
+      font-size: .85rem;
     }
 
     input {
@@ -117,7 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       padding: .7rem .75rem .7rem 2.5rem;
       border: 1.5px solid #e5e7eb;
       border-radius: 10px;
-      font-size: .9rem; outline: none;
+      font-size: .9rem;
+      outline: none;
       transition: .2s;
       font-family: 'Inter', sans-serif;
     }
@@ -128,12 +162,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .btn-login {
-      width: 100%; padding: .85rem;
-      background: var(--green); color: #fff;
-      border: none; border-radius: 10px;
-      font-size: .9rem; font-weight: 700;
+      width: 100%;
+      padding: .85rem;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .9rem;
+      font-weight: 700;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
       transition: .2s;
       font-family: 'Inter', sans-serif;
       letter-spacing: .2px;
@@ -147,33 +188,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* Kotak pesan error login */
     .error {
-      background: #fef2f2; color: #dc2626;
+      background: #fef2f2;
+      color: #dc2626;
       padding: .75rem 1rem;
-      border-radius: 8px; font-size: .8rem;
+      border-radius: 8px;
+      font-size: .8rem;
       margin-bottom: 1rem;
-      display: flex; align-items: center; gap: .5rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
       border: 1px solid #fecaca;
     }
 
-    .back-link { text-align: center; margin-top: 1.25rem; }
+    .back-link {
+      text-align: center;
+      margin-top: 1.25rem;
+    }
 
     .back-link a {
       color: rgba(255, 255, 255, .7);
-      font-size: .8rem; text-decoration: none; transition: .2s;
+      font-size: .8rem;
+      text-decoration: none;
+      transition: .2s;
     }
 
-    .back-link a:hover { color: #fff; }
+    .back-link a:hover {
+      color: #fff;
+    }
 
     /* Info kredensial default — untuk kemudahan pengembangan */
     .login-info {
-      margin-top: 1rem; padding: .75rem 1rem;
-      background: #f9fafb; border-radius: 8px;
-      font-size: .75rem; color: #6b7280; text-align: center;
+      margin-top: 1rem;
+      padding: .75rem 1rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      font-size: .75rem;
+      color: #6b7280;
+      text-align: center;
     }
 
     .login-info code {
-      background: #e5e7eb; padding: .1rem .4rem;
-      border-radius: 4px; font-size: .72rem;
+      background: #e5e7eb;
+      padding: .1rem .4rem;
+      border-radius: 4px;
+      font-size: .72rem;
     }
   </style>
 </head>

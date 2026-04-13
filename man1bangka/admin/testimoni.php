@@ -27,14 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // --- AKSI: Hapus testimoni ---
   if ($action === 'hapus') {
     $pdo->prepare("DELETE FROM testimoni WHERE id=?")->execute([(int)$_POST['id']]);
-    header('Location: testimoni.php?msg=hapus'); exit;
-  // --- AKSI: Setujui testimoni (ubah status nonaktif -> aktif) ---
+    header('Location: testimoni.php?msg=hapus');
+    exit;
+    // --- AKSI: Setujui testimoni (ubah status nonaktif -> aktif) ---
   } elseif ($action === 'approve') {
     $pdo->prepare("UPDATE testimoni SET status='aktif', is_approved=1 WHERE id=?")->execute([(int)$_POST['id']]);
-    header('Location: testimoni.php?msg=approve'); exit;
+    header('Location: testimoni.php?msg=approve');
+    exit;
   } elseif ($action === 'reject') {
     $pdo->prepare("UPDATE testimoni SET status='nonaktif', is_approved=0 WHERE id=?")->execute([(int)$_POST['id']]);
-    header('Location: testimoni.php?msg=reject'); exit;
+    header('Location: testimoni.php?msg=reject');
+    exit;
   } elseif ($action === 'tambah') {
     $nama = trim($_POST['nama'] ?? '');
     $kelas = trim($_POST['kelas'] ?? '');
@@ -44,11 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $org_id    = ($_POST['organisasi_id'] ?? '') !== '' ? (int)$_POST['organisasi_id'] : null;
     $ekskul_id = ($_POST['ekskul_id'] ?? '') !== '' ? (int)$_POST['ekskul_id'] : null;
     if (!$nama || !$isi) {
-      header('Location: testimoni.php?err=data_kurang'); exit;
+      header('Location: testimoni.php?err=data_kurang');
+      exit;
     }
     $pdo->prepare("INSERT INTO testimoni (nama_siswa,kelas,jenis_kegiatan,nama_kegiatan,isi,rating,status,is_approved,organisasi_id,ekskul_id) VALUES (?,?,'lainnya',?,?,?,'aktif',1,?,?)")
       ->execute([$nama, $kelas, $kegiatan, $isi, $rating, $org_id, $ekskul_id]);
-    header('Location: testimoni.php?msg=tambah'); exit;
+    header('Location: testimoni.php?msg=tambah');
+    exit;
   }
 }
 
@@ -294,7 +299,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                   <!-- Actions -->
                   <div style="display:flex;gap:.4rem;">
                     <form method="POST" style="display:inline;" autocomplete="off">
-              <?= csrfField() ?>
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="approve" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-primary btn-sm">
@@ -302,7 +307,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                       </button>
                     </form>
                     <form method="POST" style="display:inline;" autocomplete="off">
-              <?= csrfField() ?>
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="reject" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-outline btn-sm" style="color:var(--orange);border-color:var(--orange);">
@@ -310,7 +315,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                       </button>
                     </form>
                     <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus testimoni ini?')" autocomplete="off">
-              <?= csrfField() ?>
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-ghost btn-sm" style="color:var(--red);">
@@ -345,7 +350,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                           <?php if ($r['kelas']): ?><span style="font-size:.75rem;color:var(--gray-400);"> — <?= htmlspecialchars($r['kelas']) ?></span><?php endif; ?>
                         </div>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus?')" autocomplete="off">
-              <?= csrfField() ?>
+                          <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus" />
                           <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                           <button type="submit" class="btn btn-ghost btn-icon btn-xs" style="color:var(--red);" title="Hapus">
@@ -387,8 +392,11 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
           wrap.parentNode.replaceChild(fresh, wrap);
           var stars = Array.from(fresh.querySelectorAll('.star-input'));
           var input = document.getElementById('rating-val');
+
           function applyActive(n) {
-            stars.forEach(function(s, i) { s.classList.toggle('active', i < n); });
+            stars.forEach(function(s, i) {
+              s.classList.toggle('active', i < n);
+            });
           }
           stars.forEach(function(s, idx) {
             s.addEventListener('click', function(e) {
@@ -396,8 +404,12 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
               input.value = idx + 1;
               applyActive(idx + 1);
             });
-            s.addEventListener('mouseenter', function() { applyActive(idx + 1); });
-            s.addEventListener('mouseleave', function() { applyActive(parseInt(input.value) || 5); });
+            s.addEventListener('mouseenter', function() {
+              applyActive(idx + 1);
+            });
+            s.addEventListener('mouseleave', function() {
+              applyActive(parseInt(input.value) || 5);
+            });
           });
         })();
       </script>

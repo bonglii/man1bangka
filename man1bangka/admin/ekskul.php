@@ -212,7 +212,7 @@ $catIcon = ['olahraga' => '⚽', 'seni' => '🎨', 'akademik' => '📚', 'keagam
                       </td>
                       <td>
                         <form method="POST" style="display:inline;" autocomplete="off">
-              <?= csrfField() ?>
+                          <?= csrfField() ?>
                           <input type="hidden" name="action" value="update_pendaftar" />
                           <input type="hidden" name="pendaftar_id" value="<?= $p['id'] ?>" />
                           <input type="hidden" name="view" value="<?= (int)$_GET['view'] ?>" />
@@ -226,7 +226,7 @@ $catIcon = ['olahraga' => '⚽', 'seni' => '🎨', 'akademik' => '📚', 'keagam
                       <td style="font-size:.72rem;color:var(--gray-400);"><?= date('d/m/y', strtotime($p['created_at'])) ?></td>
                       <td>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus pendaftar ini?')" autocomplete="off">
-              <?= csrfField() ?>
+                          <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus_pendaftar" />
                           <input type="hidden" name="pendaftar_id" value="<?= $p['id'] ?>" />
                           <button type="submit" class="btn btn-ghost btn-icon btn-xs" style="color:var(--red);"><i class="fas fa-trash"></i></button>
@@ -273,7 +273,7 @@ $catIcon = ['olahraga' => '⚽', 'seni' => '🎨', 'akademik' => '📚', 'keagam
             </div>
             <div class="form-section-body">
               <form method="POST" id="form-ekskul" autocomplete="off">
-              <?= csrfField() ?>
+                <?= csrfField() ?>
                 <input type="hidden" name="action" value="<?= $isEdit ? 'edit' : 'tambah' ?>" />
                 <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= $edit['id'] ?>" /><?php endif; ?>
 
@@ -371,7 +371,7 @@ $catIcon = ['olahraga' => '⚽', 'seni' => '🎨', 'akademik' => '📚', 'keagam
                       <div style="display:flex;gap:.3rem;">
                         <a href="?edit=<?= $r['id'] ?>" class="btn btn-ghost btn-icon btn-xs" title="Edit"><i class="fas fa-pen"></i></a>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus ekskul ini?')" autocomplete="off">
-              <?= csrfField() ?>
+                          <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus" /><input type="hidden" name="id" value="<?= $r['id'] ?>" />
                           <button class="btn btn-ghost btn-icon btn-xs" style="color:var(--red);"><i class="fas fa-trash"></i></button>
                         </form>

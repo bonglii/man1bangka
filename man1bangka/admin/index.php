@@ -342,6 +342,7 @@ require '../php/config.php'; ?>
     // ── Animated counters ────────────────────────────────────────
     function animCount(el, target, duration = 900) {
       const start = performance.now();
+
       function tick(now) {
         const p = Math.min((now - start) / duration, 1);
         const ease = 1 - Math.pow(1 - p, 3);
@@ -353,11 +354,19 @@ require '../php/config.php'; ?>
     }
     document.querySelectorAll('.stat-num[data-count]').forEach(el => {
       const target = parseInt(el.dataset.count) || 0;
-      if (target === 0) { el.textContent = '0'; return; }
+      if (target === 0) {
+        el.textContent = '0';
+        return;
+      }
       el.textContent = '0';
       const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) { animCount(el, target); obs.disconnect(); }
-      }, { threshold: 0.1 });
+        if (entries[0].isIntersecting) {
+          animCount(el, target);
+          obs.disconnect();
+        }
+      }, {
+        threshold: 0.1
+      });
       obs.observe(el);
     });
 
@@ -377,7 +386,8 @@ require '../php/config.php'; ?>
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
       const fd = new FormData(this);
       const res = await fetch('../php/api.php?module=agenda&action=tambah', {
-        method: 'POST', body: fd
+        method: 'POST',
+        body: fd
       });
       const d = await res.json();
       btn.disabled = false;

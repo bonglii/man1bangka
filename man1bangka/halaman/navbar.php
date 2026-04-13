@@ -57,6 +57,9 @@ $mobileItems = [
       <li><a href="<?= $href ?>" <?= $isActive ?>><i class="<?= $icon ?>"></i> <?= $label ?></a></li>
     <?php endforeach; ?>
   </ul>
+  <button class="hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- Mobile Nav -->

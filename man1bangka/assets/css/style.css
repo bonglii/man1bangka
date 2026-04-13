@@ -19,6 +19,7 @@
 :root {
   --green-dark: #0b3d2e;
   --green-mid: #1a6b3c;
+  --green: #2e9e5e;
   --green-light: #2e9e5e;
   --gold: #c9a84c;
   --gold-light: #e8c97a;
@@ -28,6 +29,7 @@
   --gray-100: #f4f4f0;
   --gray-200: #e8e4dc;
   --gray-400: #a0998a;
+  --gray-500: #857d72;
   --gray-600: #6b6259;
   --gray-800: #2d2a24;
   --shadow-sm: 0 2px 8px rgba(11, 61, 46, 0.08);
@@ -1188,14 +1190,17 @@ select.form-control {
   gap: 6px;
 }
 .rating-input i {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--gray-200);
   cursor: pointer;
   transition: var(--transition);
 }
-.rating-input i.active,
-.rating-input i:hover ~ i.active {
+.rating-input i.active {
   color: var(--gold);
+}
+.rating-input i:hover {
+  color: var(--gold);
+  transform: scale(1.15);
 }
 .form-success {
   display: none;

@@ -223,7 +223,7 @@ $orgList = $pdo->query("SELECT id, nama FROM organisasi ORDER BY nama ASC")->fet
                   <div class="data-item-actions">
                     <a href="?edit=<?= $r['id'] ?>" class="btn btn-outline btn-icon btn-xs" title="Edit"><i class="fas fa-pen"></i></a>
                     <form method="POST" style="display:inline" onsubmit="return confirm('Hapus pengumuman ini?')" autocomplete="off">
-              <?= csrfField() ?>
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" />
                       <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button type="submit" class="btn btn-ghost btn-icon btn-xs" style="color:var(--red);" title="Hapus"><i class="fas fa-trash"></i></button>
@@ -253,7 +253,7 @@ $orgList = $pdo->query("SELECT id, nama FROM organisasi ORDER BY nama ASC")->fet
           box.parentNode.replaceChild(fresh, box);
           fresh.style.cursor = 'pointer';
           fresh.addEventListener('click', function() {
-            var cb  = document.getElementById('hl_cb');
+            var cb = document.getElementById('hl_cb');
             var chk = document.getElementById('hl-check');
             var next = !cb.checked;
             cb.checked = next;

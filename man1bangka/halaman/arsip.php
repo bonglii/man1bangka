@@ -1,228 +1,128 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arsip Kegiatan — MAN 1 Bangka</title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-  </head>
-  <body>
-    
-    <?php include 'navbar.php'; ?>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arsip Kegiatan — MAN 1 Bangka</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+
+  <?php include 'navbar.php'; ?>
 
 
-    <section class="page-hero">
-      <div class="breadcrumb">
-        <a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i>
-        <span style="color: var(--gold)">Arsip Kegiatan</span>
+  <section class="page-hero">
+    <div class="breadcrumb">
+      <a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i>
+      <span style="color: var(--gold)">Arsip Kegiatan</span>
+    </div>
+    <h1><i class="fas fa-archive"></i> Arsip Kegiatan</h1>
+    <p>
+      Laporan dan dokumentasi kegiatan siswa MAN 1 Bangka per semester dan
+      tahun ajaran.
+    </p>
+  </section>
+
+  <section style="padding: 3rem clamp(1rem, 5vw, 4rem)">
+    <div style="max-width: 1000px; margin: 0 auto">
+      <div class="section-header reveal">
+        <div class="section-tag">🗂️ Arsip</div>
+        <h2>Arsip & Laporan Kegiatan</h2>
+        <p>
+          Dokumentasi dan laporan kegiatan yang telah dilaksanakan per
+          semester dan per tahun ajaran.
+        </p>
+        <div class="section-divider"></div>
       </div>
-      <h1><i class="fas fa-archive"></i> Arsip Kegiatan</h1>
-      <p>
-        Laporan dan dokumentasi kegiatan siswa MAN 1 Bangka per semester dan
-        tahun ajaran.
-      </p>
-    </section>
 
-    <section style="padding: 3rem clamp(1rem, 5vw, 4rem)">
-      <div style="max-width: 1000px; margin: 0 auto">
-        <div class="section-header reveal">
-          <div class="section-tag">🗂️ Arsip</div>
-          <h2>Arsip & Laporan Kegiatan</h2>
-          <p>
-            Dokumentasi dan laporan kegiatan yang telah dilaksanakan per
-            semester dan per tahun ajaran.
-          </p>
-          <div class="section-divider"></div>
-        </div>
-
-        <!-- Filter -->
-        <div
-          style="
+      <!-- Filter -->
+      <div
+        style="
             display: flex;
             gap: 0.75rem;
             flex-wrap: wrap;
             margin-bottom: 2rem;
             align-items: center;
-          "
-        >
-          <div style="display: flex; align-items: center; gap: 0.4rem">
-            <label
-              style="font-size: 0.82rem; font-weight: 600; color: var(--green)"
-              >Tahun Ajaran:</label
-            >
-            <select
-              id="filter-ta"
-              class="form-control"
-              style="width: auto"
-              onchange="applyArsipFilter()"
-            >
-              <option value="">Semua</option>
-              <option value="2024/2025">2024/2025</option>
-              <option value="2023/2024">2023/2024</option>
-              <option value="2022/2023">2022/2023</option>
-            </select>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.4rem">
-            <label
-              style="font-size: 0.82rem; font-weight: 600; color: var(--green)"
-              >Semester:</label
-            >
-            <select
-              id="filter-sem"
-              class="form-control"
-              style="width: auto"
-              onchange="applyArsipFilter()"
-            >
-              <option value="">Semua</option>
-              <option value="ganjil">Ganjil</option>
-              <option value="genap">Genap</option>
-            </select>
-          </div>
+          ">
+        <div style="display: flex; align-items: center; gap: 0.4rem">
+          <label
+            style="font-size: 0.82rem; font-weight: 600; color: var(--green)">Tahun Ajaran:</label>
+          <select
+            id="filter-ta"
+            class="form-control"
+            style="width: auto"
+            onchange="applyArsipFilter()">
+            <option value="">Semua</option>
+            <option value="2024/2025">2024/2025</option>
+            <option value="2023/2024">2023/2024</option>
+            <option value="2022/2023">2022/2023</option>
+          </select>
         </div>
-
-        <div id="arsip-list">
-          <div class="loading"><div class="spinner"></div></div>
+        <div style="display: flex; align-items: center; gap: 0.4rem">
+          <label
+            style="font-size: 0.82rem; font-weight: 600; color: var(--green)">Semester:</label>
+          <select
+            id="filter-sem"
+            class="form-control"
+            style="width: auto"
+            onchange="applyArsipFilter()">
+            <option value="">Semua</option>
+            <option value="ganjil">Ganjil</option>
+            <option value="genap">Genap</option>
+          </select>
         </div>
       </div>
-    </section>
 
-    <footer>
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="logo-wrap">
-            <div class="logo-icon">M1B</div>
-            <div class="logo-text">
-              <span>MAN 1 Bangka</span><span>WEBSITE KEGIATAN SISWA</span>
-            </div>
-          </div>
-          <p>Portal resmi kegiatan siswa Madrasah Aliyah Negeri 1 Bangka.</p>
-          <div class="footer-socials">
-            <a href="#"><i class="fab fa-instagram"></i></a
-            ><a href="#"><i class="fab fa-youtube"></i></a
-            ><a href="#"><i class="fab fa-facebook-f"></i></a>
-          </div>
-        </div>
-        <div class="footer-col">
-          <h4>Menu Utama</h4>
-          <ul>
-            <li>
-              <a href="../index.html"
-                ><i class="fas fa-chevron-right"></i> Beranda</a
-              >
-            </li>
-            <li>
-              <a href="pengumuman.php"
-                ><i class="fas fa-chevron-right"></i> Pengumuman</a
-              >
-            </li>
-            <li>
-              <a href="agenda.php"
-                ><i class="fas fa-chevron-right"></i> Agenda</a
-              >
-            </li>
-            <li>
-              <a href="ekstrakurikuler.php"
-                ><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a
-              >
-            </li>
-            <li>
-              <a href="prestasi.php"
-                ><i class="fas fa-chevron-right"></i> Prestasi</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Informasi</h4>
-          <ul>
-            <li>
-              <a href="dokumentasi.php"
-                ><i class="fas fa-chevron-right"></i> Dokumentasi</a
-              >
-            </li>
-            <li>
-              <a href="arsip.php"
-                ><i class="fas fa-chevron-right"></i> Arsip Kegiatan</a
-              >
-            </li>
-            <li>
-              <a href="karya-siswa.php"
-                ><i class="fas fa-chevron-right"></i> Karya Siswa</a
-              >
-            </li>
-            <li>
-              <a href="testimoni.php"
-                ><i class="fas fa-chevron-right"></i> Testimoni</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Kontak</h4>
-          <ul>
-            <li>
-              <a href="#"
-                ><i class="fas fa-map-marker-alt"></i> Jl. Raya Bangka, Babel</a
-              >
-            </li>
-            <li>
-              <a href="tel:07171234567"
-                ><i class="fas fa-phone"></i> (0717) 123-4567</a
-              >
-            </li>
-            <li>
-              <a href="kontak.php"
-                ><i class="fas fa-address-book"></i> Kontak Pembina</a
-              >
-            </li>
-          </ul>
+      <div id="arsip-list">
+        <div class="loading">
+          <div class="spinner"></div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <div>© 2026 <span>Man1Bangka</span>. All rights reserved.</div>
-        <div>Dikembangkan oleh <span>Estefania</span></div>
-      </div>
-    </footer>
-    <button id="scrollTop" aria-label="Scroll ke atas">
-      <i class="fas fa-arrow-up"></i>
-    </button>
-    <script src="../assets/js/main.js"></script>
-    <script>
-      let allArsip = [];
+    </div>
+  </section>
 
-      async function loadArsip() {
-        const container = document.getElementById("arsip-list");
+  <?php include 'footer.php'; ?>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    let allArsip = [];
+
+    async function loadArsip() {
+      const container = document.getElementById("arsip-list");
+      container.innerHTML =
+        '<div class="loading"><div class="spinner"></div></div>';
+      const res = await apiGet("arsip", "list");
+      allArsip = res.status === "success" ? res.data : [];
+      renderArsip(allArsip);
+    }
+
+    function applyArsipFilter() {
+      const ta = document.getElementById("filter-ta").value;
+      const sem = document.getElementById("filter-sem").value;
+      let data = allArsip;
+      if (ta) data = data.filter((a) => a.tahun_ajaran === ta);
+      if (sem) data = data.filter((a) => a.semester === sem);
+      renderArsip(data);
+    }
+
+    function renderArsip(data) {
+      const container = document.getElementById("arsip-list");
+      if (!data.length) {
         container.innerHTML =
-          '<div class="loading"><div class="spinner"></div></div>';
-        const res = await apiGet("arsip", "list");
-        allArsip = res.status === "success" ? res.data : [];
-        renderArsip(allArsip);
+          '<div class="empty-state"><i class="fas fa-folder-open"></i><p>Tidak ada arsip untuk filter ini.</p></div>';
+        return;
       }
-
-      function applyArsipFilter() {
-        const ta = document.getElementById("filter-ta").value;
-        const sem = document.getElementById("filter-sem").value;
-        let data = allArsip;
-        if (ta) data = data.filter((a) => a.tahun_ajaran === ta);
-        if (sem) data = data.filter((a) => a.semester === sem);
-        renderArsip(data);
-      }
-
-      function renderArsip(data) {
-        const container = document.getElementById("arsip-list");
-        if (!data.length) {
-          container.innerHTML =
-            '<div class="empty-state"><i class="fas fa-folder-open"></i><p>Tidak ada arsip untuk filter ini.</p></div>';
-          return;
-        }
-        const semIcon = { ganjil: "📘", genap: "📗" };
-        container.innerHTML = data
-          .map(
-            (a) => `
+      const semIcon = {
+        ganjil: "📘",
+        genap: "📗"
+      };
+      container.innerHTML = data
+        .map(
+          (a) => `
     <div class="agenda-item reveal" style="margin-bottom:.75rem;">
       <div class="agenda-date" style="background:var(--gold-dark);min-width:70px;text-align:center;flex-shrink:0;">
         <div class="day" style="font-size:.95rem;font-weight:800;">${(a.tahun_ajaran || "").split("/")[0] || "—"}</div>
@@ -239,16 +139,16 @@
       </div>
     </div>
   `,
-          )
-          .join("");
-        initReveal();
-      }
+        )
+        .join("");
+      initReveal();
+    }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        initNavbar();
-        initReveal();
-        loadArsip();
-      });
-    </script>
-  </body>
+    document.addEventListener("DOMContentLoaded", () => {
+      // initNavbar() and initReveal() already called by main.js
+      loadArsip();
+    });
+  </script>
+</body>
+
 </html>

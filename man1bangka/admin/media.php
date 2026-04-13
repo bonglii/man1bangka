@@ -18,7 +18,7 @@ require 'auth.php';
 require '../php/config.php'; ?>
 <?php
 $msg = $err = ''; // Dari redirect parameter
-$msgMap = ['upload'=>'Media berhasil diupload!','hapus'=>'Media dihapus.','edit'=>'Keterangan diperbarui.'];
+$msgMap = ['upload' => 'Media berhasil diupload!', 'hapus' => 'Media dihapus.', 'edit' => 'Keterangan diperbarui.'];
 if (isset($_GET['msg'])) $msg = $msgMap[$_GET['msg']] ?? '';
 $UPLOAD_DIR = '../php/uploads/'; // Direktori upload relatif dari folder admin/
 
@@ -49,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $pdo->prepare("INSERT INTO dokumentasi (judul,deskripsi,jenis,url_media,thumbnail,kategori,tanggal,organisasi_id,ekskul_id) VALUES (?,?,?,?,?,?,NOW(),?,?)")
             ->execute([$judul, $desk, $jenis, $url, ($jenis !== 'video' ? $url : ''), $kat, $org_id, $ekskul_id]);
           // PRG: redirect setelah upload sukses
-          header('Location: media.php?msg=upload'); exit;
+          header('Location: media.php?msg=upload');
+          exit;
         } else $err = 'Gagal menyimpan file. Cek permission folder uploads.';
       }
     } else $err = 'Pilih file terlebih dahulu.';
@@ -64,13 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $fp = '../' . $r['url_media'];
       if (file_exists($fp)) @unlink($fp); // @ untuk suppress warning jika file sudah tidak ada
       $pdo->prepare("DELETE FROM dokumentasi WHERE id=?")->execute([$id]);
-      header('Location: media.php?msg=hapus'); exit;
+      header('Location: media.php?msg=hapus');
+      exit;
     }
     // --- AKSI: Edit judul/deskripsi media (tanpa re-upload file) ---
   } elseif ($action === 'edit_judul') {
     $id = (int)$_POST['id'];
     $pdo->prepare("UPDATE dokumentasi SET judul=?,deskripsi=? WHERE id=?")->execute([trim($_POST['judul']), trim($_POST['deskripsi']), $id]);
-    header('Location: media.php?msg=edit'); exit;
+    header('Location: media.php?msg=edit');
+    exit;
   }
 }
 
@@ -80,7 +83,7 @@ $allowed_kat   = ['kegiatan', 'prestasi', 'wisuda', 'lainnya', 'pramuka', 'olahr
 $filter     = in_array($_GET['jenis'] ?? '', $allowed_jenis) ? $_GET['jenis'] : '';
 $kat_filter = in_array($_GET['kat']   ?? '', $allowed_kat)   ? $_GET['kat']   : '';
 $sql = "SELECT * FROM dokumentasi WHERE 1=1";
-if ($filter)     $sql .= " AND jenis=?"    ;
+if ($filter)     $sql .= " AND jenis=?";
 if ($kat_filter) $sql .= " AND kategori=?";
 $sql .= " ORDER BY tanggal DESC";
 $sqlParams = array_filter([$filter, $kat_filter]);
@@ -522,7 +525,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                       <div class="mc-actions">
                         <button class="mc-btn" style="background:var(--blue);color:#fff;" onclick="openEditMedia(<?= $m['id'] ?>,'<?= addslashes(htmlspecialchars($m['judul'])) ?>','<?= addslashes(htmlspecialchars($m['deskripsi'] ?? '')) ?>')" title="Edit"><i class="fas fa-pen"></i></button>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus media ini?')" autocomplete="off">
-              <?= csrfField() ?>
+                          <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus" />
                           <input type="hidden" name="id" value="<?= $m['id'] ?>" />
                           <button type="submit" class="mc-btn" style="background:var(--red);color:#fff;" title="Hapus"><i class="fas fa-trash"></i></button>
@@ -552,7 +555,7 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
           <button class="modal-close" onclick="closeModal('modal-edit')"><i class="fas fa-times"></i></button>
         </div>
         <form method="POST" autocomplete="off">
-              <?= csrfField() ?>
+          <?= csrfField() ?>
           <div class="modal-body">
             <input type="hidden" name="action" value="edit_judul" />
             <input type="hidden" name="id" id="edit-media-id" />

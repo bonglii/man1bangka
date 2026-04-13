@@ -55,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'tambah') {
           $pdo->prepare("INSERT INTO prestasi (judul,siswa,kelas,jenis,posisi,tingkat,penyelenggara,tahun,deskripsi,url_file,ekskul_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
             ->execute(array_merge($v, [$desk, $url_file, $ekskul_id]));
-          header('Location: prestasi.php?msg=tambah'); exit;
+          header('Location: prestasi.php?msg=tambah');
+          exit;
         } else {
           $id = (int)$_POST['id'];
           if ($url_file) {
@@ -71,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "UPDATE prestasi SET judul=?,siswa=?,kelas=?,jenis=?,posisi=?,tingkat=?,penyelenggara=?,tahun=?,deskripsi=?,ekskul_id=? WHERE id=?";
             $pdo->prepare($sql)->execute(array_merge($v, [$desk, $ekskul_id, $id]));
           }
-          header('Location: prestasi.php?msg=edit'); exit;
+          header('Location: prestasi.php?msg=edit');
+          exit;
         }
       }
     }
@@ -82,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $r = $r->fetch(PDO::FETCH_ASSOC);
     if ($r && $r['url_file']) @unlink('../' . $r['url_file']);
     $pdo->prepare("DELETE FROM prestasi WHERE id=?")->execute([$id]);
-    header('Location: prestasi.php?msg=hapus'); exit;
+    header('Location: prestasi.php?msg=hapus');
+    exit;
   }
 }
 if (isset($_GET['msg'])) {
@@ -156,7 +159,7 @@ $medals = ['sekolah' => '⭐', 'kabupaten' => '🥉', 'provinsi' => '🥈', 'nas
                 <div class="form-group"><label>Nama Siswa <span class="req">*</span></label><input type="text" name="siswa" value="<?= htmlspecialchars($edit['siswa'] ?? '') ?>" required /></div>
                 <div class="form-group"><label>Kelas</label><select name="kelas">
                     <option value="">-- Pilih Kelas --</option>
-                    <?php $k = ['10A','10B','10C','10D','10E','10F','11A','11B','11C','11D','11E','11F','12A','12B','12C','12D','12E','12F'];
+                    <?php $k = ['10A', '10B', '10C', '10D', '10E', '10F', '11A', '11B', '11C', '11D', '11E', '11F', '12A', '12B', '12C', '12D', '12E', '12F'];
                     foreach ($k as $kl): ?>
                       <option value="<?= $kl ?>" <?= ($edit['kelas'] ?? '') === $kl ? 'selected' : '' ?>><?= $kl ?></option>
                     <?php endforeach; ?>
@@ -165,14 +168,14 @@ $medals = ['sekolah' => '⭐', 'kabupaten' => '🥉', 'provinsi' => '🥈', 'nas
 
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem;">
                 <div class="form-group"><label>Jenis</label>
-                  <select name="jenis"><?php foreach (['akademik'=>'Akademik','olahraga'=>'Olahraga','seni'=>'Seni','keagamaan'=>'Keagamaan','teknologi'=>'Teknologi','lainnya'=>'Lainnya'] as $v => $l): ?><option value="<?= $v ?>" <?= ($edit['jenis'] ?? '') === $v ? 'selected' : '' ?>><?= $l ?></option><?php endforeach; ?></select>
+                  <select name="jenis"><?php foreach (['akademik' => 'Akademik', 'olahraga' => 'Olahraga', 'seni' => 'Seni', 'keagamaan' => 'Keagamaan', 'teknologi' => 'Teknologi', 'lainnya' => 'Lainnya'] as $v => $l): ?><option value="<?= $v ?>" <?= ($edit['jenis'] ?? '') === $v ? 'selected' : '' ?>><?= $l ?></option><?php endforeach; ?></select>
                 </div>
                 <div class="form-group"><label>Posisi / Penghargaan</label><input type="text" name="posisi" value="<?= htmlspecialchars($edit['posisi'] ?? '') ?>" placeholder="Juara 1, Harapan II..." /></div>
               </div>
 
               <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:.85rem;">
                 <div class="form-group"><label>Tingkat</label>
-                  <select name="tingkat"><?php foreach (['sekolah'=>'Sekolah','kabupaten'=>'Kabupaten','provinsi'=>'Provinsi','nasional'=>'Nasional','internasional'=>'Internasional'] as $v => $l): ?><option value="<?= $v ?>" <?= ($edit['tingkat'] ?? '') === $v ? 'selected' : '' ?>><?= $l ?></option><?php endforeach; ?></select>
+                  <select name="tingkat"><?php foreach (['sekolah' => 'Sekolah', 'kabupaten' => 'Kabupaten', 'provinsi' => 'Provinsi', 'nasional' => 'Nasional', 'internasional' => 'Internasional'] as $v => $l): ?><option value="<?= $v ?>" <?= ($edit['tingkat'] ?? '') === $v ? 'selected' : '' ?>><?= $l ?></option><?php endforeach; ?></select>
                 </div>
                 <div class="form-group"><label>Penyelenggara</label><input type="text" name="penyelenggara" value="<?= htmlspecialchars($edit['penyelenggara'] ?? '') ?>" /></div>
                 <div class="form-group"><label>Tahun</label><input type="number" name="tahun" value="<?= $edit['tahun'] ?? date('Y') ?>" min="2010" max="2030" /></div>
@@ -301,7 +304,7 @@ $medals = ['sekolah' => '⭐', 'kabupaten' => '🥉', 'provinsi' => '🥈', 'nas
                   <div class="data-item-actions">
                     <a href="?edit=<?= $r['id'] ?>" class="btn btn-outline btn-icon btn-xs"><i class="fas fa-pen"></i></a>
                     <form method="POST" style="display:inline" onsubmit="return confirm('Hapus prestasi ini?')" autocomplete="off">
-              <?= csrfField() ?>
+                      <?= csrfField() ?>
                       <input type="hidden" name="action" value="hapus" /><input type="hidden" name="id" value="<?= $r['id'] ?>" />
                       <button class="btn btn-ghost btn-icon btn-xs" style="color:var(--red)"><i class="fas fa-trash"></i></button>
                     </form>
@@ -322,106 +325,158 @@ $medals = ['sekolah' => '⭐', 'kabupaten' => '🥉', 'provinsi' => '🥈', 'nas
       <!-- end two-col -->
 
       <style>
-      .upload-file-box {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 1.25rem;
-        border: 2px dashed var(--gray-300);
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        transition: var(--transition);
-        background: var(--gray-50);
-      }
-      .upload-file-box:hover { border-color: var(--primary-mid); background: var(--primary-light); }
-      .upload-file-box.has-file { border-style: solid; border-color: var(--primary-mid); background: var(--primary-light); }
-      .ufb-icon {
-        width: 44px; height: 44px; border-radius: var(--radius-sm);
-        background: var(--white); border: 1px solid var(--gray-200);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.1rem; color: var(--primary-mid); flex-shrink: 0; transition: var(--transition);
-      }
-      .upload-file-box.has-file .ufb-icon { background: var(--primary-mid); color: #fff; border-color: var(--primary-mid); }
-      .ufb-text { display: flex; flex-direction: column; }
-      .ufb-text #prestasi-ufb-label { font-size: .83rem; font-weight: 700; color: var(--gray-700); }
-      .ufb-text #prestasi-ufb-hint { font-size: .72rem; color: var(--gray-400); margin-top: 2px; }
-      .upload-file-box.has-file .ufb-text #prestasi-ufb-label { color: var(--primary); }
-    </style>
+        .upload-file-box {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem 1.25rem;
+          border: 2px dashed var(--gray-300);
+          border-radius: var(--radius-sm);
+          cursor: pointer;
+          transition: var(--transition);
+          background: var(--gray-50);
+        }
 
-    <script>
-      (function initPrestasiScripts() {
-        window.onPrestasiFile = function(input) {
-          var box   = document.getElementById('prestasi-file-box');
-          var lbl   = document.getElementById('prestasi-ufb-label');
-          var hint  = document.getElementById('prestasi-ufb-hint');
-          var icon  = document.getElementById('prestasi-ufb-icon');
-          var prev  = document.getElementById('prestasi-img-preview');
-          var prevW = document.getElementById('prestasi-img-preview-wrap');
-          var nameBar = document.getElementById('prestasi-img-name-bar');
-          var vidNote = document.getElementById('prestasi-video-note');
-          var errDiv  = document.getElementById('prestasi-file-err');
-          var errMsg  = document.getElementById('prestasi-file-err-msg');
+        .upload-file-box:hover {
+          border-color: var(--primary-mid);
+          background: var(--primary-light);
+        }
 
-          // Reset error
-          errDiv.style.display = 'none';
-          box.style.borderColor = '';
+        .upload-file-box.has-file {
+          border-style: solid;
+          border-color: var(--primary-mid);
+          background: var(--primary-light);
+        }
 
-          if (!input.files || !input.files[0]) { resetPrestasiFile(); return; }
-          var f   = input.files[0];
-          var ext = f.name.split('.').pop().toLowerCase();
-          var imgExts = ['jpg','jpeg','png','webp'];
-          var allowed = ['jpg','jpeg','png','webp','mp4'];
+        .ufb-icon {
+          width: 44px;
+          height: 44px;
+          border-radius: var(--radius-sm);
+          background: var(--white);
+          border: 1px solid var(--gray-200);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+          color: var(--primary-mid);
+          flex-shrink: 0;
+          transition: var(--transition);
+        }
 
-          if (!allowed.includes(ext)) {
-            errMsg.innerHTML = '<strong>Format .' + ext.toUpperCase() + ' tidak didukung!</strong><br>Gunakan JPG, PNG, WEBP, atau MP4.';
-            errDiv.style.display = 'flex';
-            box.style.borderColor = 'var(--red)';
-            input.value = '';
-            return;
-          }
+        .upload-file-box.has-file .ufb-icon {
+          background: var(--primary-mid);
+          color: #fff;
+          border-color: var(--primary-mid);
+        }
 
-          var iconMap = { jpg:'fa-file-image', jpeg:'fa-file-image', png:'fa-file-image', webp:'fa-file-image', mp4:'fa-file-video' };
-          icon.className = 'fas ' + (iconMap[ext] || 'fa-file');
-          lbl.textContent = f.name;
-          hint.textContent = (f.size / 1024 / 1024).toFixed(2) + ' MB — File siap diupload ✓';
-          box.classList.add('has-file');
+        .ufb-text {
+          display: flex;
+          flex-direction: column;
+        }
 
-          // Image preview
-          if (imgExts.includes(ext)) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-              prev.src = e.target.result;
-              nameBar.textContent = f.name;
-              prevW.style.display = 'block';
+        .ufb-text #prestasi-ufb-label {
+          font-size: .83rem;
+          font-weight: 700;
+          color: var(--gray-700);
+        }
+
+        .ufb-text #prestasi-ufb-hint {
+          font-size: .72rem;
+          color: var(--gray-400);
+          margin-top: 2px;
+        }
+
+        .upload-file-box.has-file .ufb-text #prestasi-ufb-label {
+          color: var(--primary);
+        }
+      </style>
+
+      <script>
+        (function initPrestasiScripts() {
+          window.onPrestasiFile = function(input) {
+            var box = document.getElementById('prestasi-file-box');
+            var lbl = document.getElementById('prestasi-ufb-label');
+            var hint = document.getElementById('prestasi-ufb-hint');
+            var icon = document.getElementById('prestasi-ufb-icon');
+            var prev = document.getElementById('prestasi-img-preview');
+            var prevW = document.getElementById('prestasi-img-preview-wrap');
+            var nameBar = document.getElementById('prestasi-img-name-bar');
+            var vidNote = document.getElementById('prestasi-video-note');
+            var errDiv = document.getElementById('prestasi-file-err');
+            var errMsg = document.getElementById('prestasi-file-err-msg');
+
+            // Reset error
+            errDiv.style.display = 'none';
+            box.style.borderColor = '';
+
+            if (!input.files || !input.files[0]) {
+              resetPrestasiFile();
+              return;
+            }
+            var f = input.files[0];
+            var ext = f.name.split('.').pop().toLowerCase();
+            var imgExts = ['jpg', 'jpeg', 'png', 'webp'];
+            var allowed = ['jpg', 'jpeg', 'png', 'webp', 'mp4'];
+
+            if (!allowed.includes(ext)) {
+              errMsg.innerHTML = '<strong>Format .' + ext.toUpperCase() + ' tidak didukung!</strong><br>Gunakan JPG, PNG, WEBP, atau MP4.';
+              errDiv.style.display = 'flex';
+              box.style.borderColor = 'var(--red)';
+              input.value = '';
+              return;
+            }
+
+            var iconMap = {
+              jpg: 'fa-file-image',
+              jpeg: 'fa-file-image',
+              png: 'fa-file-image',
+              webp: 'fa-file-image',
+              mp4: 'fa-file-video'
             };
-            reader.readAsDataURL(f);
-            vidNote.style.display = 'none';
-          } else if (ext === 'mp4') {
-            prevW.style.display = 'none';
-            vidNote.style.display = 'block';
-          }
-        };
+            icon.className = 'fas ' + (iconMap[ext] || 'fa-file');
+            lbl.textContent = f.name;
+            hint.textContent = (f.size / 1024 / 1024).toFixed(2) + ' MB — File siap diupload ✓';
+            box.classList.add('has-file');
 
-        window.resetPrestasiFile = function() {
-          var input   = document.getElementById('prestasi-file-input');
-          var box     = document.getElementById('prestasi-file-box');
-          var lbl     = document.getElementById('prestasi-ufb-label');
-          var hint    = document.getElementById('prestasi-ufb-hint');
-          var icon    = document.getElementById('prestasi-ufb-icon');
-          var prevW   = document.getElementById('prestasi-img-preview-wrap');
-          var vidNote = document.getElementById('prestasi-video-note');
-          var errDiv  = document.getElementById('prestasi-file-err');
-          if (input)   input.value = '';
-          if (box)   { box.classList.remove('has-file'); box.style.borderColor = ''; }
-          if (lbl)     lbl.textContent = 'Klik untuk memilih file';
-          if (hint)    hint.textContent = 'JPG, PNG, WEBP, MP4 — Maks 30MB';
-          if (icon)    icon.className = 'fas fa-file-upload';
-          if (prevW)   prevW.style.display = 'none';
-          if (vidNote) vidNote.style.display = 'none';
-          if (errDiv)  errDiv.style.display = 'none';
-        };
-      })();
-    </script>
+            // Image preview
+            if (imgExts.includes(ext)) {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                prev.src = e.target.result;
+                nameBar.textContent = f.name;
+                prevW.style.display = 'block';
+              };
+              reader.readAsDataURL(f);
+              vidNote.style.display = 'none';
+            } else if (ext === 'mp4') {
+              prevW.style.display = 'none';
+              vidNote.style.display = 'block';
+            }
+          };
+
+          window.resetPrestasiFile = function() {
+            var input = document.getElementById('prestasi-file-input');
+            var box = document.getElementById('prestasi-file-box');
+            var lbl = document.getElementById('prestasi-ufb-label');
+            var hint = document.getElementById('prestasi-ufb-hint');
+            var icon = document.getElementById('prestasi-ufb-icon');
+            var prevW = document.getElementById('prestasi-img-preview-wrap');
+            var vidNote = document.getElementById('prestasi-video-note');
+            var errDiv = document.getElementById('prestasi-file-err');
+            if (input) input.value = '';
+            if (box) {
+              box.classList.remove('has-file');
+              box.style.borderColor = '';
+            }
+            if (lbl) lbl.textContent = 'Klik untuk memilih file';
+            if (hint) hint.textContent = 'JPG, PNG, WEBP, MP4 — Maks 30MB';
+            if (icon) icon.className = 'fas fa-file-upload';
+            if (prevW) prevW.style.display = 'none';
+            if (vidNote) vidNote.style.display = 'none';
+            if (errDiv) errDiv.style.display = 'none';
+          };
+        })();
+      </script>
 
     </div><!-- end page-content -->
   </main>

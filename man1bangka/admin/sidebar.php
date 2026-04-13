@@ -27,15 +27,15 @@ $current = basename($_SERVER['PHP_SELF']);
 // ============================================================
 function navLink($file, $icon, $label, $badge = null)
 {
-    global $current;
+  global $current;
 
-    // Tambahkan class 'active' jika halaman ini sedang dibuka
-    $active = ($current === $file) ? ' active' : '';
+  // Tambahkan class 'active' jika halaman ini sedang dibuka
+  $active = ($current === $file) ? ' active' : '';
 
-    // Render badge angka jika ada (misal: jumlah testimoni pending)
-    $bdg = $badge ? "<span class=\"nav-badge\">$badge</span>" : '';
+  // Render badge angka jika ada (misal: jumlah testimoni pending)
+  $bdg = $badge ? "<span class=\"nav-badge\">$badge</span>" : '';
 
-    echo "<a href=\"$file\" class=\"nav-link$active\">
+  echo "<a href=\"$file\" class=\"nav-link$active\">
         <span class=\"nav-icon\"><i class=\"fas $icon\"></i></span>
         <span>$label</span>$bdg
       </a>";
@@ -54,29 +54,35 @@ $siswaCount   = 0;  // Total pendaftaran ekskul (tidak dipakai di widget saat in
 $ekskulCount  = 0;  // Total jumlah ekskul aktif
 
 try {
-    global $pdo;
-    if ($pdo) {
-        // Hitung testimoni yang belum dimoderasi (status='nonaktif')
-        $n = $pdo->query("SELECT COUNT(*) FROM testimoni WHERE status='nonaktif'")->fetchColumn();
-        if ($n > 0) $pendingCount = $n; // Hanya tampilkan badge jika ada yang pending
-        $totalPending = (int)$n;
+  global $pdo;
+  if ($pdo) {
+    // Hitung testimoni yang belum dimoderasi (status='nonaktif')
+    $n = $pdo->query("SELECT COUNT(*) FROM testimoni WHERE status='nonaktif'")->fetchColumn();
+    if ($n > 0) $pendingCount = $n; // Hanya tampilkan badge jika ada yang pending
+    $totalPending = (int)$n;
 
-        // Hitung total record dari seluruh tabel data utama
-        $tables = [
-            'agenda', 'pengumuman', 'dokumentasi', 'prestasi',
-            'ekstrakurikuler', 'pendaftaran_ekskul', 'karya_siswa', 'testimoni'
-        ];
-        foreach ($tables as $t) {
-            $c          = $pdo->query("SELECT COUNT(*) FROM `$t`")->fetchColumn();
-            $totalData += (int)$c;
-        }
-
-        // Statistik tambahan untuk widget
-        $siswaCount  = $pdo->query("SELECT COUNT(*) FROM pendaftaran_ekskul")->fetchColumn();
-        $ekskulCount = $pdo->query("SELECT COUNT(*) FROM ekstrakurikuler")->fetchColumn();
+    // Hitung total record dari seluruh tabel data utama
+    $tables = [
+      'agenda',
+      'pengumuman',
+      'dokumentasi',
+      'prestasi',
+      'ekstrakurikuler',
+      'pendaftaran_ekskul',
+      'karya_siswa',
+      'testimoni'
+    ];
+    foreach ($tables as $t) {
+      $c          = $pdo->query("SELECT COUNT(*) FROM `$t`")->fetchColumn();
+      $totalData += (int)$c;
     }
+
+    // Statistik tambahan untuk widget
+    $siswaCount  = $pdo->query("SELECT COUNT(*) FROM pendaftaran_ekskul")->fetchColumn();
+    $ekskulCount = $pdo->query("SELECT COUNT(*) FROM ekstrakurikuler")->fetchColumn();
+  }
 } catch (Exception $e) {
-    // Abaikan error — sidebar tetap tampil meskipun query gagal
+  // Abaikan error — sidebar tetap tampil meskipun query gagal
 }
 ?>
 

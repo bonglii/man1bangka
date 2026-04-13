@@ -56,7 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if (move_uploaded_file($_FILES['foto']['tmp_name'], $dest)) {
             $fotoUpdate = $fname;
             // Delete old foto
-            $stmtFoto = $pdo->prepare("SELECT foto FROM kontak_pembina WHERE id=?"); $stmtFoto->execute([$id]); $oldFoto = $stmtFoto->fetchColumn();
+            $stmtFoto = $pdo->prepare("SELECT foto FROM kontak_pembina WHERE id=?");
+            $stmtFoto->execute([$id]);
+            $oldFoto = $stmtFoto->fetchColumn();
             if ($oldFoto && file_exists('../php/uploads/' . $oldFoto)) {
               @unlink('../php/uploads/' . $oldFoto);
             }

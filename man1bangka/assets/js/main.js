@@ -66,6 +66,12 @@ function initNavbar() {
   const hamburger = $('.hamburger');
   const mobileNav = $('.mobile-nav');
 
+  function closeMobileNav() {
+    hamburger?.classList.remove('open');
+    mobileNav?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   window.addEventListener('scroll', () => {
     navbar?.classList.toggle('scrolled', window.scrollY > 50);
     $('#scrollTop')?.classList.toggle('show', window.scrollY > 400);
@@ -75,6 +81,20 @@ function initNavbar() {
     hamburger.classList.toggle('open');
     mobileNav?.classList.toggle('open');
     document.body.style.overflow = mobileNav?.classList.contains('open') ? 'hidden' : '';
+  });
+
+  // Close mobile nav when any link is tapped
+  $$('.mobile-nav a').forEach(a => a.addEventListener('click', closeMobileNav));
+
+  // Close mobile nav when tapping outside (on the page overlay)
+  document.addEventListener('click', (e) => {
+    if (
+      mobileNav?.classList.contains('open') &&
+      !mobileNav.contains(e.target) &&
+      !hamburger?.contains(e.target)
+    ) {
+      closeMobileNav();
+    }
   });
 
   // Active link
@@ -160,6 +180,9 @@ function initCounters() {
 // ============================================================
 // TESTIMONI SLIDER
 // ============================================================
+// Track slider interval so it can be cleared on re-init
+let _sliderInterval = null;
+
 function initSlider() {
   const track = $('.testimoni-track');
   if (!track) return;
@@ -176,12 +199,30 @@ function initSlider() {
     track.style.transform = `translateX(-${current * cardW}px)`;
     dots.forEach((d, i) => d.classList.toggle('active', i === current));
   }
-  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
-  $('.slider-btn.prev')?.addEventListener('click', () => goTo(current - 1));
-  $('.slider-btn.next')?.addEventListener('click', () => goTo(current + 1));
 
-  // Auto slide
-  setInterval(() => goTo(current >= maxIdx ? 0 : current + 1), 5000);
+  // Remove duplicate listeners by replacing buttons with clones
+  const prevBtn = $('.slider-btn.prev');
+  const nextBtn = $('.slider-btn.next');
+  if (prevBtn) {
+    const p = prevBtn.cloneNode(true);
+    prevBtn.parentNode.replaceChild(p, prevBtn);
+    p.addEventListener('click', () => goTo(current - 1));
+  }
+  if (nextBtn) {
+    const n = nextBtn.cloneNode(true);
+    nextBtn.parentNode.replaceChild(n, nextBtn);
+    n.addEventListener('click', () => goTo(current + 1));
+  }
+
+  dots.forEach((d, i) => {
+    const nd = d.cloneNode(true);
+    d.parentNode.replaceChild(nd, d);
+    nd.addEventListener('click', () => goTo(i));
+  });
+
+  // Clear previous interval before starting new one
+  if (_sliderInterval) clearInterval(_sliderInterval);
+  _sliderInterval = setInterval(() => goTo(current >= maxIdx ? 0 : current + 1), 5000);
 }
 
 // ============================================================
@@ -466,6 +507,10 @@ function initForms() {
     if (res.status === 'success') {
       showAlert('Testimoni berhasil dikirim!');
       formTestimoni.reset();
+      // Reset rating stars visual back to 5
+      const ratingInput = document.getElementById('rating-value');
+      if (ratingInput) ratingInput.value = 5;
+      document.querySelectorAll('#rating-stars .fa-star').forEach((s, i) => s.classList.toggle('active', i < 5));
     } else {
       showAlert(res.message || 'Gagal mengirim testimoni', 'error');
     }

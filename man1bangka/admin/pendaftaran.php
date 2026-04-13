@@ -25,37 +25,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id     = (int)$_POST['id'];
     $status = $_POST['status'] ?? 'menunggu';
     if (!in_array($status, ['menunggu', 'diterima', 'ditolak'])) {
-      header('Location: pendaftaran.php?err=status_invalid'); exit;
+      header('Location: pendaftaran.php?err=status_invalid');
+      exit;
     }
     $pdo->prepare("UPDATE pendaftaran_ekskul SET status=? WHERE id=?")->execute([$status, $id]);
-    header('Location: pendaftaran.php?msg=status_updated'); exit;
-
+    header('Location: pendaftaran.php?msg=status_updated');
+    exit;
   } elseif ($action === 'hapus') {
     $id = (int)$_POST['id'];
     $pdo->prepare("DELETE FROM pendaftaran_ekskul WHERE id=?")->execute([$id]);
-    header('Location: pendaftaran.php?msg=hapus'); exit;
-
+    header('Location: pendaftaran.php?msg=hapus');
+    exit;
   } elseif ($action === 'update_status_bulk') {
     $ids    = $_POST['id'] ?? [];
     $status = $_POST['status_bulk'] ?? 'menunggu';
     if (!in_array($status, ['menunggu', 'diterima', 'ditolak'])) {
-      header('Location: pendaftaran.php?err=status_invalid'); exit;
+      header('Location: pendaftaran.php?err=status_invalid');
+      exit;
     }
     if ($ids) {
       $ph = implode(',', array_fill(0, count($ids), '?'));
       $vals = array_merge([$status], array_map('intval', $ids));
       $pdo->prepare("UPDATE pendaftaran_ekskul SET status=? WHERE id IN ($ph)")->execute($vals);
     }
-    header('Location: pendaftaran.php?msg=bulk_updated&n=' . count($ids)); exit;
-
+    header('Location: pendaftaran.php?msg=bulk_updated&n=' . count($ids));
+    exit;
   } elseif ($action === 'hapus_bulk') {
     $ids = $_POST['ids'] ?? [];
     if ($ids) {
       $ph = implode(',', array_fill(0, count($ids), '?'));
       $pdo->prepare("DELETE FROM pendaftaran_ekskul WHERE id IN ($ph)")->execute(array_map('intval', $ids));
     }
-    header('Location: pendaftaran.php?msg=bulk_hapus&n=' . count($ids)); exit;
-
+    header('Location: pendaftaran.php?msg=bulk_hapus&n=' . count($ids));
+    exit;
   } elseif ($action === 'tambah') {
     $ekskul_id = (int)($_POST['ekstrakurikuler_id'] ?? 0);
     $nama      = trim($_POST['nama_siswa'] ?? '');
@@ -67,16 +69,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status    = $_POST['status'] ?? 'menunggu';
 
     if (!$ekskul_id || !$nama || !$kelas || !$nis) {
-      header('Location: pendaftaran.php?err=data_kurang'); exit;
+      header('Location: pendaftaran.php?err=data_kurang');
+      exit;
     }
     $cek = $pdo->prepare("SELECT id FROM pendaftaran_ekskul WHERE nis=? AND ekstrakurikuler_id=?");
     $cek->execute([$nis, $ekskul_id]);
     if ($cek->fetch()) {
-      header('Location: pendaftaran.php?err=sudah_daftar'); exit;
+      header('Location: pendaftaran.php?err=sudah_daftar');
+      exit;
     }
     $pdo->prepare("INSERT INTO pendaftaran_ekskul (ekstrakurikuler_id,nama_siswa,kelas,nis,no_hp,email,alasan,status) VALUES (?,?,?,?,?,?,?,?)")
       ->execute([$ekskul_id, $nama, $kelas, $nis, $no_hp, $email, $alasan, $status]);
-    header('Location: pendaftaran.php?msg=tambah'); exit;
+    header('Location: pendaftaran.php?msg=tambah');
+    exit;
   }
 }
 
@@ -256,7 +261,7 @@ if (isset($_GET['detail'])) {
         <!-- TABLE -->
         <!-- Hidden bulk form (outside table to avoid nested form issues) -->
         <form method="POST" id="bulk-form" autocomplete="off" style="display:none;">
-              <?= csrfField() ?>
+          <?= csrfField() ?>
           <input type="hidden" name="action" value="hapus_bulk" />
           <div id="bulk-ids-container"></div>
         </form>
@@ -294,7 +299,7 @@ if (isset($_GET['detail'])) {
                     </td>
                     <td>
                       <form method="POST" style="display:inline;" autocomplete="off">
-              <?= csrfField() ?>
+                        <?= csrfField() ?>
                         <input type="hidden" name="action" value="update_status" />
                         <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                         <select name="status" onchange="this.form.submit()" style="width:auto;font-size:.76rem;padding:.3rem .6rem;border-radius:6px;font-weight:600;border-color:transparent;" class="status-select status-<?= htmlspecialchars($r['status']) ?>">
@@ -309,7 +314,7 @@ if (isset($_GET['detail'])) {
                       <div class="td-actions">
                         <a href="?detail=<?= $r['id'] ?><?= $fSearch ? '&q=' . urlencode($fSearch) : '' ?><?= $fStatus ? '&status=' . urlencode($fStatus) : '' ?><?= $fEkskul ? '&ekskul=' . (int)$fEkskul : '' ?>" class="btn btn-ghost btn-icon btn-sm" title="Detail"><i class="fas fa-eye"></i></a>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus pendaftaran ini?')" autocomplete="off">
-              <?= csrfField() ?>
+                          <?= csrfField() ?>
                           <input type="hidden" name="action" value="hapus" />
                           <input type="hidden" name="id" value="<?= $r['id'] ?>" />
                           <button type="submit" class="btn btn-ghost btn-icon btn-sm" style="color:var(--red);" title="Hapus"><i class="fas fa-trash"></i></button>
@@ -355,6 +360,7 @@ if (isset($_GET['detail'])) {
 
       <script>
         /* Bulk Action Scripts — HARUS di dalam .page-content agar SPA reinitPageScripts() bisa re-run */
+        const _csrfToken = <?= json_encode(getCsrfToken()) ?>;
         (function initBulkActions() {
           const checkAll = document.getElementById('check-all');
           const rowChecks = document.querySelectorAll('.row-check');
@@ -401,6 +407,7 @@ if (isset($_GET['detail'])) {
             };
             addHidden('action', 'update_status_bulk');
             addHidden('status_bulk', status);
+            addHidden('_csrf', _csrfToken);
             ids.forEach(id => addHidden('id[]', id));
             document.body.appendChild(form);
             form.submit();
@@ -421,6 +428,7 @@ if (isset($_GET['detail'])) {
               form.appendChild(i);
             };
             addHidden('action', 'hapus_bulk');
+            addHidden('_csrf', _csrfToken);
             ids.forEach(id => addHidden('ids[]', id));
             document.body.appendChild(form);
             form.submit();
@@ -448,7 +456,7 @@ if (isset($_GET['detail'])) {
         <button class="modal-close" onclick="closeModal('modal-tambah')"><i class="fas fa-times"></i></button>
       </div>
       <form method="POST" autocomplete="off">
-              <?= csrfField() ?>
+        <?= csrfField() ?>
         <div class="modal-body">
           <input type="hidden" name="action" value="tambah" />
           <div class="form-group">
@@ -591,7 +599,7 @@ if (isset($_GET['detail'])) {
         <div class="modal-footer">
           <!-- Quick status update -->
           <form method="POST" style="display:flex;gap:.5rem;align-items:center;flex:1;" autocomplete="off">
-              <?= csrfField() ?>
+            <?= csrfField() ?>
             <input type="hidden" name="action" value="update_status" />
             <input type="hidden" name="id" value="<?= $detail['id'] ?>" />
             <select name="status" style="width:auto;font-size:.82rem;">
@@ -602,7 +610,7 @@ if (isset($_GET['detail'])) {
             <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Update Status</button>
           </form>
           <form method="POST" onsubmit="return confirm('Hapus data ini?')" autocomplete="off">
-              <?= csrfField() ?>
+            <?= csrfField() ?>
             <input type="hidden" name="action" value="hapus" />
             <input type="hidden" name="id" value="<?= $detail['id'] ?>" />
             <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
