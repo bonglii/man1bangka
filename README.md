@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/26620174/README.md)
 # 🏫 MAN 1 Bangka — Website Kegiatan Siswa
 
 Website resmi portal kegiatan siswa **Madrasah Aliyah Negeri 1 Bangka** dengan Panel Admin lengkap berbasis PHP + MySQL.
