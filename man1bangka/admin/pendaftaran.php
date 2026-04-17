@@ -341,16 +341,26 @@ if (isset($_GET['detail'])) {
         <!-- BULK ACTIONS -->
         <?php if ($rows): ?>
           <div style="padding:.85rem 1.25rem;border-top:1px solid var(--gray-100);display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
-            <span style="font-size:.78rem;color:var(--gray-400);" id="selected-count">0 dipilih</span>
-            <button onclick="bulkAction('diterima')" class="btn btn-outline btn-sm" style="color:var(--teal);border-color:var(--teal);" id="btn-bulk-diterima" disabled>
-              <i class="fas fa-check"></i> <span id="lbl-terima">Terima Semua</span>
-            </button>
-            <button onclick="bulkAction('ditolak')" class="btn btn-outline btn-sm" style="color:var(--orange);border-color:var(--orange);" id="btn-bulk-tolak" disabled>
-              <i class="fas fa-times"></i> <span id="lbl-tolak">Tolak Semua</span>
-            </button>
-            <button onclick="bulkHapus()" class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red);" id="btn-bulk-hapus" disabled>
-              <i class="fas fa-trash"></i> Hapus Dipilih
-            </button>
+            <!-- Hint saat belum ada yang dipilih -->
+            <div id="bulk-hint" style="display:flex;align-items:center;gap:.5rem;">
+              <span style="font-size:.78rem;color:var(--gray-400);" id="selected-count">0 dipilih</span>
+              <span id="bulk-note" style="font-size:.75rem;color:var(--gray-400);display:flex;align-items:center;gap:.35rem;">
+                <i class="fas fa-info-circle" style="color:#93c5fd;font-size:.8rem;"></i>
+                Centang data terlebih dahulu untuk Terima / Tolak / Hapus
+              </span>
+            </div>
+            <!-- Tombol bulk — muncul saat ada yang dicentang -->
+            <div id="bulk-action-btns" style="display:none;align-items:center;gap:.5rem;flex-wrap:wrap;">
+              <button class="btn btn-sm" style="background:#ccfbf1;color:#0f766e;border:1.5px solid #0f766e;" id="btn-bulk-diterima">
+                <i class="fas fa-check"></i> <span id="lbl-terima">Terima</span>
+              </button>
+              <button class="btn btn-sm" style="background:#ffedd5;color:#c2410c;border:1.5px solid #c2410c;" id="btn-bulk-tolak">
+                <i class="fas fa-times"></i> <span id="lbl-tolak">Tolak</span>
+              </button>
+              <button class="btn btn-sm" style="background:#fee2e2;color:#b91c1c;border:1.5px solid #b91c1c;" id="btn-bulk-hapus">
+                <i class="fas fa-trash"></i> Hapus
+              </button>
+            </div>
             <a href="?<?= http_build_query(['ekskul' => $fEkskul, 'status' => $fStatus, 'q' => $fSearch]) ?>" class="btn btn-outline btn-sm" style="margin-left:auto;">
               <i class="fas fa-sync"></i> Refresh
             </a>
@@ -364,20 +374,22 @@ if (isset($_GET['detail'])) {
         (function initBulkActions() {
           const checkAll = document.getElementById('check-all');
           const rowChecks = document.querySelectorAll('.row-check');
-          const bulkBtns = ['btn-bulk-diterima', 'btn-bulk-tolak', 'btn-bulk-hapus'];
           const countEl = document.getElementById('selected-count');
 
           function updateBulk() {
             const n = document.querySelectorAll('.row-check:checked').length;
             if (countEl) countEl.textContent = n + ' dipilih';
-            bulkBtns.forEach(id => {
-              const b = document.getElementById(id);
-              if (b) b.disabled = (n === 0);
-            });
+
+            // Tampilkan tombol / sembunyikan note saat ada yang dipilih
+            const bulkDiv  = document.getElementById('bulk-action-btns');
+            const bulkNote = document.getElementById('bulk-note');
+            if (bulkDiv)  bulkDiv.style.display  = n > 0 ? 'flex' : 'none';
+            if (bulkNote) bulkNote.style.display  = n > 0 ? 'none' : 'flex';
+
             const lblTerima = document.getElementById('lbl-terima');
-            const lblTolak = document.getElementById('lbl-tolak');
+            const lblTolak  = document.getElementById('lbl-tolak');
             if (lblTerima) lblTerima.textContent = n === 1 ? 'Terima' : 'Terima Semua';
-            if (lblTolak) lblTolak.textContent = n === 1 ? 'Tolak' : 'Tolak Semua';
+            if (lblTolak)  lblTolak.textContent  = n === 1 ? 'Tolak'  : 'Tolak Semua';
           }
 
           if (checkAll) {
@@ -390,6 +402,15 @@ if (isset($_GET['detail'])) {
             if (checkAll) checkAll.checked = [...rowChecks].every(c => c.checked);
             updateBulk();
           }));
+
+          // Pasang event listener ke tombol bulk (bukan onclick inline)
+          // sehingga disabled attribute benar-benar direspek
+          const btnDiterima = document.getElementById('btn-bulk-diterima');
+          const btnTolak    = document.getElementById('btn-bulk-tolak');
+          const btnHapus    = document.getElementById('btn-bulk-hapus');
+          if (btnDiterima) btnDiterima.addEventListener('click', () => { if (!btnDiterima.disabled) bulkAction('diterima'); });
+          if (btnTolak)    btnTolak.addEventListener('click',    () => { if (!btnTolak.disabled)    bulkAction('ditolak'); });
+          if (btnHapus)    btnHapus.addEventListener('click',    () => { if (!btnHapus.disabled)    bulkHapus(); });
 
           window.bulkAction = function(status) {
             const ids = [...document.querySelectorAll('.row-check:checked')].map(c => c.value);

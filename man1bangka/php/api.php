@@ -104,6 +104,14 @@ switch ($module) {
         }
 
         if ($action === 'tambah' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            // FIX #7: Endpoint agenda tambah hanya untuk admin yang sudah login.
+            // api.php diakses publik untuk modul read & form publik (testimoni, daftar_ekskul, dll),
+            // tapi write ke tabel agenda harus dibatasi admin saja.
+            if (session_status() === PHP_SESSION_NONE) session_start();
+            if (empty($_SESSION['admin_logged_in'])) {
+                jsonResponse('error', [], 'Akses ditolak. Silakan login terlebih dahulu.');
+            }
+
             $judul  = sanitize($_POST['judul'] ?? '');
             $desk   = sanitize($_POST['deskripsi'] ?? '');
             $tgl    = sanitize($_POST['tanggal_mulai'] ?? '');
@@ -116,11 +124,32 @@ switch ($module) {
 
             if (!$judul || !$tgl) jsonResponse('error', [], 'Judul dan tanggal wajib diisi');
 
-            $stmt = $conn->prepare(
-                "INSERT INTO agenda (judul, deskripsi, tanggal_mulai, tanggal_selesai, lokasi, kategori, warna, is_selesai, organisasi_id, ekskul_id)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)"
-            );
-            $stmt->bind_param('sssssssii', $judul, $desk, $tgl, $tgl2, $lokasi, $kat, $warna, $org_id, $ekskul_id);
+            // FIX: Bangun query dinamis agar semua kolom nullable (FK & DATETIME)
+            // tersimpan sebagai NULL di DB — kompatibel PHP 7.4+.
+            // MySQLi bind_param tidak handle NULL sebelum PHP 8.1:
+            //   - 'i' dengan NULL → tersimpan 0 (FK violation)
+            //   - 's' dengan NULL → tersimpan '' (datetime error di strict mode)
+            // Solusi: hanya masukkan kolom ke INSERT jika nilainya tidak NULL.
+
+            // Base: tanpa tanggal_selesai (akan ditambah jika ada isinya)
+            $cols  = 'judul, deskripsi, tanggal_mulai, lokasi, kategori, warna, is_selesai';
+            $phs   = '?, ?, ?, ?, ?, ?, 0';
+            $types = 'ssssss';
+            $vals  = [$judul, $desk, $tgl, $lokasi, $kat, $warna];
+
+            // tanggal_selesai: DATETIME DEFAULT NULL — sertakan hanya jika terisi
+            if ($tgl2 !== null) {
+                $cols  = 'judul, deskripsi, tanggal_mulai, tanggal_selesai, lokasi, kategori, warna, is_selesai';
+                $phs   = '?, ?, ?, ?, ?, ?, ?, 0';
+                $types = 'sssssss';
+                $vals  = [$judul, $desk, $tgl, $tgl2, $lokasi, $kat, $warna];
+            }
+
+            if ($org_id !== null)    { $cols .= ', organisasi_id'; $phs .= ', ?'; $types .= 'i'; $vals[] = $org_id; }
+            if ($ekskul_id !== null) { $cols .= ', ekskul_id';    $phs .= ', ?'; $types .= 'i'; $vals[] = $ekskul_id; }
+
+            $stmt = $conn->prepare("INSERT INTO agenda ($cols) VALUES ($phs)");
+            $stmt->bind_param($types, ...$vals);
 
             if ($stmt->execute()) {
                 jsonResponse('success', ['id' => $conn->insert_id], 'Agenda berhasil ditambahkan');
@@ -322,11 +351,18 @@ switch ($module) {
 
             if (!$nama || !$isi) jsonResponse('error', [], 'Nama dan isi testimoni wajib diisi');
 
-            $stmt = $conn->prepare(
-                "INSERT INTO testimoni (nama_siswa, kelas, jenis_kegiatan, nama_kegiatan, isi, rating, status, organisasi_id, ekskul_id)
-                 VALUES (?, ?, ?, ?, ?, ?, 'nonaktif', ?, ?)"
-            );
-            $stmt->bind_param('sssssiii', $nama, $kelas, $jenis, $namKeg, $isi, $rating, $org_id, $ekskul_id);
+            // FIX: Bangun query dinamis agar FK nullable (organisasi_id, ekskul_id)
+            // tersimpan sebagai NULL di DB — bukan 0 — kompatibel PHP 7.4+
+            $cols  = 'nama_siswa, kelas, jenis_kegiatan, nama_kegiatan, isi, rating, status, is_approved';
+            $phs   = "?, ?, ?, ?, ?, ?, 'nonaktif', 1";
+            $types = 'sssssi';
+            $vals  = [$nama, $kelas, $jenis, $namKeg, $isi, $rating];
+
+            if ($org_id !== null)    { $cols .= ', organisasi_id'; $phs .= ', ?'; $types .= 'i'; $vals[] = $org_id; }
+            if ($ekskul_id !== null) { $cols .= ', ekskul_id';    $phs .= ', ?'; $types .= 'i'; $vals[] = $ekskul_id; }
+
+            $stmt = $conn->prepare("INSERT INTO testimoni ($cols) VALUES ($phs)");
+            $stmt->bind_param($types, ...$vals);
 
             if ($stmt->execute()) {
                 jsonResponse('success', [], 'Testimoni berhasil dikirim!');

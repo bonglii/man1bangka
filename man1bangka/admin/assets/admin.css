@@ -2295,3 +2295,84 @@ select {
   color: var(--gold);
   transform: scale(1.15);
 }
+
+/* ============================================================
+   PESAN MASUK — pesan.php
+   ============================================================ */
+.pesan-list { display: flex; flex-direction: column; gap: .75rem; }
+.pesan-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow .2s, transform .2s;
+}
+.pesan-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.pesan-card.unread { border-left: 4px solid var(--gold); }
+.pesan-card.read   { border-left: 4px solid var(--gray-200); }
+.pesan-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem .65rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.pesan-sender { display: flex; align-items: center; gap: .75rem; }
+.pesan-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-mid), var(--primary));
+  color: #fff;
+  font-weight: 700;
+  font-size: .95rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pesan-card.read .pesan-avatar { background: var(--gray-200); color: var(--gray-500); }
+.pesan-nama  { font-weight: 700; font-size: .9rem; color: var(--gray-900); }
+.pesan-kelas { font-size: .77rem; color: var(--gray-400); font-weight: 500; }
+.pesan-time  { font-size: .75rem; color: var(--gray-400); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+.pesan-card-body { padding: 0 1.25rem .85rem; }
+.pesan-subjek {
+  font-weight: 700; font-size: .88rem; color: var(--gray-800);
+  margin-bottom: .55rem; display: flex; align-items: center; gap: .4rem;
+}
+.pesan-subjek i { color: var(--gold-dark); font-size: .78rem; }
+.pesan-isi {
+  font-size: .85rem; color: var(--gray-600); line-height: 1.75;
+  background: var(--gray-50); border-radius: var(--radius-sm);
+  padding: .75rem 1rem; white-space: pre-wrap; margin-bottom: .75rem;
+  border: 1px solid var(--gray-100);
+}
+.pesan-card-footer {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+}
+.filter-bar {
+  display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;
+  margin-bottom: 1.25rem; padding: .75rem 1rem;
+  background: var(--white); border: 1px solid var(--gray-100);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+}
+.filter-lbl { font-size: .78rem; font-weight: 700; color: var(--gray-400); margin-right: .25rem; }
+.filter-chip {
+  padding: .28rem .85rem; border-radius: 99px;
+  border: 1.5px solid var(--gray-200); background: transparent;
+  color: var(--gray-500); font-size: .78rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: .15s;
+  display: inline-flex; align-items: center; gap: .35rem;
+}
+.filter-chip:hover  { border-color: var(--primary-mid); color: var(--primary); }
+.filter-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.empty-pesan { text-align: center; padding: 5rem 1rem; color: var(--gray-400); }
+.empty-pesan-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--gray-100); display: flex; align-items: center;
+  justify-content: center; font-size: 1.8rem; margin: 0 auto 1.25rem;
+  color: var(--gray-400);
+}
+.empty-pesan h3 { font-size: 1rem; color: var(--gray-600); margin-bottom: .35rem; }
+.empty-pesan p  { font-size: .82rem; }
+.bulk-info { font-size: .82rem; color: var(--gray-500); font-weight: 500; margin-bottom: 1rem; }

@@ -387,6 +387,7 @@ require '../php/config.php'; ?>
       const fd = new FormData(this);
       const res = await fetch('../php/api.php?module=agenda&action=tambah', {
         method: 'POST',
+        credentials: 'same-origin', // FIX: kirim session cookie agar auth check di api.php berhasil
         body: fd
       });
       const d = await res.json();

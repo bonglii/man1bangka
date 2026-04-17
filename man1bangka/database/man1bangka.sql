@@ -2,8 +2,8 @@
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Apr 10, 2026 at 04:08 AM
+-- Host: localhost:3306
+-- Generation Time: Apr 16, 2026 at 05:37 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -155,8 +155,7 @@ INSERT INTO `ekstrakurikuler` (`id`, `nama`, `deskripsi`, `kategori`, `jadwal`, 
 (6, 'Robotika', 'Mempelajari teknologi, pemrograman Arduino, dan merakit robot untuk menghadapi era digital.', 'teknologi', 'Sabtu, 09:00–11:00', 'Lab Komputer', NULL, NULL, '2026-04-01 19:11:49'),
 (7, 'Bola Kaki/Futsal', 'Olahraga bola kaki/futsal kompetitif yang membangun semangat sportivitas dan kekompakan tim.', 'olahraga', 'Selasa, 16.00-Selesai', 'Lapangan Sepak Bola Gang Sambu, Lapangan Futsal Man 1 Bangka', 21, NULL, '2026-04-01 19:11:49'),
 (8, 'Paduan Suara', 'Kegiatan seni vokal yang melatih kemampuan bernyanyi harmonis dan tampil di berbagai acara.', 'seni', 'Selasa, 14:00–16:00', 'Ruang Musik', NULL, NULL, '2026-04-01 19:11:49'),
-(9, 'Silat', 'Pencak Silat', 'olahraga', 'Selasa 14.00', 'Sekolah', NULL, 5, '2026-04-01 19:48:30'),
-(10, 'www', 'awdawdawdawdawd', 'akademik', 'awdawdawd', 'awdawdawdawd', NULL, 5, '2026-04-02 14:49:00');
+(9, 'Silat', 'Pencak Silat', 'olahraga', 'Selasa 14.00', 'Sekolah', NULL, 5, '2026-04-01 19:48:30');
 
 -- --------------------------------------------------------
 
@@ -188,8 +187,7 @@ INSERT INTO `karya_siswa` (`id`, `judul`, `siswa`, `penulis`, `kelas`, `jenis`, 
 (2, 'Inovasi Pupuk Organik dari Limbah Kelapa Sawit', 'Ahmad Rizky', 'Ahmad Rizky', 'XII IPA 1', 'karya_ilmiah', 'Penelitian tentang pemanfaatan limbah kelapa sawit menjadi pupuk organik berkualitas tinggi.', 'Juara 1 Provinsi', NULL, 4, '2026-04-02 02:11:49', '2026-04-01 19:11:49'),
 (3, 'Stop Bullying — Sekolah Ramah Anak', 'Dinda Permata', 'Dinda Permata', 'XI IPS 1', 'poster', 'Poster kampanye anti-bullying.', NULL, NULL, NULL, '2026-04-02 02:11:49', '2026-04-01 19:11:49'),
 (4, 'Bangga Budaya Bangka — Mini Dokumenter', 'Tim Multimedia', 'Tim Multimedia', 'XII IPA 3', 'video', 'Video dokumenter pendek tentang kebudayaan dan potensi wisata Pulau Bangka.', 'Best Short Film', NULL, NULL, '2026-04-02 02:11:49', '2026-04-01 19:11:49'),
-(5, 'Dalam Diam Tersimpan Doa', 'Nurul Fadhilah', 'Nurul Fadhilah', 'X IPS 2', 'puisi', 'Kumpulan puisi tentang perjuangan dan harapan dalam menuntut ilmu.', 'Juara 1 Lomba Puisi Islami', NULL, NULL, '2026-04-02 02:11:49', '2026-04-01 19:11:49'),
-(9, 'Makalah Lomba Berbuat Baik 2', 'wdawd', 'wdawd', '10A', 'artikel', 'aa', '-', 'php/uploads/karya/karya_69ce882c2e61c5.55516471.png', NULL, '2026-04-02 22:15:56', '2026-04-02 15:15:56');
+(5, 'Dalam Diam Tersimpan Doa', 'Nurul Fadhilah', 'Nurul Fadhilah', '', 'puisi', 'Kumpulan puisi tentang perjuangan dan harapan dalam menuntut ilmu.', 'Juara 1 Lomba Puisi Islami', NULL, NULL, '2026-04-02 02:11:49', '2026-04-01 19:11:49');
 
 -- --------------------------------------------------------
 
@@ -287,6 +285,24 @@ CREATE TABLE `pendaftaran_ekskul` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pendaftaran_lomba`
+--
+
+CREATE TABLE `pendaftaran_lomba` (
+  `id` int NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelas` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nis` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_lomba` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tingkat` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('menunggu','diterima','ditolak') COLLATE utf8mb4_unicode_ci DEFAULT 'menunggu',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `pengumuman`
 --
 
@@ -311,6 +327,22 @@ INSERT INTO `pengumuman` (`id`, `judul`, `isi`, `kategori`, `tanggal_publish`, `
 (2, 'Peringatan Hari Hari', 'Seluruh siswa wajib mengikuti upacara Hardiknas pada 2 Mei 2025 pukul 07.00 WIB di lapangan utama sekolah. Harap memakai seragam lengkap.', 'umum', '2025-04-28', NULL, 0, NULL, '2026-04-01 19:11:48'),
 (3, 'Pendaftaran Ekstrakurikuler Semester Genap', 'Pendaftaran ekstrakurikuler semester genap 2024/2025 dibuka 15–31 Januari 2025.', 'pendaftaran', '2025-01-15', NULL, 1, 1, '2026-04-01 19:11:48'),
 (4, 'Seminar Motivasi Bersama Alumni Berprestasi', 'MAN 1 Bangka mengadakan seminar motivasi bersama alumni berprestasi pada 1 Maret 2025 pukul 08.00–12.00 di Aula Utama.', 'kegiatan', '2025-02-01', NULL, 0, 1, '2026-04-01 19:11:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pesan_kontak`
+--
+
+CREATE TABLE `pesan_kontak` (
+  `id` int NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelas` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subjek` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pesan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_read` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -370,7 +402,7 @@ CREATE TABLE `program_kerja` (
 
 INSERT INTO `program_kerja` (`id`, `organisasi_id`, `nama_program`, `deskripsi`, `semester`, `status`, `created_at`) VALUES
 (1, 1, 'Masa Orientasi Siswa Baru', 'Pengenalan lingkungan sekolah bagi siswa baru kelas X.', 'ganjil', 'selesai', '2026-04-01 19:11:49'),
-(2, 1, 'Peringatan HUT RI', 'Serangkaian lomba dalam rangka memperingati Hari Kemerdekaan.', 'ganjil', 'selesai', '2026-04-01 19:11:49'),
+(2, 1, 'Peringatan HUT RI', 'Serangkaian lomba dalam rangka memperingati Hari Kemerdekaan.', 'ganjil', 'berjalan', '2026-04-01 19:11:49'),
 (3, 1, 'Olimpiade Internal Sekolah', 'Kompetisi akademik dan non-akademik antar kelas.', 'genap', 'berjalan', '2026-04-01 19:11:49'),
 (4, 1, 'Pentas Seni Akhir Tahun', 'Penampilan seni tari, musik, dan drama dari seluruh siswa.', 'genap', 'rencana', '2026-04-01 19:11:49');
 
@@ -390,7 +422,7 @@ CREATE TABLE `testimoni` (
   `isi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `rating` int DEFAULT '5',
   `status` enum('aktif','nonaktif') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'aktif',
-  `is_approved` tinyint(1) DEFAULT '1',
+  `is_approved` tinyint(1) NOT NULL DEFAULT '0',
   `organisasi_id` int DEFAULT NULL,
   `ekskul_id` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -475,11 +507,23 @@ ALTER TABLE `pendaftaran_ekskul`
   ADD KEY `fk_pendaftaran_ekskul` (`ekstrakurikuler_id`);
 
 --
+-- Indexes for table `pendaftaran_lomba`
+--
+ALTER TABLE `pendaftaran_lomba`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `pengumuman`
 --
 ALTER TABLE `pengumuman`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_pengumuman_org` (`organisasi_id`);
+
+--
+-- Indexes for table `pesan_kontak`
+--
+ALTER TABLE `pesan_kontak`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `prestasi`
@@ -517,7 +561,7 @@ ALTER TABLE `agenda`
 -- AUTO_INCREMENT for table `anggota_organisasi`
 --
 ALTER TABLE `anggota_organisasi`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `arsip`
@@ -547,18 +591,24 @@ ALTER TABLE `karya_siswa`
 -- AUTO_INCREMENT for table `kontak_pembina`
 --
 ALTER TABLE `kontak_pembina`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `organisasi`
 --
 ALTER TABLE `organisasi`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `pendaftaran_ekskul`
 --
 ALTER TABLE `pendaftaran_ekskul`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `pendaftaran_lomba`
+--
+ALTER TABLE `pendaftaran_lomba`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -566,6 +616,12 @@ ALTER TABLE `pendaftaran_ekskul`
 --
 ALTER TABLE `pengumuman`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `pesan_kontak`
+--
+ALTER TABLE `pesan_kontak`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `prestasi`
@@ -583,7 +639,7 @@ ALTER TABLE `program_kerja`
 -- AUTO_INCREMENT for table `testimoni`
 --
 ALTER TABLE `testimoni`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
@@ -658,52 +714,6 @@ ALTER TABLE `program_kerja`
 ALTER TABLE `testimoni`
   ADD CONSTRAINT `fk_testimoni_ekskul` FOREIGN KEY (`ekskul_id`) REFERENCES `ekstrakurikuler` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_testimoni_org` FOREIGN KEY (`organisasi_id`) REFERENCES `organisasi` (`id`) ON DELETE SET NULL;
---
--- Table structure for table `pesan_kontak`
--- Menyimpan pesan dari form kontak halaman publik
---
-
-CREATE TABLE IF NOT EXISTS `pesan_kontak` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kelas` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `subjek` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pesan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sudah_dibaca` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Table structure for table `pendaftaran_lomba`
--- Menyimpan pendaftaran lomba dari halaman publik
---
-
-CREATE TABLE IF NOT EXISTS `pendaftaran_lomba` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kelas` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nis` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_lomba` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tingkat` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `no_hp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('menunggu','diterima','ditolak') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'menunggu',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- AUTO_INCREMENT for table `pesan_kontak`
---
-ALTER TABLE `pesan_kontak`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `pendaftaran_lomba`
---
-ALTER TABLE `pendaftaran_lomba`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

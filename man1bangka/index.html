@@ -94,7 +94,7 @@
           >
         </li>
         <li>
-          <a href="halaman/organisasi.php"><i class="fas fa-users"></i> OSIS</a>
+          <a href="halaman/organisasi.php"><i class="fas fa-users"></i> OSIM</a>
         </li>
         <li>
           <a href="halaman/dokumentasi.php"
@@ -461,9 +461,6 @@
         <button class="slider-btn prev">
           <i class="fas fa-chevron-left"></i>
         </button>
-        <div class="slider-dots">
-          <span class="slider-dot active"></span>
-        </div>
         <button class="slider-btn next">
           <i class="fas fa-chevron-right"></i>
         </button>
@@ -747,13 +744,13 @@
       <div class="ekskul-card reveal" style="max-width:100%;">
         <div class="ekskul-card__header">
           <div class="ekskul-card__icon">${icons[e.kategori] || "🌟"}</div>
-          <h3 class="ekskul-card__title">${e.nama}</h3>
+          <h3 class="ekskul-card__title">${esc(e.nama)}</h3>
           <span class="badge badge-gold">${e.kategori}</span>
         </div>
         <div class="ekskul-card__body">
-          <p style="font-size:.87rem;margin-bottom:1rem;">${(e.deskripsi || "").substring(0, 120)}...</p>
-          <div class="ekskul-card__row"><i class="fas fa-user-tie"></i><span>${e.nama_pembina || "-"}</span></div>
-          <div class="ekskul-card__row"><i class="far fa-clock"></i><span>${e.jadwal || "-"}</span></div>
+          <p style="font-size:.87rem;margin-bottom:1rem;">${esc((e.deskripsi || "").substring(0, 120))}...</p>
+          <div class="ekskul-card__row"><i class="fas fa-user-tie"></i><span>${esc(e.nama_pembina || "-")}</span></div>
+          <div class="ekskul-card__row"><i class="far fa-clock"></i><span>${esc(e.jadwal || "-")}</span></div>
         </div>
         <div class="ekskul-card__footer">
           <button class="btn btn-green btn-sm" onclick="window.location='halaman/ekstrakurikuler.php'">

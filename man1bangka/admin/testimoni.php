@@ -69,9 +69,14 @@ if (isset($_GET['msg'])) $msg = $msgMap[$_GET['msg']] ?? '';
 $err = isset($_GET['err']) ? ($errMap[$_GET['err']] ?? '') : '';
 
 $rows = $pdo->query("SELECT * FROM testimoni ORDER BY is_approved ASC, created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
-$pending = array_values(array_filter($rows, fn($r) => $r['status'] !== 'aktif'));
+// Menunggu  = nonaktif & is_approved=1 (baru dikirim publik, belum direview)
+// Ditolak   = nonaktif & is_approved=0 (sudah ditolak admin)
+// Disetujui = aktif    & is_approved=1
+$pending  = array_values(array_filter($rows, fn($r) => $r['status'] === 'nonaktif' && (int)$r['is_approved'] === 1));
+$rejected = array_values(array_filter($rows, fn($r) => $r['status'] === 'nonaktif' && (int)$r['is_approved'] === 0));
 $approved = array_values(array_filter($rows, fn($r) => $r['status'] === 'aktif'));
-$nPending = count($pending);
+$nPending  = count($pending);
+$nRejected = count($rejected);
 $nApproved = count($approved);
 $orgList    = $pdo->query("SELECT id, nama FROM organisasi ORDER BY nama ASC")->fetchAll(PDO::FETCH_ASSOC);
 $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama ASC")->fetchAll(PDO::FETCH_ASSOC);
@@ -260,6 +265,12 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                   <span style="display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;background:var(--orange);color:#fff;border-radius:99px;font-size:.65rem;font-weight:800;margin-left:.3rem;padding:0 .3rem;"><?= $nPending ?></span>
                 <?php endif; ?>
               </button>
+              <button class="admin-tab" data-tab="tab-rejected">
+                🚫 Ditolak
+                <?php if ($nRejected): ?>
+                  <span style="display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;background:var(--red,#ef4444);color:#fff;border-radius:99px;font-size:.65rem;font-weight:800;margin-left:.3rem;padding:0 .3rem;"><?= $nRejected ?></span>
+                <?php endif; ?>
+              </button>
               <button class="admin-tab" data-tab="tab-approved">
                 ✅ Disetujui
                 <span style="display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;background:var(--primary-mid);color:#fff;border-radius:99px;font-size:.65rem;font-weight:800;margin-left:.3rem;padding:0 .3rem;"><?= $nApproved ?></span>
@@ -330,6 +341,56 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
                 <div class="empty-state-icon">✅</div>
                 <h4>Semua Bersih!</h4>
                 <p>Tidak ada testimoni yang menunggu persetujuan.</p>
+              </div>
+            <?php endif; ?>
+          </div>
+
+          <!-- TAB DITOLAK -->
+          <div id="tab-rejected" class="tab-pane" style="max-height:560px;overflow-y:auto;">
+            <?php if ($rejected): ?>
+              <?php foreach ($rejected as $r): ?>
+                <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--gray-100);opacity:.8;">
+                  <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem;">
+                    <div style="width:38px;height:38px;border-radius:50%;background:#fee2e2;color:#b91c1c;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0;border:2px solid #fca5a5;">
+                      <?= strtoupper(substr($r['nama_siswa'], 0, 1)) ?>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-weight:700;font-size:.87rem;color:var(--gray-900);">
+                        <?= htmlspecialchars($r['nama_siswa']) ?>
+                        <?php if ($r['kelas']): ?><span style="font-weight:400;color:var(--gray-400);font-size:.78rem;"> — <?= htmlspecialchars($r['kelas']) ?></span><?php endif; ?>
+                      </div>
+                      <span class="badge" style="background:#fee2e2;color:#b91c1c;font-size:.65rem;margin-top:.2rem;display:inline-block;">🚫 Ditolak</span>
+                    </div>
+                    <span style="font-size:.7rem;color:var(--gray-400);flex-shrink:0;"><?= date('d/m/y', strtotime($r['created_at'])) ?></span>
+                  </div>
+                  <div style="font-size:.82rem;color:var(--gray-600);line-height:1.6;padding:.75rem;background:var(--gray-50);border-radius:var(--radius-sm);border-left:3px solid #fca5a5;margin-bottom:.75rem;font-style:italic;">
+                    "<?= htmlspecialchars(substr($r['isi'], 0, 200)) ?><?= strlen($r['isi']) > 200 ? '...' : '' ?>"
+                  </div>
+                  <div style="display:flex;gap:.4rem;">
+                    <form method="POST" style="display:inline;" autocomplete="off">
+                      <?= csrfField() ?>
+                      <input type="hidden" name="action" value="approve" />
+                      <input type="hidden" name="id" value="<?= $r['id'] ?>" />
+                      <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-check"></i> Setujui
+                      </button>
+                    </form>
+                    <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus testimoni ini?')" autocomplete="off">
+                      <?= csrfField() ?>
+                      <input type="hidden" name="action" value="hapus" />
+                      <input type="hidden" name="id" value="<?= $r['id'] ?>" />
+                      <button type="submit" class="btn btn-ghost btn-sm" style="color:var(--red);">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <div class="empty-state" style="padding:3rem 1.5rem;">
+                <div class="empty-state-icon">🚫</div>
+                <h4>Tidak Ada Testimoni Ditolak</h4>
+                <p>Testimoni yang ditolak akan muncul di sini.</p>
               </div>
             <?php endif; ?>
           </div>

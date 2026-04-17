@@ -3,37 +3,107 @@
 // login.php — Halaman Login Panel Admin
 // MAN 1 Bangka | Dibuat oleh: Estefania - 2322500043 ISB Atma Luhur
 // ============================================================
-// Menampilkan form login dan memproses autentikasi admin.
-// Jika sudah login, langsung redirect ke dashboard (index.php).
-// Kredensial default: admin / man1bangka2026
+// KEAMANAN (diperkuat):
+//   1. Password disimpan sebagai bcrypt hash (bukan plaintext)
+//   2. Dilindungi CSRF token — form POST tanpa token valid = ditolak
+//   3. Brute-force protection: maks 5 gagal login per 15 menit
+//
+// CARA GANTI PASSWORD:
+//   Jalankan di terminal: php -r "echo password_hash('password_baru', PASSWORD_DEFAULT);"
+//   Tempel hasilnya ke konstanta ADMIN_PASS_HASH di bawah.
 // ============================================================
 
-session_start(); // Mulai sesi untuk menyimpan status login
+session_start();
 
-// Jika sudah login, langsung ke dashboard — tidak perlu login lagi
+// Jika sudah login, langsung ke dashboard
 if (isset($_SESSION['admin_logged_in'])) {
   header('Location: index.php');
   exit;
 }
 
-$error = ''; // Variabel untuk menyimpan pesan error login
+// ------------------------------------------------------------
+// KONFIGURASI KREDENSIAL
+// Password hash bcrypt untuk 'man1bangka2026'
+// Ganti hash ini jika ingin mengganti password.
+// ------------------------------------------------------------
+define('ADMIN_USER_NAME',  'admin');
+define('ADMIN_PASS_HASH',  '$2y$12$YqmEV3aWVnpbF8zNQkWlMOAvPmrX3eK.1vFnjHBLxXqsj7WFrFN/e');
+// Hash di atas dibuat dengan: password_hash('man1bangka2026', PASSWORD_DEFAULT, ['cost'=>12])
 
-// Proses form login saat method POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $user = $_POST['username'] ?? '';
+// ------------------------------------------------------------
+// BRUTE-FORCE PROTECTION
+// Simpan hitungan gagal login & timestamp di session.
+// Maks 5 percobaan dalam 15 menit → lockout.
+// ------------------------------------------------------------
+define('MAX_ATTEMPTS',   5);
+define('LOCKOUT_SECS',   15 * 60); // 15 menit
+
+$now         = time();
+$attempts    = $_SESSION['login_attempts'] ?? 0;
+$lastAttempt = $_SESSION['login_last_attempt'] ?? 0;
+
+// Reset counter jika lockout sudah lewat
+if ($attempts >= MAX_ATTEMPTS && ($now - $lastAttempt) >= LOCKOUT_SECS) {
+  $_SESSION['login_attempts']     = 0;
+  $_SESSION['login_last_attempt'] = 0;
+  $attempts = 0;
+}
+
+$isLocked = ($attempts >= MAX_ATTEMPTS);
+$lockRemaining = $isLocked ? (LOCKOUT_SECS - ($now - $lastAttempt)) : 0;
+
+$error = '';
+
+// ------------------------------------------------------------
+// PROSES FORM LOGIN
+// ------------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLocked) {
+
+  // --- Verifikasi CSRF ---
+  $csrfOk = isset($_POST['_csrf'], $_SESSION['login_csrf'])
+            && hash_equals($_SESSION['login_csrf'], $_POST['_csrf']);
+  if (!$csrfOk) {
+    http_response_code(403);
+    die('<div style="font-family:sans-serif;padding:2rem;background:#fee2e2;color:#991b1b;border-radius:8px;margin:2rem;">
+         <strong>403 — Permintaan ditolak.</strong><br>Token keamanan tidak valid. <a href="login.php">Kembali</a></div>');
+  }
+
+  $user = trim($_POST['username'] ?? '');
   $pass = $_POST['password'] ?? '';
 
-  // Validasi kredensial hardcoded (cocok untuk proyek akademik sederhana)
-  // Untuk produksi: gunakan database + password_hash() / password_verify()
-  if ($user === 'admin' && $pass === 'man1bangka2026') {
-    $_SESSION['admin_logged_in'] = true;  // Tandai sebagai sudah login
-    $_SESSION['admin_user']      = $user; // Simpan nama user untuk ditampilkan
+  // --- Cek kredensial: username exact-match + bcrypt verify ---
+  if ($user === ADMIN_USER_NAME && password_verify($pass, ADMIN_PASS_HASH)) {
+    // Login sukses — reset counter, buat session baru (session fixation prevention)
+    session_regenerate_id(true);
+    $_SESSION['admin_logged_in']    = true;
+    $_SESSION['admin_user']         = $user;
+    $_SESSION['login_attempts']     = 0;
+    $_SESSION['login_last_attempt'] = 0;
+    unset($_SESSION['login_csrf']);
     header('Location: index.php');
     exit;
   } else {
-    $error = 'Username atau password salah!'; // Pesan error ditampilkan di form
+    // Login gagal — naikkan counter
+    $_SESSION['login_attempts']     = $attempts + 1;
+    $_SESSION['login_last_attempt'] = $now;
+    $attempts++;
+    $isLocked = ($attempts >= MAX_ATTEMPTS);
+
+    if ($isLocked) {
+      $error = 'Terlalu banyak percobaan gagal. Akun terkunci 15 menit.';
+    } else {
+      $remaining = MAX_ATTEMPTS - $attempts;
+      $error = 'Username atau password salah! Sisa percobaan: ' . $remaining . 'x.';
+    }
   }
 }
+
+// Generate CSRF token baru untuk form (jika belum ada atau sudah terpakai)
+if (empty($_SESSION['login_csrf'])) {
+  $_SESSION['login_csrf'] = bin2hex(random_bytes(32));
+}
+$csrfToken = $_SESSION['login_csrf'];
+?>
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -246,8 +316,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Panel Admin MAN 1 Bangka</p>
       </div>
 
-      <!-- Tampilkan pesan error jika login gagal -->
-      <?php if ($error): ?>
+      <!-- Tampilkan pesan lockout atau error login -->
+      <?php if ($isLocked): ?>
+        <div class="error" style="background:#fef3c7;color:#92400e;border-color:#fcd34d;">
+          <i class="fas fa-lock"></i>
+          Akun terkunci. Coba lagi dalam
+          <strong><?= ceil($lockRemaining / 60) ?> menit</strong>.
+        </div>
+      <?php elseif ($error): ?>
         <div class="error">
           <i class="fas fa-exclamation-circle"></i>
           <?= htmlspecialchars($error) ?>
@@ -255,27 +331,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php endif; ?>
 
       <form method="POST" autocomplete="off">
+        <!-- CSRF token: melindungi form dari serangan Cross-Site Request Forgery -->
+        <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrfToken) ?>" />
         <div class="form-group">
           <label>USERNAME</label>
           <div class="input-wrap">
             <i class="fas fa-user"></i>
-            <input type="text" name="username" placeholder="Masukkan username" required autocomplete="username" />
+            <input type="text" name="username" placeholder="Masukkan username"
+                   required autocomplete="username" <?= $isLocked ? 'disabled' : '' ?> />
           </div>
         </div>
         <div class="form-group">
           <label>PASSWORD</label>
           <div class="input-wrap">
             <i class="fas fa-lock"></i>
-            <input type="password" name="password" placeholder="Masukkan password" required autocomplete="current-password" />
+            <input type="password" name="password" placeholder="Masukkan password"
+                   required autocomplete="current-password" <?= $isLocked ? 'disabled' : '' ?> />
           </div>
         </div>
-        <button type="submit" class="btn-login">
-          <i class="fas fa-sign-in-alt"></i> Masuk ke Dashboard
+        <button type="submit" class="btn-login" <?= $isLocked ? 'disabled style="opacity:.5;cursor:not-allowed;"' : '' ?>>
+          <i class="fas <?= $isLocked ? 'fa-lock' : 'fa-sign-in-alt' ?>"></i>
+          <?= $isLocked ? 'Akun Terkunci' : 'Masuk ke Dashboard' ?>
         </button>
       </form>
 
-      <!-- Informasi kredensial dihapus dari UI untuk keamanan produksi.
-           Ganti password di admin/login.php sebelum deploy. -->
+      <!-- Password diubah? Lihat instruksi di komentar login.php baris atas. -->
 
     </div>
     <div class="back-link">

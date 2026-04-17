@@ -425,7 +425,7 @@ function fmtNum(n) { return Number(n).toLocaleString('id-ID'); }
 (function () {
   // Halaman dengan file upload kompleks + inline scripts bergantung pada scope global
   // wajib full reload (bukan SPA swap) agar upload preview & validasi file berfungsi.
-  const FULL_RELOAD_PAGES = ['media.php', 'karya.php', 'prestasi.php'];
+  const FULL_RELOAD_PAGES = ['media.php', 'karya.php', 'prestasi.php', 'osim.php', 'pembina.php'];
 
   function isSameOrigin(href) {
     try { return new URL(href, location.href).origin === location.origin; }
@@ -566,4 +566,124 @@ function fmtNum(n) { return Number(n).toLocaleString('id-ID'); }
       }
     });
   }
+})();
+
+/* ============================================================
+   NOTIFIKASI REAL-TIME — Polling notif_count.php
+   Memperbarui badge di sidebar setiap 30 detik tanpa reload halaman.
+   Badge yang diperbarui:
+     - Testimoni  (.nav-badge pada link testimoni.php)
+     - Pendaftaran Ekskul (.nav-badge pada link pendaftaran.php)
+     - Pesan Masuk (.nav-badge pada link pesan.php)
+   Menampilkan toast jika ada data baru masuk sejak polling terakhir.
+   Juga memperbarui angka "Pending" di widget statistik sidebar.
+   ============================================================ */
+(function () {
+  const POLL_INTERVAL = 30000; // 30 detik
+
+  // Path ke notif_count.php dihitung dinamis dari kedalaman URL saat ini.
+  // Semua halaman admin ada di admin/*.php sehingga depth = 2, base = '../'.
+  // Pendekatan sama dengan main.js agar aman di semua kondisi.
+  function getNotifUrl() {
+    const depth = (window.location.pathname.match(/\//g) || []).length - 1;
+    return (depth <= 1 ? '' : '../') + 'php/notif_count.php';
+  }
+
+  // Simpan jumlah polling sebelumnya untuk deteksi data baru
+  let _prev = { testimoni: null, pendaftaran: null, pesan: null };
+
+  function navBadge(filename) {
+    const link = document.querySelector(`.nav-link[href*="${filename}"]`);
+    if (!link) return null;
+    let badge = link.querySelector('.nav-badge');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'nav-badge';
+      link.appendChild(badge);
+    }
+    return badge;
+  }
+
+  function updateBadge(filename, count) {
+    const badge = navBadge(filename);
+    if (!badge) return;
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = '';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function updateSidebarPending(total) {
+    const el = document.querySelector('.sidebar-stat-num[data-pending]');
+    if (el) {
+      el.textContent = total;
+      el.style.color = total > 0 ? '#ff6b6b' : 'var(--gold)';
+    }
+    const dot = document.querySelector('[data-pending-dot]');
+    if (dot) dot.style.display = total > 0 ? '' : 'none';
+  }
+
+  // Tampilkan toast notifikasi — klik toast untuk navigasi ke halaman terkait
+  function notifToast(msg, filename) {
+    if (typeof showToast !== 'function') return;
+    showToast(msg, 'info');
+    // Tempelkan handler klik pada toast terakhir agar bisa navigasi langsung
+    setTimeout(() => {
+      const toasts = document.querySelectorAll('.toast-item');
+      const last   = toasts[toasts.length - 1];
+      if (!last) return;
+      last.style.cursor = 'pointer';
+      last.title = 'Klik untuk membuka halaman';
+      last.addEventListener('click', () => {
+        const link = document.querySelector(`.nav-link[href*="${filename}"]`);
+        if (link) link.click();
+      }, { once: true });
+    }, 50);
+  }
+
+  async function pollNotif() {
+    try {
+      const res = await fetch(getNotifUrl(), { credentials: 'same-origin' });
+      if (!res.ok) return;
+      const data = await res.json();
+
+      const cur = {
+        testimoni:   data.testimoni   || 0,
+        pendaftaran: data.pendaftaran || 0,
+        pesan:       data.pesan       || 0,
+      };
+
+      // Toast hanya jika jumlah NAIK dan bukan polling pertama (prev masih null)
+      if (_prev.testimoni !== null) {
+        if (cur.testimoni > _prev.testimoni) {
+          const n = cur.testimoni - _prev.testimoni;
+          notifToast(`💬 ${n} testimoni baru menunggu moderasi`, 'testimoni.php');
+        }
+        if (cur.pendaftaran > _prev.pendaftaran) {
+          const n = cur.pendaftaran - _prev.pendaftaran;
+          notifToast(`📋 ${n} pendaftaran ekskul baru menunggu`, 'pendaftaran.php');
+        }
+        if (cur.pesan > _prev.pesan) {
+          const n = cur.pesan - _prev.pesan;
+          notifToast(`✉️ ${n} pesan masuk baru`, 'pesan.php');
+        }
+      }
+
+      _prev = { ...cur };
+
+      updateBadge('testimoni.php',   cur.testimoni);
+      updateBadge('pendaftaran.php', cur.pendaftaran);
+      updateBadge('pesan.php',       cur.pesan);
+
+      updateSidebarPending(cur.testimoni + cur.pendaftaran + cur.pesan);
+    } catch (e) {
+      // Gagal polling — abaikan, coba lagi pada interval berikutnya
+    }
+  }
+
+  // Jalankan sekali saat halaman pertama kali dimuat, lalu setiap 30 detik
+  pollNotif();
+  setInterval(pollNotif, POLL_INTERVAL);
 })();

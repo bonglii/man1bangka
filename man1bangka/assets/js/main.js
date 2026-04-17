@@ -191,13 +191,11 @@ function initSlider() {
   let current = 0;
   const visible = window.innerWidth > 1024 ? 3 : window.innerWidth > 640 ? 2 : 1;
   const maxIdx = Math.max(0, cards.length - visible);
-  const dots = $$('.slider-dot');
 
   function goTo(idx) {
     current = Math.max(0, Math.min(idx, maxIdx));
     const cardW = cards[0].offsetWidth + 24;
     track.style.transform = `translateX(-${current * cardW}px)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === current));
   }
 
   // Remove duplicate listeners by replacing buttons with clones
@@ -213,12 +211,6 @@ function initSlider() {
     nextBtn.parentNode.replaceChild(n, nextBtn);
     n.addEventListener('click', () => goTo(current + 1));
   }
-
-  dots.forEach((d, i) => {
-    const nd = d.cloneNode(true);
-    d.parentNode.replaceChild(nd, d);
-    nd.addEventListener('click', () => goTo(i));
-  });
 
   // Clear previous interval before starting new one
   if (_sliderInterval) clearInterval(_sliderInterval);
@@ -430,11 +422,6 @@ async function loadTestimoni() {
         </div>
       </div>
     `).join('');
-    // Generate dots
-    const dotsEl = $('.slider-dots');
-    if (dotsEl) {
-      dotsEl.innerHTML = res.data.map((_, i) => `<span class="slider-dot ${i === 0 ? 'active' : ''}"></span>`).join('');
-    }
     initSlider();
   }
 }

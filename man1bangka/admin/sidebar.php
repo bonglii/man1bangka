@@ -47,7 +47,8 @@ function navLink($file, $icon, $label, $badge = null)
 // Semua query dibungkus try-catch agar sidebar tidak crash
 // jika ada tabel yang belum ada (misal saat pertama setup).
 // ============================================================
-$pendingCount = ''; // Badge untuk testimoni yang belum dimoderasi
+$pendingCount    = ''; // Badge untuk testimoni yang belum dimoderasi
+$pendaftaranBadge = null; // Badge untuk pendaftaran ekskul yang menunggu
 $totalData    = 0;  // Total semua record dari 8 tabel utama
 $totalPending = 0;  // Angka pending (untuk warna merah jika > 0)
 $siswaCount   = 0;  // Total pendaftaran ekskul (tidak dipakai di widget saat ini)
@@ -56,10 +57,25 @@ $ekskulCount  = 0;  // Total jumlah ekskul aktif
 try {
   global $pdo;
   if ($pdo) {
-    // Hitung testimoni yang belum dimoderasi (status='nonaktif')
-    $n = $pdo->query("SELECT COUNT(*) FROM testimoni WHERE status='nonaktif'")->fetchColumn();
+    // Hitung testimoni yang belum dimoderasi (nonaktif & is_approved=1 = baru dari publik)
+    $n = $pdo->query("SELECT COUNT(*) FROM testimoni WHERE status='nonaktif' AND is_approved=1")->fetchColumn();
     if ($n > 0) $pendingCount = $n; // Hanya tampilkan badge jika ada yang pending
     $totalPending = (int)$n;
+
+    // Hitung pendaftaran ekskul yang menunggu persetujuan
+    $nDaftar = 0;
+    try {
+      $nDaftar = (int)$pdo->query("SELECT COUNT(*) FROM pendaftaran_ekskul WHERE status='menunggu'")->fetchColumn();
+      if ($nDaftar > 0) $pendaftaranBadge = $nDaftar;
+      $totalPending += $nDaftar;
+    } catch (Exception $e) { $nDaftar = 0; }
+
+    // Hitung pesan kontak yang belum dibaca
+    $pesanBelumBaca = 0;
+    try {
+      $pesanBelumBaca = (int)$pdo->query("SELECT COUNT(*) FROM pesan_kontak WHERE is_read=0")->fetchColumn();
+    } catch (Exception $e) { $pesanBelumBaca = 0; }
+    $pesanBadge = $pesanBelumBaca > 0 ? $pesanBelumBaca : null;
 
     // Hitung total record dari seluruh tabel data utama
     $tables = [
@@ -78,7 +94,8 @@ try {
     }
 
     // Statistik tambahan untuk widget
-    $siswaCount  = $pdo->query("SELECT COUNT(*) FROM pendaftaran_ekskul")->fetchColumn();
+    // FIX: $siswaCount dihapus — sudah tercakup dalam loop $tables di atas
+    // dan tidak digunakan di UI. $ekskulCount tetap karena ditampilkan di widget.
     $ekskulCount = $pdo->query("SELECT COUNT(*) FROM ekstrakurikuler")->fetchColumn();
   }
 } catch (Exception $e) {
@@ -113,13 +130,15 @@ try {
     <?php navLink('pengumuman.php', 'fa-bell',                'Pengumuman'); ?>
 
     <div class="nav-section">Akademik &amp; Siswa</div>
-    <?php navLink('pendaftaran.php', 'fa-clipboard-list',      'Pendaftaran Siswa'); ?>
+    <?php navLink('pendaftaran.php', 'fa-clipboard-list',      'Pendaftaran Siswa', $pendaftaranBadge); ?>
     <?php navLink('ekskul.php',      'fa-star',                'Ekstrakurikuler'); ?>
+    <?php navLink('osim.php',        'fa-users-cog',           'OSIM / OSIS'); ?>
     <?php navLink('pembina.php',     'fa-chalkboard-teacher',  'Guru Pembina'); ?>
     <?php navLink('prestasi.php',    'fa-trophy',              'Prestasi Siswa'); ?>
     <?php navLink('karya.php',       'fa-palette',             'Karya Siswa'); ?>
     <!-- Badge merah muncul jika ada testimoni yang belum dimoderasi -->
     <?php navLink('testimoni.php',   'fa-comment-dots',        'Testimoni', $pendingCount); ?>
+    <?php navLink('pesan.php',       'fa-envelope',            'Pesan Masuk', $pesanBadge); ?>
 
     <div class="nav-section">Sistem</div>
     <!-- Buka website publik di tab baru -->
@@ -149,13 +168,13 @@ try {
       </div>
       <!-- Jumlah pending — merah & animasi dot jika ada -->
       <div class="sidebar-stat-item" style="position:relative;">
-        <span class="sidebar-stat-num" style="color:<?= $totalPending > 0 ? '#ff6b6b' : 'var(--gold)' ?>;">
+        <span class="sidebar-stat-num" data-pending style="color:<?= $totalPending > 0 ? '#ff6b6b' : 'var(--gold)' ?>;">
           <?= $totalPending ?>
         </span>
         <span class="sidebar-stat-label">Pending</span>
         <?php if ($totalPending > 0): ?>
           <!-- Titik animasi sebagai indikator visual ada item pending -->
-          <span style="position:absolute;top:2px;right:2px;width:6px;height:6px;background:#ff6b6b;border-radius:50%;animation:pulse-dot 1.5s infinite;"></span>
+          <span data-pending-dot style="position:absolute;top:2px;right:2px;width:6px;height:6px;background:#ff6b6b;border-radius:50%;animation:pulse-dot 1.5s infinite;"></span>
         <?php endif; ?>
       </div>
     </div>

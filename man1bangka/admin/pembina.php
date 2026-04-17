@@ -99,7 +99,31 @@ $rows = $pdo->query("SELECT k.*, COUNT(e.id) as jml_ekskul
     LEFT JOIN ekstrakurikuler e ON e.pembina_id=k.id
     GROUP BY k.id ORDER BY k.bidang, k.nama")->fetchAll(PDO::FETCH_ASSOC);
 $isEdit = !!$edit;
-$bidangColors = ['Kepramukaan' => 'green', 'Keagamaan' => 'teal', 'Olahraga' => 'blue', 'Akademik' => 'purple', 'Teknologi' => 'orange', 'Seni' => 'gold', 'Koordinator Kesiswaan' => 'red'];
+$bidangColors = [
+  'Kepramukaan'           => 'green',
+  'Keagamaan'             => 'teal',
+  'Olahraga'              => 'blue',
+  'Akademik'              => 'purple',
+  'Teknologi'             => 'orange',
+  'Seni'                  => 'gold',
+  'Koordinator Kesiswaan' => 'red',
+  'Bahasa'                => 'blue',
+  'Kesehatan'             => 'teal',
+  'Lingkungan Hidup'      => 'green',
+  'Lainnya'               => 'gray',
+];
+// Helper: render semua chip bidang dari string "A / B / C"
+function renderBidangBadges(string $bidang, array $colors): string {
+  if (!$bidang) return '';
+  $parts = array_filter(array_map('trim', explode('/', $bidang)));
+  $html  = '';
+  foreach ($parts as $b) {
+    $cls   = $colors[$b] ?? 'gray';
+    $html .= '<span class="badge badge-' . $cls . '" style="margin:.1rem .15rem .1rem 0;">'
+           . htmlspecialchars($b) . '</span>';
+  }
+  return $html;
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -174,12 +198,64 @@ $bidangColors = ['Kepramukaan' => 'green', 'Keagamaan' => 'teal', 'Olahraga' => 
 
               <div class="form-group">
                 <label>Bidang / Ekskul</label>
-                <select name="bidang">
-                  <option value="">-- Pilih Bidang --</option>
-                  <?php foreach (['Kepramukaan', 'Keagamaan', 'Olahraga', 'Akademik', 'Teknologi', 'Seni', 'Koordinator Kesiswaan', 'Lainnya'] as $b): ?>
-                    <option value="<?= $b ?>" <?= ($edit['bidang'] ?? '') === $b ? 'selected' : '' ?>><?= $b ?></option>
-                  <?php endforeach; ?>
-                </select>
+                <input type="hidden" name="bidang" id="bidang-value"
+                  value="<?= htmlspecialchars($edit['bidang'] ?? '') ?>" />
+
+                <!-- Panduan langkah -->
+                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.7rem .9rem;margin-bottom:.6rem;">
+                  <div style="font-size:.78rem;font-weight:700;color:#1e40af;margin-bottom:.45rem;display:flex;align-items:center;gap:.4rem;">
+                    <i class="fas fa-lightbulb" style="color:#f59e0b;"></i> Cara menambah bidang:
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:.35rem;">
+                    <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:#1e40af;">
+                      <span style="background:#1e40af;color:#fff;border-radius:50%;width:18px;height:18px;min-width:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;">1</span>
+                      Ketik nama bidang di kotak bawah, atau pilih dari daftar yang muncul
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:#1e40af;">
+                      <span style="background:#1e40af;color:#fff;border-radius:50%;width:18px;height:18px;min-width:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;">2</span>
+                      Tekan <kbd style="background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:4px;font-size:.7rem;font-weight:700;border:1px solid #93c5fd;">Enter</kbd> atau klik tombol <strong>+ Tambah</strong>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:#1e40af;">
+                      <span style="background:#1e40af;color:#fff;border-radius:50%;width:18px;height:18px;min-width:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;">3</span>
+                      Ulangi untuk bidang lain — otomatis dipisah dengan <strong>&nbsp;/&nbsp;</strong>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:#991b1b;margin-top:.05rem;">
+                      <span style="background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;min-width:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;">✕</span>
+                      Klik chip bidang yang muncul di atas untuk <strong>menghapusnya</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tag chips -->
+                <div id="bidang-tags" style="display:flex;flex-wrap:wrap;gap:.4rem;min-height:38px;padding:.45rem .55rem;border:1px solid var(--gray-200);border-radius:var(--radius-sm);background:#f9fafb;margin-bottom:.45rem;cursor:text;"
+                  onclick="document.getElementById('bidang-input').focus()">
+                </div>
+
+                <!-- Input + tombol -->
+                <div style="display:flex;gap:.4rem;align-items:center;">
+                  <div class="input-icon-wrap" style="flex:1;">
+                    <i class="input-icon fas fa-chalkboard"></i>
+                    <input type="text" id="bidang-input"
+                      placeholder="Ketik nama bidang atau pilih dari daftar..."
+                      list="bidang-options" autocomplete="off" />
+                  </div>
+                  <button type="button" id="bidang-add-btn" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah
+                  </button>
+                </div>
+                <datalist id="bidang-options">
+                  <option value="Kepramukaan">
+                  <option value="Keagamaan">
+                  <option value="Olahraga">
+                  <option value="Akademik">
+                  <option value="Teknologi">
+                  <option value="Seni">
+                  <option value="Koordinator Kesiswaan">
+                  <option value="Bahasa">
+                  <option value="Kesehatan">
+                  <option value="Lingkungan Hidup">
+                  <option value="Lainnya">
+                </datalist>
               </div>
 
               <div class="form-group">
@@ -247,7 +323,7 @@ $bidangColors = ['Kepramukaan' => 'green', 'Keagamaan' => 'teal', 'Olahraga' => 
           </div>
           <div style="padding:1rem;max-height:600px;overflow-y:auto;">
             <?php if ($rows): ?>
-              <?php foreach ($rows as $r): $bc = $bidangColors[$r['bidang']] ?? 'gray'; ?>
+              <?php foreach ($rows as $r): ?>
                 <div class="data-item">
                   <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;background:var(--primary-light);color:var(--primary-mid);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;flex-shrink:0;border:2px solid var(--primary-border);">
                     <?php if (!empty($r['foto'])): ?>
@@ -256,14 +332,20 @@ $bidangColors = ['Kepramukaan' => 'green', 'Keagamaan' => 'teal', 'Olahraga' => 
                       <?= strtoupper(substr($r['nama'], 0, 1)) ?>
                     <?php endif; ?>
                   </div>
-                  <div class="data-item-body">
+                  <div class="data-item-body" style="min-width:0;">
                     <div class="data-item-title"><?= htmlspecialchars($r['nama']) ?></div>
-                    <div class="data-item-sub" style="margin-top:.2rem;">
-                      <?= htmlspecialchars($r['jabatan'] ?? '-') ?>
-                      <?php if ($r['bidang']): ?> <span class="badge badge-<?= $bc ?>"><?= htmlspecialchars($r['bidang']) ?></span><?php endif; ?>
-                      <?php if ($r['jml_ekskul'] > 0): ?><span class="badge badge-blue"><?= $r['jml_ekskul'] ?> ekskul</span><?php endif; ?>
-                    </div>
-                    <div style="display:flex;gap:1rem;margin-top:.35rem;font-size:.72rem;color:var(--gray-400);">
+                    <?php if ($r['jabatan']): ?>
+                      <div style="font-size:.78rem;color:var(--gray-500);margin-top:.15rem;">
+                        <i class="fas fa-id-badge" style="width:13px;color:var(--gray-400);margin-right:3px;"></i><?= htmlspecialchars($r['jabatan']) ?>
+                      </div>
+                    <?php endif; ?>
+                    <?php if ($r['bidang']): ?>
+                      <div style="display:flex;flex-wrap:wrap;gap:.15rem;margin-top:.35rem;">
+                        <?= renderBidangBadges($r['bidang'], $bidangColors) ?>
+                        <?php if ($r['jml_ekskul'] > 0): ?><span class="badge badge-blue"><?= $r['jml_ekskul'] ?> ekskul</span><?php endif; ?>
+                      </div>
+                    <?php endif; ?>
+                    <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.35rem;font-size:.72rem;color:var(--gray-400);">
                       <?php if ($r['no_hp']): ?><span><i class="fas fa-phone" style="width:12px;margin-right:3px;"></i><?= htmlspecialchars($r['no_hp']) ?></span><?php endif; ?>
                       <?php if ($r['email']): ?><span><i class="fas fa-envelope" style="width:12px;margin-right:3px;"></i><?= htmlspecialchars($r['email']) ?></span><?php endif; ?>
                     </div>
@@ -303,6 +385,114 @@ $bidangColors = ['Kepramukaan' => 'green', 'Keagamaan' => 'teal', 'Olahraga' => 
       };
       reader.readAsDataURL(input.files[0]);
     }
+
+    /* ── Bidang multi-tag dengan pemisah " / " ── */
+    (function () {
+      const hiddenInput = document.getElementById('bidang-value');
+      const tagsWrap    = document.getElementById('bidang-tags');
+      const textInput   = document.getElementById('bidang-input');
+      if (!hiddenInput || !tagsWrap || !textInput) return;
+
+      // Warna chip per bidang
+      const chipColors = {
+        'Kepramukaan': '#dcfce7:#166534', 'Keagamaan': '#ccfbf1:#0f766e',
+        'Olahraga': '#dbeafe:#1e40af',    'Akademik': '#ede9fe:#5b21b6',
+        'Teknologi': '#ffedd5:#9a3412',   'Seni': '#fef9c3:#92400e',
+        'Koordinator Kesiswaan': '#fee2e2:#991b1b',
+        'Bahasa': '#e0f2fe:#0369a1',      'Kesehatan': '#d1fae5:#065f46',
+      };
+
+      // Render chips dari nilai hidden (pisah dengan " / ")
+      function renderTags() {
+        tagsWrap.innerHTML = '';
+        const vals = hiddenInput.value
+          .split('/')
+          .map(v => v.trim())
+          .filter(v => v.length > 0);
+
+        vals.forEach(v => {
+          const pair = chipColors[v] ? chipColors[v].split(':') : ['#f3f4f6', '#374151'];
+          const chip = document.createElement('span');
+          chip.style.cssText = `
+            display:inline-flex;align-items:center;gap:.3rem;
+            background:${pair[0]};color:${pair[1]};
+            padding:.2rem .6rem;border-radius:99px;
+            font-size:.75rem;font-weight:600;cursor:pointer;
+            border:1px solid ${pair[1]}33;
+            transition:opacity .15s;
+          `;
+          chip.title = 'Klik untuk hapus';
+          chip.innerHTML = `${v} <i class="fas fa-times" style="font-size:.6rem;opacity:.7;"></i>`;
+          chip.addEventListener('click', () => removeTag(v));
+          chip.addEventListener('mouseenter', () => chip.style.opacity = '.7');
+          chip.addEventListener('mouseleave', () => chip.style.opacity = '1');
+          tagsWrap.appendChild(chip);
+        });
+
+        // Placeholder saat kosong
+        if (vals.length === 0) {
+          tagsWrap.style.border = '1px solid var(--gray-200)';
+        } else {
+          tagsWrap.style.border = '1.5px solid var(--primary-border)';
+        }
+      }
+
+      function addBidang() {
+        const val = textInput.value.trim();
+        if (!val) return;
+
+        const current = hiddenInput.value
+          .split('/')
+          .map(v => v.trim())
+          .filter(v => v.length > 0);
+
+        // Cegah duplikat
+        if (current.map(v => v.toLowerCase()).includes(val.toLowerCase())) {
+          textInput.value = '';
+          textInput.focus();
+          return;
+        }
+
+        current.push(val);
+        hiddenInput.value = current.join(' / ');
+        textInput.value = '';
+        textInput.focus();
+        renderTags();
+      }
+
+      function removeTag(val) {
+        const current = hiddenInput.value
+          .split('/')
+          .map(v => v.trim())
+          .filter(v => v.length > 0 && v.toLowerCase() !== val.toLowerCase());
+        hiddenInput.value = current.join(' / ');
+        renderTags();
+      }
+
+      // Expose ke global (tidak dipakai lagi tapi tetap ada untuk backward compat)
+      window.addBidang = addBidang;
+
+      // Tekan Enter di input
+      textInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addBidang();
+        }
+      });
+
+      // Tombol Tambah — pakai mousedown bukan click
+      // agar nilai input belum hilang saat blur terjadi sebelum click
+      const addBtn = document.getElementById('bidang-add-btn');
+      if (addBtn) {
+        addBtn.addEventListener('mousedown', function(e) {
+          e.preventDefault(); // Cegah blur pada input
+          addBidang();
+        });
+      }
+
+      // Init render dari nilai yang sudah ada (mode edit)
+      renderTags();
+    })();
   </script>
 </body>
 

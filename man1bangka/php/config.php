@@ -118,13 +118,6 @@ function sanitize($input) {
 }
 
 // ============================================================
-// FUNGSI: formatTanggal($date)
-// Mengubah format tanggal MySQL (YYYY-MM-DD atau DATETIME)
-// menjadi format Indonesia yang mudah dibaca: "DD Bulan YYYY"
-// Contoh: "2026-04-03" → "3 April 2026"
-// Mengembalikan '-' jika nilai kosong/null.
-// ============================================================
-// ============================================================
 // CSRF PROTECTION
 // Semua form POST di panel admin dilindungi CSRF token.
 // Token dibuat sekali per sesi dan diverifikasi setiap POST.

@@ -36,7 +36,6 @@
     </div>
     <div class="slider-controls">
       <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
-      <div class="slider-dots"><span class="slider-dot active"></span></div>
       <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
     </div>
   </section>
