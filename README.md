@@ -54,9 +54,16 @@ define('DB_NAME', 'man1bangka');
 | Field | Nilai |
 |---|---|
 | Username | `admin` |
-| Password | `man1bangka2026` |
+| Password | `man1bangka2026` (tersimpan sebagai plaintext di konstanta `ADMIN_PASS` di `admin/login.php`) |
 
-> ⚠️ Ubah password sesuai kebutuhan di file `admin/login.php`.
+> ⚠️ **Cara mengganti password sebelum deploy:**
+> 1. Buka `admin/login.php`.
+> 2. Cari konstanta `ADMIN_PASS` dan ganti nilainya:
+>    ```php
+>    define('ADMIN_PASS', 'password_baru_anda');
+>    ```
+>
+> **Catatan:** Password saat ini disimpan sebagai teks biasa (plaintext). Untuk keamanan lebih baik di server produksi, pertimbangkan untuk menggantinya dengan bcrypt menggunakan `password_hash()` + `password_verify()`.
 
 ---
 
