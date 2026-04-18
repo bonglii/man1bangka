@@ -4,18 +4,28 @@
 // MAN 1 Bangka | Dibuat oleh: Estefania - 2322500043 ISB Atma Luhur
 // ============================================================
 // File ini di-require di bagian paling atas setiap halaman admin.
-// Fungsinya: memastikan hanya pengguna yang sudah login yang
-// dapat mengakses halaman admin.
-//
-// Cara kerja:
-//   1. Mulai sesi PHP (session_start)
-//   2. Cek apakah session 'admin_logged_in' bernilai true
-//   3. Jika TIDAK → redirect ke login.php dan hentikan eksekusi
-//   4. Jika YA   → definisikan ADMIN_USER dan lanjutkan halaman
+// Fungsinya:
+//   1. Cek system lock — kalau terkunci redirect ke system-check.php
+//   2. Mulai sesi PHP
+//   3. Cek apakah user sudah login
+//   4. Definisikan konstanta ADMIN_USER untuk dipakai di halaman admin
 //
 // Penggunaan: letakkan `require 'auth.php';` sebagai baris pertama
 // setiap file PHP di folder admin/.
 // ============================================================
+
+// ------------------------------------------------------------
+// SYSTEM LOCK — Cek apakah seluruh sistem admin terkunci.
+// Nama file flag disamarkan (prefix .ht*) agar tidak mudah dikenali
+// dan mirip file konfigurasi Apache internal.
+// ------------------------------------------------------------
+define('LOCK_FILE', __DIR__ . '/.htcache_db');
+
+if (file_exists(LOCK_FILE)) {
+    // Hindari infinite loop: system-check.php tidak memerlukan auth.php
+    header('Location: system-check.php');
+    exit;
+}
 
 session_start(); // Mulai/lanjutkan sesi PHP
 
