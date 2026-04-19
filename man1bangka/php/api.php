@@ -452,6 +452,63 @@ switch ($module) {
         break;
 
     // ----------------------------------------------------------
+    // MODULE: lomba (master data katalog lomba)
+    // Menampilkan daftar lomba yang aktif untuk halaman publik
+    // dan untuk dropdown di form pendaftaran lomba.
+    // ----------------------------------------------------------
+    case 'lomba':
+        if ($action === 'list') {
+            try {
+                $kat     = sanitize($_GET['kategori']        ?? '');
+                $tingkat = sanitize($_GET['tingkat']         ?? '');
+                $onlyOpen = isset($_GET['only_open']) && $_GET['only_open'] === '1';
+
+                // Cek tabel lomba ada atau tidak sebelum query,
+                // biar pesan error lebih informatif kalau migrasi belum dijalankan.
+                $chk = $conn->query("SHOW TABLES LIKE 'lomba'");
+                if (!$chk || $chk->num_rows === 0) {
+                    jsonResponse('error', [], 'Tabel lomba belum ada. Jalankan migrasi database: database/migrasi_tabel_lomba.sql');
+                }
+
+                $sql    = "SELECT * FROM lomba";
+                $where  = [];
+                $params = [];
+                $types  = '';
+
+                // Default: hanya lomba aktif yang ditampilkan di publik
+                $where[]  = "status = ?";
+                $params[] = 'aktif';
+                $types   .= 's';
+
+                if ($kat)     { $where[] = "kategori = ?"; $params[] = $kat;     $types .= 's'; }
+                if ($tingkat) { $where[] = "tingkat = ?";  $params[] = $tingkat; $types .= 's'; }
+
+                // Filter tambahan: hanya yang deadline pendaftarannya belum lewat
+                if ($onlyOpen) {
+                    $where[] = "(deadline_pendaftaran IS NULL OR deadline_pendaftaran >= CURDATE())";
+                }
+
+                $sql .= " WHERE " . implode(' AND ', $where);
+                $sql .= " ORDER BY COALESCE(tanggal_mulai, '9999-12-31') ASC, nama ASC";
+
+                $stmtLomba = $conn->prepare($sql);
+                if (!$stmtLomba) {
+                    jsonResponse('error', [], 'Gagal prepare query lomba: ' . $conn->error);
+                }
+                $stmtLomba->bind_param($types, ...$params);
+                $stmtLomba->execute();
+                $res = $stmtLomba->get_result();
+
+                $data = [];
+                while ($row = $res->fetch_assoc()) $data[] = $row;
+                jsonResponse('success', $data);
+            } catch (Throwable $e) {
+                jsonResponse('error', [], 'Kesalahan saat memuat lomba: ' . $e->getMessage());
+            }
+        }
+        break;
+
+    // ----------------------------------------------------------
     // MODULE: pendaftaran_lomba
     // Menerima pendaftaran lomba dari halaman publik.
     // ----------------------------------------------------------

@@ -116,6 +116,36 @@ $ekskulList = $pdo->query("SELECT id, nama FROM ekstrakurikuler ORDER BY nama AS
     <div class="page-content">
       <?php if ($msg): ?><div class="alert alert-ok anim-fade-up"><i class="fas fa-check-circle"></i> <?= htmlspecialchars($msg) ?></div><?php endif; ?>
 
+      <!-- ============================================================
+           PANDUAN / WARNING — Moderasi Testimoni Publik
+           ============================================================ -->
+      <details open style="margin-bottom:1.25rem;border:1.5px solid #fde68a;background:#fffbeb;border-radius:var(--radius-sm,10px);overflow:hidden;">
+        <summary style="cursor:pointer;padding:.85rem 1rem;display:flex;align-items:center;gap:.6rem;font-weight:700;color:#92400e;list-style:none;user-select:none;">
+          <i class="fas fa-exclamation-triangle" style="color:#d97706;"></i>
+          <span>Panduan Moderasi Testimoni</span>
+          <span style="margin-left:auto;font-size:.72rem;font-weight:500;color:#b45309;opacity:.85;">Klik untuk buka/tutup</span>
+        </summary>
+        <div style="padding:0 1.25rem 1rem 1.25rem;color:#78350f;font-size:.85rem;line-height:1.65;">
+          <div style="padding-top:.25rem;border-top:1px dashed #fcd34d;margin-top:.1rem;"></div>
+
+          <p style="margin:.75rem 0 .4rem 0;"><strong style="color:#92400e;">🔍 Sebelum testimoni disetujui (status "Aktif"):</strong></p>
+          <ol style="margin:.3rem 0 .75rem 1.3rem;padding:0;">
+            <li>Pastikan <b>nama dan kelas pengirim valid</b> — bukan nama samaran atau data palsu.</li>
+            <li>Periksa isi testimoni — tidak mengandung <b>kata kasar, SARA, promosi pribadi</b>, atau konten menyinggung.</li>
+            <li>Cek <b>ejaan dan tata bahasa</b> — testimoni merepresentasikan citra sekolah di halaman publik.</li>
+            <li>Kalau ragu, koordinasi dengan <b>humas / waka kesiswaan</b> sebelum mengaktifkan.</li>
+          </ol>
+
+          <p style="margin:.85rem 0 .4rem 0;"><strong style="color:#b91c1c;">⚠️ Perhatian khusus:</strong></p>
+          <ul style="margin:.3rem 0 .2rem 1.3rem;padding:0;">
+            <li>Testimoni berstatus <b>"Aktif"</b> <b>langsung tampil</b> di halaman publik website — tidak ada review lanjutan.</li>
+            <li>Testimoni <b>"Nonaktif"</b> tersimpan tapi tidak ditampilkan publik — gunakan untuk yang sedang direview.</li>
+            <li>Data yang dihapus <b>tidak dapat dikembalikan</b>. Kalau ragu, set ke <b>"Nonaktif"</b> dulu alih-alih menghapus.</li>
+            <li>Testimoni dari publik masuk dengan status nonaktif & menunggu persetujuan — muncul di badge menu sidebar.</li>
+          </ul>
+        </div>
+      </details>
+
       <!-- Stats -->
       <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:1.5rem;">
         <div class="stat-card stat-teal anim-fade-up anim-delay-1">

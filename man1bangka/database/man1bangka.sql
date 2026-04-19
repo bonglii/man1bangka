@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 16, 2026 at 05:37 AM
+-- Generation Time: Apr 19, 2026 at 04:31 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -239,6 +239,37 @@ INSERT INTO `kontak_pembina` (`id`, `nama`, `jabatan`, `email`, `no_hp`, `bidang
 (35, 'Utama Dewi Maya Sari,S.Pd', 'Pembina Sekolah/Madrasah Sehat, English Club', '', '', 'Lainnya', '', '2026-04-08 04:17:48'),
 (36, 'Feni Wulandari, S.Pd', 'Pembina Sekolah/Madrasah Sehat, KSM Matematika', '', '', 'Lainnya', '', '2026-04-08 04:19:26'),
 (37, 'Tina, S.Pd', 'Pembina Ruang Sastra, Literasi', '', '', 'Akademik', '', '2026-04-08 04:21:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lomba`
+--
+
+CREATE TABLE `lomba` (
+  `id` int NOT NULL,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `kategori` enum('akademik','seni','olahraga','keagamaan','teknologi','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'lainnya',
+  `tingkat` enum('sekolah','kabupaten','provinsi','nasional','internasional') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'sekolah',
+  `penyelenggara` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tempat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_mulai` date DEFAULT NULL,
+  `tanggal_selesai` date DEFAULT NULL,
+  `deadline_pendaftaran` date DEFAULT NULL,
+  `kuota` int DEFAULT NULL,
+  `biaya` int DEFAULT '0',
+  `kontak_pic` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('aktif','selesai','dibatalkan') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'aktif',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `lomba`
+--
+
+INSERT INTO `lomba` (`id`, `nama`, `deskripsi`, `kategori`, `tingkat`, `penyelenggara`, `tempat`, `tanggal_mulai`, `tanggal_selesai`, `deadline_pendaftaran`, `kuota`, `biaya`, `kontak_pic`, `status`, `created_at`) VALUES
+(3, 'Sepak Bola', 'Tenda tendang aje', 'olahraga', 'sekolah', 'Irul', 'MAN  1 BANGKA', '2026-04-19', '2026-04-23', '2026-04-17', NULL, 0, '000', 'aktif', '2026-04-19 03:46:53');
 
 -- --------------------------------------------------------
 
@@ -494,6 +525,12 @@ ALTER TABLE `kontak_pembina`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `lomba`
+--
+ALTER TABLE `lomba`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `organisasi`
 --
 ALTER TABLE `organisasi`
@@ -594,6 +631,12 @@ ALTER TABLE `kontak_pembina`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
+-- AUTO_INCREMENT for table `lomba`
+--
+ALTER TABLE `lomba`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `organisasi`
 --
 ALTER TABLE `organisasi`
@@ -603,13 +646,13 @@ ALTER TABLE `organisasi`
 -- AUTO_INCREMENT for table `pendaftaran_ekskul`
 --
 ALTER TABLE `pendaftaran_ekskul`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pendaftaran_lomba`
 --
 ALTER TABLE `pendaftaran_lomba`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `pengumuman`

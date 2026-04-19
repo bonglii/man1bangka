@@ -102,6 +102,35 @@ $orgList = $pdo->query("SELECT id, nama FROM organisasi ORDER BY nama ASC")->fet
       <?php if ($msg): ?><div class="alert alert-ok anim-fade-up"><i class="fas fa-check-circle"></i> <?= htmlspecialchars($msg) ?></div><?php endif; ?>
       <?php if ($err): ?><div class="alert alert-err anim-fade-up"><i class="fas fa-times-circle"></i> <?= htmlspecialchars($err) ?></div><?php endif; ?>
 
+      <!-- ============================================================
+           PANDUAN / WARNING — Posting Pengumuman
+           ============================================================ -->
+      <details open style="margin-bottom:1.25rem;border:1.5px solid #fde68a;background:#fffbeb;border-radius:var(--radius-sm,10px);overflow:hidden;">
+        <summary style="cursor:pointer;padding:.85rem 1rem;display:flex;align-items:center;gap:.6rem;font-weight:700;color:#92400e;list-style:none;user-select:none;">
+          <i class="fas fa-exclamation-triangle" style="color:#d97706;"></i>
+          <span>Panduan Memposting Pengumuman</span>
+          <span style="margin-left:auto;font-size:.72rem;font-weight:500;color:#b45309;opacity:.85;">Klik untuk buka/tutup</span>
+        </summary>
+        <div style="padding:0 1.25rem 1rem 1.25rem;color:#78350f;font-size:.85rem;line-height:1.65;">
+          <div style="padding-top:.25rem;border-top:1px dashed #fcd34d;margin-top:.1rem;"></div>
+
+          <p style="margin:.75rem 0 .4rem 0;"><strong style="color:#92400e;">🔍 Sebelum menekan Simpan:</strong></p>
+          <ol style="margin:.3rem 0 .75rem 1.3rem;padding:0;">
+            <li><b>Proofread</b> judul dan isi — pengumuman langsung muncul di halaman publik setelah disimpan.</li>
+            <li>Isi <b>Tanggal Publish</b> & <b>Tanggal Berakhir</b> bila bersifat sementara, agar otomatis berhenti tampil setelah deadline.</li>
+            <li>Pilih <b>kategori</b> yang tepat (lomba, akademik, libur, dll) supaya filter di halaman publik akurat.</li>
+            <li>Kalau mengumumkan kegiatan lomba/ekskul tertentu, sebutkan <b>tanggal, tempat, dan kontak PIC</b> yang jelas.</li>
+          </ol>
+
+          <p style="margin:.85rem 0 .4rem 0;"><strong style="color:#b91c1c;">⚠️ Perhatian khusus:</strong></p>
+          <ul style="margin:.3rem 0 .2rem 1.3rem;padding:0;">
+            <li>Centang <b>"Highlight"</b> <b>hanya</b> untuk pengumuman penting — akan tampil di <b>halaman beranda</b>. Jangan terlalu banyak (disarankan maks 2–3 aktif bersamaan).</li>
+            <li>Pengumuman dengan tanggal berakhir di masa lampau otomatis tidak tampil publik, tapi data masih tersimpan di admin.</li>
+            <li>Data yang dihapus <b>tidak dapat dikembalikan</b>.</li>
+          </ul>
+        </div>
+      </details>
+
       <div class="two-col" style="align-items:start;">
 
         <!-- FORM PANEL -->

@@ -334,6 +334,90 @@ async function loadEkskul(containerId = 'ekskul-container', filter = '') {
 }
 
 // ============================================================
+// LOAD LOMBA (full page katalog lomba)
+// ============================================================
+async function loadLomba(containerId = 'lomba-container', filter = '') {
+  const container = $(`#${containerId}`);
+  if (!container) return;
+  container.innerHTML = `<div class="loading"><div class="spinner"></div></div>`;
+
+  let res;
+  try {
+    const params = filter ? { kategori: filter } : {};
+    res = await apiGet('lomba', 'list', params);
+  } catch (err) {
+    container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat data lomba. Cek koneksi Anda.</p></div>`;
+    console.error('loadLomba network error:', err);
+    return;
+  }
+
+  // API mengembalikan error (misal: tabel belum ada karena migrasi belum dijalankan)
+  if (!res || res.status !== 'success') {
+    const errMsg = (res && res.message) ? res.message : 'Tidak dapat memuat data lomba.';
+    container.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1;">
+        <i class="fas fa-exclamation-triangle" style="color:#b45309;"></i>
+        <p><strong>Gagal memuat daftar lomba</strong></p>
+        <p style="font-size:.85rem;color:var(--gray-500);margin-top:.4rem;">${esc(errMsg)}</p>
+      </div>`;
+    console.error('loadLomba API error:', res);
+    return;
+  }
+
+  // Pasti array, meskipun kosong
+  const list = Array.isArray(res.data) ? res.data : [];
+
+  const icons = { akademik: '📚', seni: '🎨', olahraga: '⚽', keagamaan: '🕌', teknologi: '💻', lainnya: '🏆' };
+  const tingkatIcons = { sekolah: '🏫', kabupaten: '🏘️', provinsi: '🗺️', nasional: '🇮🇩', internasional: '🌏' };
+  const fmtTgl = (d) => {
+    if (!d) return '-';
+    const dt = new Date(d);
+    if (isNaN(dt)) return d;
+    return dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+  const fmtBiaya = (b) => {
+    const n = parseInt(b, 10);
+    if (!n || n === 0) return 'Gratis';
+    return 'Rp ' + n.toLocaleString('id-ID');
+  };
+
+  if (list.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-trophy"></i><p>Belum ada lomba yang akan datang. Cek kembali nanti ya!</p></div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(l => {
+    const deadlineTs = l.deadline_pendaftaran ? new Date(l.deadline_pendaftaran).getTime() : null;
+    const expired = deadlineTs && deadlineTs < Date.now();
+    return `
+      <div class="ekskul-card reveal" data-cat="${l.kategori}">
+        <div class="ekskul-card__header">
+          <div class="ekskul-card__icon">${icons[l.kategori] || '🏆'}</div>
+          <h3 class="ekskul-card__title">${esc(l.nama)}</h3>
+          <span class="badge badge-gold">${tingkatIcons[l.tingkat] || ''} ${esc(l.tingkat || '')}</span>
+        </div>
+        <div class="ekskul-card__body">
+          <p style="font-size:.87rem;margin-bottom:1rem;">${esc(l.deskripsi || '')}</p>
+          ${l.penyelenggara ? `<div class="ekskul-card__row"><i class="fas fa-building"></i><span>${esc(l.penyelenggara)}</span></div>` : ''}
+          ${l.tempat ? `<div class="ekskul-card__row"><i class="fas fa-map-marker-alt"></i><span>${esc(l.tempat)}</span></div>` : ''}
+          ${l.tanggal_mulai ? `<div class="ekskul-card__row"><i class="far fa-calendar"></i><span>${fmtTgl(l.tanggal_mulai)}${l.tanggal_selesai && l.tanggal_selesai !== l.tanggal_mulai ? ' – ' + fmtTgl(l.tanggal_selesai) : ''}</span></div>` : ''}
+          ${l.deadline_pendaftaran ? `<div class="ekskul-card__row" style="${expired ? 'color:#b91c1c;' : ''}"><i class="far fa-clock"></i><span>Deadline: ${fmtTgl(l.deadline_pendaftaran)}${expired ? ' (Tutup)' : ''}</span></div>` : ''}
+          ${l.biaya !== undefined ? `<div class="ekskul-card__row"><i class="fas fa-money-bill-wave"></i><span>${fmtBiaya(l.biaya)}</span></div>` : ''}
+          ${l.kontak_pic ? `<div class="ekskul-card__row"><i class="fas fa-user-circle"></i><span>${esc(l.kontak_pic)}</span></div>` : ''}
+        </div>
+        <div class="ekskul-card__footer">
+          ${expired
+            ? `<button class="btn btn-outline btn-sm" disabled style="opacity:.6;cursor:not-allowed;"><i class="fas fa-ban"></i> Pendaftaran Ditutup</button>`
+            : `<a class="btn btn-green btn-sm" href="pendaftaran.php?lomba=${encodeURIComponent(l.nama)}"><i class="fas fa-pen"></i> Daftar Sekarang</a>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+  if (typeof initReveal === 'function') initReveal();
+}
+
+// ============================================================
 // LOAD PRESTASI (full page)
 // ============================================================
 async function loadPrestasi(containerId = 'prestasi-container', filter = '') {
@@ -578,6 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (page === 'pengumuman.php') loadPengumuman();
   if (page === 'ekstrakurikuler.php') loadEkskul();
+  if (page === 'lomba.php') loadLomba();
   if (page === 'prestasi.php') loadPrestasi();
   if (page === 'testimoni.php') { loadTestimoni(); }
   if (page === 'kontak.php') loadKontak();
@@ -587,5 +672,6 @@ document.addEventListener('DOMContentLoaded', () => {
 window.openDaftarModal = openDaftarModal;
 window.showDetail = showDetail;
 window.loadEkskul = loadEkskul;
+window.loadLomba = loadLomba;
 window.loadPrestasi = loadPrestasi;
 window.loadPengumuman = loadPengumuman;

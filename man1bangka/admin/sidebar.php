@@ -70,6 +70,14 @@ try {
       $totalPending += $nDaftar;
     } catch (Exception $e) { $nDaftar = 0; }
 
+    // Hitung pendaftaran lomba yang menunggu persetujuan
+    $lombaBadge = null;
+    try {
+      $nLomba = (int)$pdo->query("SELECT COUNT(*) FROM pendaftaran_lomba WHERE status='menunggu'")->fetchColumn();
+      if ($nLomba > 0) $lombaBadge = $nLomba;
+      $totalPending += $nLomba;
+    } catch (Exception $e) { /* abaikan jika tabel belum ada */ }
+
     // Hitung pesan kontak yang belum dibaca
     $pesanBelumBaca = 0;
     try {
@@ -84,13 +92,17 @@ try {
       'dokumentasi',
       'prestasi',
       'ekstrakurikuler',
+      'lomba',
       'pendaftaran_ekskul',
+      'pendaftaran_lomba',
       'karya_siswa',
       'testimoni'
     ];
     foreach ($tables as $t) {
-      $c          = $pdo->query("SELECT COUNT(*) FROM `$t`")->fetchColumn();
-      $totalData += (int)$c;
+      try {
+        $c          = $pdo->query("SELECT COUNT(*) FROM `$t`")->fetchColumn();
+        $totalData += (int)$c;
+      } catch (Exception $e) { /* tabel bisa saja belum dimigrasi */ }
     }
 
     // Statistik tambahan untuk widget
@@ -130,8 +142,10 @@ try {
     <?php navLink('pengumuman.php', 'fa-bell',                'Pengumuman'); ?>
 
     <div class="nav-section">Akademik &amp; Siswa</div>
-    <?php navLink('pendaftaran.php', 'fa-clipboard-list',      'Pendaftaran Siswa', $pendaftaranBadge); ?>
-    <?php navLink('ekskul.php',      'fa-star',                'Ekstrakurikuler'); ?>
+    <?php navLink('pendaftaran.php',        'fa-clipboard-list',      'Pendaftaran Siswa', $pendaftaranBadge); ?>
+    <?php navLink('lomba.php',              'fa-medal',               'Data Lomba'); ?>
+    <?php navLink('pendaftaran-lomba.php',  'fa-flag-checkered',      'Pendaftaran Lomba', $lombaBadge); ?>
+    <?php navLink('ekskul.php',             'fa-star',                'Ekstrakurikuler'); ?>
     <?php navLink('osim.php',        'fa-users-cog',           'OSIM / OSIS'); ?>
     <?php navLink('pembina.php',     'fa-chalkboard-teacher',  'Guru Pembina'); ?>
     <?php navLink('prestasi.php',    'fa-trophy',              'Prestasi Siswa'); ?>

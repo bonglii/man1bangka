@@ -89,6 +89,11 @@
           >
         </li>
         <li>
+          <a href="halaman/lomba.php"
+            ><i class="fas fa-medal"></i> Lomba</a
+          >
+        </li>
+        <li>
           <a href="halaman/prestasi.php"
             ><i class="fas fa-trophy"></i> Prestasi</a
           >
@@ -128,6 +133,9 @@
       >
       <a href="halaman/ekstrakurikuler.php"
         ><i class="fas fa-star"></i> Ekstrakurikuler</a
+      >
+      <a href="halaman/lomba.php"
+        ><i class="fas fa-medal"></i> Lomba</a
       >
       <a href="halaman/prestasi.php"
         ><i class="fas fa-trophy"></i> Prestasi Siswa</a
@@ -362,6 +370,36 @@
       <div style="text-align: center; margin-top: 2rem">
         <a href="halaman/ekstrakurikuler.php" class="btn btn-green"
           ><i class="fas fa-arrow-right"></i> Lihat Semua Ekskul</a
+        >
+      </div>
+    </section>
+
+    <!-- ============================================================
+     LOMBA FEATURED
+     ============================================================ -->
+    <section class="home-section" style="background: var(--gray-100)">
+      <div class="section-header reveal">
+        <div class="section-tag">
+          <i class="fas fa-medal"></i> Lomba
+        </div>
+        <h2>Asah Bakat, Raih Prestasi</h2>
+        <p>
+          Ikuti berbagai lomba yang sedang dan akan berlangsung.
+          Kesempatan buat kamu menunjukkan kemampuan dan mengharumkan
+          nama MAN 1 Bangka.
+        </p>
+        <div class="section-divider"></div>
+      </div>
+      <div
+        class="cards-grid"
+        id="lomba-home"
+        style="max-width: 1200px; margin: 0 auto"
+      >
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+      <div style="text-align: center; margin-top: 2rem">
+        <a href="halaman/lomba.php" class="btn btn-green"
+          ><i class="fas fa-arrow-right"></i> Lihat Semua Lomba</a
         >
       </div>
     </section>
@@ -762,6 +800,64 @@
             )
             .join("");
           initReveal();
+        }
+      })();
+
+      // Load lomba for homepage (3 items — hanya yang masih buka pendaftaran)
+      (async () => {
+        const container = document.getElementById("lomba-home");
+        if (!container) return;
+        const res = await apiGet("lomba", "list", { only_open: 1 });
+        const icons = {
+          akademik: "📚",
+          seni: "🎨",
+          olahraga: "⚽",
+          keagamaan: "🕌",
+          teknologi: "💻",
+          lainnya: "🏆",
+        };
+        const tingkatIcons = {
+          sekolah: "🏫",
+          kabupaten: "🏘️",
+          provinsi: "🗺️",
+          nasional: "🇮🇩",
+          internasional: "🌏",
+        };
+        const fmtTgl = (d) => {
+          if (!d) return "";
+          const dt = new Date(d);
+          if (isNaN(dt)) return d;
+          return dt.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
+        };
+        if (res?.status === "success" && res.data.length) {
+          container.innerHTML = res.data
+            .slice(0, 3)
+            .map(
+              (l) => `
+      <div class="ekskul-card reveal" style="max-width:100%;">
+        <div class="ekskul-card__header">
+          <div class="ekskul-card__icon">${icons[l.kategori] || "🏆"}</div>
+          <h3 class="ekskul-card__title">${esc(l.nama)}</h3>
+          <span class="badge badge-gold">${tingkatIcons[l.tingkat] || ""} ${esc(l.tingkat || "")}</span>
+        </div>
+        <div class="ekskul-card__body">
+          <p style="font-size:.87rem;margin-bottom:1rem;">${esc((l.deskripsi || "").substring(0, 120))}${(l.deskripsi || "").length > 120 ? "..." : ""}</p>
+          ${l.penyelenggara ? `<div class="ekskul-card__row"><i class="fas fa-building"></i><span>${esc(l.penyelenggara)}</span></div>` : ""}
+          ${l.tanggal_mulai ? `<div class="ekskul-card__row"><i class="far fa-calendar"></i><span>${fmtTgl(l.tanggal_mulai)}</span></div>` : ""}
+          ${l.deadline_pendaftaran ? `<div class="ekskul-card__row" style="color:#b91c1c;"><i class="far fa-clock"></i><span>Deadline: ${fmtTgl(l.deadline_pendaftaran)}</span></div>` : ""}
+        </div>
+        <div class="ekskul-card__footer">
+          <a class="btn btn-green btn-sm" href="halaman/pendaftaran.php?lomba=${encodeURIComponent(l.nama)}">
+            <i class="fas fa-pen"></i> Daftar
+          </a>
+        </div>
+      </div>
+    `,
+            )
+            .join("");
+          initReveal();
+        } else {
+          container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-medal"></i><p>Belum ada lomba yang buka pendaftaran. Cek kembali nanti!</p></div>`;
         }
       })();
 

@@ -92,6 +92,35 @@ $totalPages = max(1, (int)ceil(($filter === 'belum' ? $belumBaca : ($filter === 
         <div class="alert alert-ok anim-fade-up"><i class="fas fa-check-circle"></i> <?= htmlspecialchars($msg) ?></div>
       <?php endif; ?>
 
+      <!-- ============================================================
+           PANDUAN / WARNING — Menangani Pesan Masuk (Privacy)
+           ============================================================ -->
+      <details open style="margin-bottom:1.25rem;border:1.5px solid #fde68a;background:#fffbeb;border-radius:var(--radius-sm,10px);overflow:hidden;">
+        <summary style="cursor:pointer;padding:.85rem 1rem;display:flex;align-items:center;gap:.6rem;font-weight:700;color:#92400e;list-style:none;user-select:none;">
+          <i class="fas fa-exclamation-triangle" style="color:#d97706;"></i>
+          <span>Panduan Menangani Pesan Masuk</span>
+          <span style="margin-left:auto;font-size:.72rem;font-weight:500;color:#b45309;opacity:.85;">Klik untuk buka/tutup</span>
+        </summary>
+        <div style="padding:0 1.25rem 1rem 1.25rem;color:#78350f;font-size:.85rem;line-height:1.65;">
+          <div style="padding-top:.25rem;border-top:1px dashed #fcd34d;margin-top:.1rem;"></div>
+
+          <p style="margin:.75rem 0 .4rem 0;"><strong style="color:#92400e;">🔍 Cara merespons pesan:</strong></p>
+          <ol style="margin:.3rem 0 .75rem 1.3rem;padding:0;">
+            <li>Baca pesan dengan <b>teliti</b> sebelum menghubungi pengirim — konteks penting untuk balasan yang tepat.</li>
+            <li>Balas langsung via <b>email / telepon</b> pengirim yang tercantum. Sistem ini <b>tidak mengirim balasan otomatis</b>.</li>
+            <li>Tandai <b>"Sudah Dibaca"</b> setelah pesan selesai ditangani agar tidak terus muncul di badge sidebar.</li>
+            <li>Kalau pesan ditujukan ke unit tertentu (OSIS, ekskul, BK, dll), <b>teruskan</b> ke penanggung jawab yang relevan.</li>
+          </ol>
+
+          <p style="margin:.85rem 0 .4rem 0;"><strong style="color:#b91c1c;">🔒 Privasi data pengirim:</strong></p>
+          <ul style="margin:.3rem 0 .2rem 1.3rem;padding:0;">
+            <li>Pesan berisi <b>data kontak pribadi</b> (nama, email, nomor HP). Jangan disebarluaskan ke pihak yang tidak berkepentingan.</li>
+            <li>Jangan balas pesan dengan <b>informasi sensitif</b> (password, data siswa lain, dll) via channel yang tidak terverifikasi.</li>
+            <li>Data yang dihapus <b>tidak dapat dikembalikan</b>. Kalau belum yakin, cukup tandai "Sudah Dibaca" dulu.</li>
+          </ul>
+        </div>
+      </details>
+
       <!-- Stat cards -->
       <div class="stat-grid anim-fade-up" style="grid-template-columns:repeat(3,1fr);">
         <div class="stat-card stat-teal">

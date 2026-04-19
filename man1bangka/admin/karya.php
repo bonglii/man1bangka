@@ -146,6 +146,36 @@ $jenisInfo = [
       <?php if ($msg): ?><div class="alert alert-ok anim-fade-up"><i class="fas fa-check-circle"></i> <?= htmlspecialchars($msg) ?></div><?php endif; ?>
       <?php if ($err): ?><div class="alert alert-err anim-fade-up"><i class="fas fa-times-circle"></i> <?= htmlspecialchars($err) ?></div><?php endif; ?>
 
+      <!-- ============================================================
+           PANDUAN / WARNING — Publikasi Karya Siswa
+           ============================================================ -->
+      <details open style="margin-bottom:1.25rem;border:1.5px solid #fde68a;background:#fffbeb;border-radius:var(--radius-sm,10px);overflow:hidden;">
+        <summary style="cursor:pointer;padding:.85rem 1rem;display:flex;align-items:center;gap:.6rem;font-weight:700;color:#92400e;list-style:none;user-select:none;">
+          <i class="fas fa-exclamation-triangle" style="color:#d97706;"></i>
+          <span>Panduan Menampilkan Karya Siswa</span>
+          <span style="margin-left:auto;font-size:.72rem;font-weight:500;color:#b45309;opacity:.85;">Klik untuk buka/tutup</span>
+        </summary>
+        <div style="padding:0 1.25rem 1rem 1.25rem;color:#78350f;font-size:.85rem;line-height:1.65;">
+          <div style="padding-top:.25rem;border-top:1px dashed #fcd34d;margin-top:.1rem;"></div>
+
+          <p style="margin:.75rem 0 .4rem 0;"><strong style="color:#92400e;">🔍 Sebelum menampilkan karya siswa di publik:</strong></p>
+          <ol style="margin:.3rem 0 .75rem 1.3rem;padding:0;">
+            <li>Verifikasi <b>karya asli siswa</b> — bukan salinan dari internet atau karya orang lain.</li>
+            <li>Pastikan <b>nama dan kelas siswa</b> benar — dapatkan izin siswa/orang tua sebelum ditampilkan publik.</li>
+            <li>Periksa kesesuaian dengan <b>nilai-nilai madrasah</b> — tidak mengandung unsur SARA, pornografi, atau kekerasan.</li>
+            <li>Untuk karya foto/gambar: pastikan tidak melanggar <b>hak cipta</b> pihak lain.</li>
+          </ol>
+
+          <p style="margin:.85rem 0 .4rem 0;"><strong style="color:#b91c1c;">⚠️ Perhatian khusus:</strong></p>
+          <ul style="margin:.3rem 0 .2rem 1.3rem;padding:0;">
+            <li>Karya yang disimpan <b>langsung tampil</b> di halaman Karya Siswa publik.</li>
+            <li>File diupload ke server — perhatikan <b>format dan ukuran</b> yang didukung (lihat note di form).</li>
+            <li>Bila siswa/orang tua meminta karya dihapus kemudian hari, <b>segera proses</b> permintaan itu demi privasi.</li>
+            <li>Data yang dihapus <b>tidak dapat dikembalikan</b> — file uploadnya juga ikut terhapus dari server.</li>
+          </ul>
+        </div>
+      </details>
+
       <div class="two-col" style="align-items:start;">
 
         <!-- FORM -->

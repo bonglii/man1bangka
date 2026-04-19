@@ -78,14 +78,16 @@ require '../php/config.php'; ?>
       <!-- STAT CARDS -->
       <?php
       $stats = [
-        ['tbl' => 'agenda',             'label' => 'Agenda',       'icon' => 'fa-calendar-alt',     'color' => 'green',  'link' => 'agenda.php'],
-        ['tbl' => 'pengumuman',         'label' => 'Pengumuman',   'icon' => 'fa-bell',              'color' => 'gold',   'link' => 'pengumuman.php'],
-        ['tbl' => 'dokumentasi',        'label' => 'Media',        'icon' => 'fa-images',            'color' => 'blue',   'link' => 'media.php'],
-        ['tbl' => 'prestasi',           'label' => 'Prestasi',     'icon' => 'fa-trophy',            'color' => 'purple', 'link' => 'prestasi.php'],
-        ['tbl' => 'testimoni',          'label' => 'Testimoni',    'icon' => 'fa-comment-dots',      'color' => 'teal',   'link' => 'testimoni.php'],
-        ['tbl' => 'ekstrakurikuler',    'label' => 'Ekskul',       'icon' => 'fa-star',              'color' => 'orange', 'link' => 'ekskul.php'],
-        ['tbl' => 'pendaftaran_ekskul', 'label' => 'Pendaftaran',  'icon' => 'fa-clipboard-list',    'color' => 'indigo', 'link' => 'pendaftaran.php'],
-        ['tbl' => 'karya_siswa',        'label' => 'Karya Siswa',  'icon' => 'fa-palette',           'color' => 'red',    'link' => 'karya.php'],
+        ['tbl' => 'agenda',             'label' => 'Agenda',            'icon' => 'fa-calendar-alt',     'color' => 'green',  'link' => 'agenda.php'],
+        ['tbl' => 'pengumuman',         'label' => 'Pengumuman',        'icon' => 'fa-bell',              'color' => 'gold',   'link' => 'pengumuman.php'],
+        ['tbl' => 'dokumentasi',        'label' => 'Media',             'icon' => 'fa-images',            'color' => 'blue',   'link' => 'media.php'],
+        ['tbl' => 'prestasi',           'label' => 'Prestasi',          'icon' => 'fa-trophy',            'color' => 'purple', 'link' => 'prestasi.php'],
+        ['tbl' => 'testimoni',          'label' => 'Testimoni',         'icon' => 'fa-comment-dots',      'color' => 'teal',   'link' => 'testimoni.php'],
+        ['tbl' => 'ekstrakurikuler',    'label' => 'Ekskul',            'icon' => 'fa-star',              'color' => 'orange', 'link' => 'ekskul.php'],
+        ['tbl' => 'pendaftaran_ekskul', 'label' => 'Pendaftaran',       'icon' => 'fa-clipboard-list',    'color' => 'indigo', 'link' => 'pendaftaran.php'],
+        ['tbl' => 'lomba',              'label' => 'Data Lomba',        'icon' => 'fa-medal',             'color' => 'gold',   'link' => 'lomba.php'],
+        ['tbl' => 'pendaftaran_lomba',  'label' => 'Pendaftaran Lomba', 'icon' => 'fa-flag-checkered',    'color' => 'gold',   'link' => 'pendaftaran-lomba.php'],
+        ['tbl' => 'karya_siswa',        'label' => 'Karya Siswa',       'icon' => 'fa-palette',           'color' => 'red',    'link' => 'karya.php'],
       ];
       ?>
       <div class="stat-grid">

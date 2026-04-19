@@ -200,16 +200,24 @@
                   placeholder="Nomor Induk Siswa" />
               </div>
               <div class="form-group">
-                <label>Nama Lomba <span>*</span></label>
-                <input
+                <label>Pilih Lomba <span>*</span></label>
+                <select
                   class="form-control"
                   name="nama_lomba"
+                  id="select-lomba"
                   required
-                  placeholder="Nama lomba yang diikuti" />
+                  onchange="onLombaChange(this)">
+                  <option value="">-- Memuat daftar lomba... --</option>
+                </select>
+              </div>
+              <div class="form-group" id="lomba-info" style="display:none;grid-column:1/-1;">
+                <div style="padding:.85rem 1rem;border-radius:10px;background:var(--gray-100);border:1px solid var(--gray-200);font-size:.85rem;line-height:1.65;">
+                  <div id="lomba-info-body"></div>
+                </div>
               </div>
               <div class="form-group">
                 <label>Kategori / Tingkat Lomba</label>
-                <select class="form-control" name="tingkat">
+                <select class="form-control" name="tingkat" id="select-tingkat">
                   <option value="">-- Pilih Kategori --</option>
                   <option>Matematika</option>
                   <option>Fisika</option>
@@ -263,10 +271,103 @@
           sel.innerHTML = '<option value="">-- Gagal memuat ekskul --</option>';
         }
       })();
+
+      // Load lomba options dynamically from API (hanya yang masih buka pendaftaran)
+      window._lombaData = {};
+      (async () => {
+        const sel = document.getElementById('select-lomba');
+        if (!sel) return;
+        try {
+          const res = await apiGet('lomba', 'list', { only_open: 1 });
+          if (res.status === 'success' && res.data.length) {
+            // Simpan data lengkap di memory untuk di-lookup saat change
+            res.data.forEach(l => window._lombaData[l.nama] = l);
+            sel.innerHTML = '<option value="">-- Pilih Lomba --</option>' +
+              res.data.map(l => {
+                // Escape both value attribute dan display text supaya nama dengan karakter < > & " tidak merusak rendering
+                const escHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                return `<option value="${escHtml(l.nama)}">${escHtml(l.nama)}</option>`;
+              }).join('');
+
+            // Pre-select dari query string ?lomba=xxx (dari tombol "Daftar" di halaman lomba)
+            const qs = new URLSearchParams(location.search);
+            const preLomba = qs.get('lomba');
+            if (preLomba && window._lombaData[preLomba]) {
+              sel.value = preLomba;
+              onLombaChange(sel);
+              // Scroll ke tab pendaftaran lomba
+              const lombaTabBtn = document.querySelector('[data-tab="daftar-lomba-tab"]');
+              if (lombaTabBtn) lombaTabBtn.click();
+            }
+          } else {
+            sel.innerHTML = '<option value="">-- Belum ada lomba yang buka pendaftaran --</option>';
+          }
+        } catch (err) {
+          sel.innerHTML = '<option value="">-- Gagal memuat daftar lomba --</option>';
+        }
+      })();
     });
 
     function setEkskulId(sel) {
       document.querySelector('[name="ekstrakurikuler_id"]').value = sel.value;
+    }
+
+    // Dipanggil saat user pilih lomba di dropdown — tampilkan info card & auto-map tingkat
+    function onLombaChange(sel) {
+      const info     = document.getElementById('lomba-info');
+      const infoBody = document.getElementById('lomba-info-body');
+      const tSel     = document.getElementById('select-tingkat');
+      const l = window._lombaData[sel.value];
+
+      if (!l) {
+        if (info) info.style.display = 'none';
+        return;
+      }
+
+      const fmt = (d) => {
+        if (!d) return '-';
+        const dt = new Date(d);
+        if (isNaN(dt)) return d;
+        return dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+      };
+      const fmtBiaya = (b) => {
+        const n = parseInt(b, 10);
+        return (!n || n === 0) ? 'Gratis' : 'Rp ' + n.toLocaleString('id-ID');
+      };
+      const tingkatIcon = { sekolah:'🏫', kabupaten:'🏘️', provinsi:'🗺️', nasional:'🇮🇩', internasional:'🌏' };
+
+      const rows = [];
+      rows.push(`<div><i class="fas fa-layer-group" style="width:18px;color:var(--gold-dark);"></i> <strong>Tingkat:</strong> ${tingkatIcon[l.tingkat] || ''} ${l.tingkat || '-'}</div>`);
+      if (l.penyelenggara)  rows.push(`<div><i class="fas fa-building" style="width:18px;color:var(--gold-dark);"></i> <strong>Penyelenggara:</strong> ${l.penyelenggara}</div>`);
+      if (l.tempat)         rows.push(`<div><i class="fas fa-map-marker-alt" style="width:18px;color:var(--gold-dark);"></i> <strong>Tempat:</strong> ${l.tempat}</div>`);
+      if (l.tanggal_mulai)  {
+        const range = l.tanggal_selesai && l.tanggal_selesai !== l.tanggal_mulai
+          ? `${fmt(l.tanggal_mulai)} – ${fmt(l.tanggal_selesai)}`
+          : fmt(l.tanggal_mulai);
+        rows.push(`<div><i class="far fa-calendar" style="width:18px;color:var(--gold-dark);"></i> <strong>Jadwal:</strong> ${range}</div>`);
+      }
+      if (l.deadline_pendaftaran) rows.push(`<div><i class="far fa-clock" style="width:18px;color:#b91c1c;"></i> <strong>Deadline Pendaftaran:</strong> ${fmt(l.deadline_pendaftaran)}</div>`);
+      rows.push(`<div><i class="fas fa-money-bill-wave" style="width:18px;color:var(--gold-dark);"></i> <strong>Biaya:</strong> ${fmtBiaya(l.biaya)}</div>`);
+      if (l.kontak_pic)     rows.push(`<div><i class="fas fa-user-circle" style="width:18px;color:var(--gold-dark);"></i> <strong>Kontak PIC:</strong> ${l.kontak_pic}</div>`);
+      if (l.deskripsi)      rows.push(`<div style="margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--gray-300);font-style:italic;color:var(--gray-600);">${l.deskripsi}</div>`);
+
+      infoBody.innerHTML = rows.join('');
+      info.style.display = 'block';
+
+      // Auto-map kategori lomba (master) → tingkat form (kategori bidang lomba)
+      // Map sederhana: jika kategori master cocok dengan opsi di dropdown tingkat, select-in
+      if (tSel && l.kategori) {
+        const mapKat = {
+          akademik: 'Lainnya', seni: 'Seni', olahraga: 'Olahraga',
+          keagamaan: 'Lainnya', teknologi: 'Informatika', lainnya: 'Lainnya'
+        };
+        const pilih = mapKat[l.kategori];
+        if (pilih) {
+          for (const opt of tSel.options) {
+            if (opt.value === pilih || opt.text === pilih) { tSel.value = opt.value; break; }
+          }
+        }
+      }
     }
 
     function submitLomba(e) {
